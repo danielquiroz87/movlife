@@ -30,6 +30,14 @@ class UsuariosController extends Controller
     { 
        
     }
+    public function edit()
+    { 
+       
+    }
+    public function update()
+    { 
+       
+    }
     private function getRepository(){
         return Usuarios::paginate(25);
     }
