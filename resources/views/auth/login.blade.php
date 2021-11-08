@@ -8,23 +8,24 @@
         <title>Gull - laravel 8.x + Bootstrap 4 admin template</title>
         <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700,800,900" rel="stylesheet">
         <link rel="stylesheet" href="{{asset('assets/styles/css/themes/lite-purple.min.css')}}">
+
     </head>
 
     <body>
-        <div class="auth-layout-wrap" style="background-image: url({{asset('assets/images/photo-wide-4.jpg')}})">
+        <div class="auth-layout-wrap" style="background-image: url({{asset('assets/images/bg-movlife-registro.jpg')}})">
             <div class="auth-content">
                 <div class="card o-hidden">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="p-4">
                                 <div class="auth-logo text-center mb-4">
-                                    <img src="{{asset('assets/images/logo.png')}}" alt="">
+                                    <img src="{{asset('assets/images/logo-movlife.png')}}" alt="">
                                 </div>
-                                <h1 class="mb-3 text-18">Sign In</h1>
+                                <h1 class="mb-3 text-18">Acceso</h1>
                                 <form method="POST" action="{{ route('login') }}">
                                     @csrf
                                     <div class="form-group">
-                                        <label for="email">Email address</label>
+                                        <label for="email">Email</label>
                                         <input id="email"
                                             class="form-control form-control-rounded @error('email') is-invalid @enderror"
                                             name="email" value="{{ old('email') }}" required autocomplete="email"
@@ -36,7 +37,7 @@
                                         @enderror
                                     </div>
                                     <div class="form-group">
-                                        <label for="password">Password</label>
+                                        <label for="password">Clave</label>
                                         <input id="password"
                                             class="form-control form-control-rounded @error('password') is-invalid @enderror"
                                             name="password" required autocomplete="current-password">
@@ -53,27 +54,28 @@
                                                     id="remember" {{ old('remember') ? 'checked' : '' }}>
 
                                                 <label class="form-check-label" for="remember">
-                                                    {{ __('Remember Me') }}
+                                                    Recordarme
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <button class="btn btn-rounded btn-primary btn-block mt-2">Sign In</button>
+                                    <button class="btn btn-rounded btn-primary btn-block mt-2">Entrar</button>
 
                                 </form>
                                 @if (Route::has('password.request'))
 
                                 <div class="mt-3 text-center">
 
-                                    <a href="{{ route('password.request') }}" class="text-muted"><u>Forgot
-                                            Password?</u></a>
+                                    <a href="{{ route('password.request') }}" class="text-muted"><u>Olvido Su Clave?</u></a>
                                 </div>
                                 @endif
                             </div>
                         </div>
                         <div class="col-md-6 text-center "
-                            style="background-size: cover;background-image: url({{asset('assets/images/photo-long-3.jpg')}}">
+                            style="background-size: cover;background-image: url({{asset('assets/images/bg-movlife-access.jpg')}}">
+                            
+                            <!--
                             <div class="pr-3 auth-right">
                                 @if (Route::has('register'))
 
@@ -92,6 +94,7 @@
                                     <i class="i-Facebook-2"></i> Sign up with Facebook
                                 </a>
                             </div>
+                            !-->
                         </div>
                     </div>
                 </div>

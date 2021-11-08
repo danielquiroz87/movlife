@@ -24,16 +24,35 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/user/logout', 'ClientesController@logout')->name('user.logout');
 
 Auth::routes();
 Route::get('/', 'HomeController@index')->name('index');
-Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/users', 'UsuariosController@index')->name('users');
-Route::get('/users/new', 'UsuariosController@new')->name('user.new');
-Route::post('/users/save', 'UsuariosController@save')->name('user.save');
+Route::get('/home', 'HomeController@index')->name('index');
+Route::get('/inicio', 'HomeController@index')->name('home');
+Route::get('/clientes', 'ClientesController@index')->name('customers');
+Route::get('/clientes/new', 'ClientesController@new')->name('customers.new');
+Route::get('/clientes/edit/{id}', 'ClientesController@edit')->name('customers.edit');
+Route::post('/clientes/save', 'ClientesController@save')->name('customers.save');
+Route::post('/clientes/delete', 'ClientesController@delete')->name('customers.delete');
+Route::get('/clientes/register', 'ClientesController@new')->name('signIn');
 
-Route::get('/users/register', 'UsuariosController@new')->name('signIn');
+Route::get('/empleados', 'EmpleadosController@index')->name('employes');
+Route::get('/empleados/new', 'EmpleadosController@new')->name('employes.new');
+Route::get('/empleados/edit/{id}', 'EmpleadosController@edit')->name('employes.edit');
+Route::post('/empleados/save', 'EmpleadosController@save')->name('employes.save');
+Route::post('/empleados/delete', 'EmpleadosController@delete')->name('employes.delete');
 
+Route::get('/pasajeros', 'PasajerosController@index')->name('pasajeros');
+Route::get('/pasajeros/new', 'PasajerosController@new')->name('pasajeros.new');
+Route::get('/pasajeros/edit/{id}', 'PasajerosController@edit')->name('pasajeros.edit');
+Route::post('/pasajeros/save', 'PasajerosController@save')->name('pasajeros.save');
+Route::post('/pasajeros/delete', 'PasajerosController@delete')->name('pasajeros.delete');
 
-//Route::get('/login', 'HomeController@login')->name('login');
+Route::get('/propietarios', 'PropietariosVehiculosController@index')->name('propietarios');
+Route::get('/propietarios/new', 'PropietariosVehiculosController@new')->name('propietarios.new');
+Route::get('/propietarios/edit/{id}', 'PropietariosVehiculosController@edit')->name('propietarios.edit');
+Route::post('/propietarios/save', 'PropietariosVehiculosController@save')->name('propietarios.save');
+Route::post('/propietarios/delete', 'PropietariosVehiculosController@delete')->name('propietarios.delete');
+
 

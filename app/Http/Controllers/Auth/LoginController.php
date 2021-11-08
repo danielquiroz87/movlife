@@ -40,6 +40,7 @@ class LoginController extends Controller
     }
 
 
+
     public function authenticate(Request $request)
     {
         $validator = \Validator::make(request()->all(), [
@@ -61,7 +62,7 @@ class LoginController extends Controller
             
             auth()->loginUsingId($userData->id);
             //log que necesites
-            return redirect()->route('home');
+            return redirect()->route('inicio');
 
         }else{
 

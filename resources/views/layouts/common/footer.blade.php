@@ -2,18 +2,11 @@
 <div class="flex-grow-1"></div>
 <div class="app-footer">
     <div class="row">
-        
-    </div>
-    <div class="footer-bottom border-top pt-3 d-flex flex-column flex-sm-row align-items-center">
-      
-        <span class="flex-grow-1"></span>
-        <div class="d-flex align-items-center">
-            <img class="logo" src="{{asset('assets/images/logo.png')}}" alt="">
-            <div>
-                <p class="m-0">&copy; 2019 UI-Lib</p>
-                <p class="m-0">All rights reserved</p>
+          <p class="m-0" style="text-align: right; display: block; width: 100%;padding-right: 20px">&copy; 2021 Movlife</p>
+        <div>
+              
             </div>
-        </div>
     </div>
+   
 </div>
 <!-- fotter end -->

@@ -8,8 +8,47 @@
                 </a>
                 <div class="triangle"></div>
             </li>
+            <li class="nav-item {{ request()->is('customers/*') ? 'active' : '' }}" data-item="users">
+                <a class="nav-item-hold" href="#">
+                    <i class="nav-icon i-Add-User"></i>
+                    <span class="nav-text">Usuarios</span>
+                </a>
+                <div class="triangle"></div>
+            </li>
+
+            <li class="nav-item {{ request()->is('customers/*') ? 'active' : '' }}" data-item="users">
+                <a class="nav-item-hold" href="#">
+                    <i class="nav-icon i-Split-Horizontal-2-Window"></i>
+                    <span class="nav-text">Operaciones</span>
+                </a>
+                <div class="triangle"></div>
+            </li>
+             <li class="nav-item {{ request()->is('customers/*') ? 'active' : '' }}" data-item="users">
+                <a class="nav-item-hold" href="#">
+                    <i class="nav-icon i-File-Clipboard-File--Text"></i>
+                    <span class="nav-text">Formularios</span>
+                </a>
+                <div class="triangle"></div>
+            </li>
+
+            <li class="nav-item {{ request()->is('customers/*') ? 'active' : '' }}" data-item="users">
+                <a class="nav-item-hold" href="#">
+                    <i class="nav-icon i-File-Clipboard-Text--Image"></i>
+                    <span class="nav-text">Informes</span>
+                </a>
+                <div class="triangle"></div>
+            </li>
+
+             <li class="nav-item {{ request()->is('customers/*') ? 'active' : '' }}" data-item="users">
+                <a class="nav-item-hold" href="#">
+                    <i class="nav-icon i-Gear"></i>
+                    <span class="nav-text">Configuración</span>
+                </a>
+                <div class="triangle"></div>
+            </li>
            
         </ul>
+       
     </div>
 
     <div class="sidebar-left-secondary rtl-ps-none" data-perfect-scrollbar data-suppress-scroll-x="true">
@@ -17,7 +56,7 @@
         <ul class="childNav" data-parent="dashboard">
             <li class="nav-item ">
                 <a class="{{ Route::currentRouteName()=='dashboard_version_1' ? 'open' : '' }}"
-                    href="#">
+                    href="{{route('home')}}">
                     <i class="nav-icon i-Clock-3"></i>
                     <span class="item-name">Dashboard</span>
                 </a>
@@ -25,7 +64,39 @@
             
         </ul>
 
+        <ul class="childNav" data-parent="users">
+            <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='customers' ? 'open' : '' }}"
+                    href="{{route('customers')}}">
+                    <i class="nav-icon i-Add-User"></i>
+                    <span class="item-name">Clientes</span>
+                </a>
+            </li>
+            <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='employes' ? 'open' : '' }}"
+                    href="{{route('employes')}}">
+                    <i class="nav-icon i-Add-User"></i>
+                    <span class="item-name">Empleados</span>
+                </a>
+            </li>
+            <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='propietarios' ? 'open' : '' }}"
+                    href="{{route('propietarios')}}">
+                    <i class="nav-icon i-Add-User"></i>
+                    <span class="item-name">Propietarios</span>
+                </a>
+            </li>
+            <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='pasajeros' ? 'open' : '' }}"
+                    href="{{route('pasajeros')}}">
+                    <i class="nav-icon i-Add-User"></i>
+                    <span class="item-name">Pasajeros</span>
+                </a>
+            </li>
+            
         </ul>
+
+        
       
     </div>
     <div class="sidebar-overlay"></div>

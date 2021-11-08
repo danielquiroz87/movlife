@@ -2,8 +2,6 @@
 @section('before-css')
  <link rel="stylesheet" href="{{asset('assets/styles/vendor/pickadate/classic.css')}}">
  <link rel="stylesheet" href="{{asset('assets/styles/vendor/pickadate/classic.date.css')}}">
-
-
 @endsection
 
 @section('main-content')

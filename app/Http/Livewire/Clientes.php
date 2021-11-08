@@ -4,7 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 
-class Usuarios extends Component
+class Clientes extends Component
 {
     public function render()
     {

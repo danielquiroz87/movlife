@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 
-class Usuarios extends  Model
+class Pasajero extends  Model
 {
     use HasFactory;
 
-    protected $table = 'usuarios';
+    protected $table = 'pasajeros';
 
     protected $fillable = ['user_id','documento','nombres','apellidos','email_contacto','telefono','celular','direccion_id','whatsapp','activo'];
 }

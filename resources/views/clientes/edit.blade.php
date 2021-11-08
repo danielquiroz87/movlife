@@ -3,9 +3,9 @@
 @section('main-content')
   <div class="breadcrumb">
       <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="{{route('users')}}">Usuarios</a></li>
-          <li>Nuevo Usuario</li>
+          <li><a href="/">Inicio</a></li>
+          <li><a href="{{route('customers')}}">Clientes</a></li>
+          <li>Nuevo Cliente</li>
       </ul>
   </div>
   <div class="separator-breadcrumb border-top"></div>
@@ -28,85 +28,86 @@
 <div class="col-md-8 mb-4">
       <div class="card text-left">
           <div class="card-body">
-                <h3 class="card-title mb3">Nuevo Usuario</h3>
+                <h3 class="card-title mb3">Editar Cliente</h3>
   
  <div class="box box-info">
-    <form action="{{route('user.save')}}" method="POST" id="user-new-form" enctype="multipart/form-data" >
+    <form action="{{route('customers.save')}}" method="POST" id="user-new-form" enctype="multipart/form-data" >
     {{ csrf_field() }}
-      <input type="hidden" name="id" value="0">
-      <input type="hidden" name="is_new" value="true">
+      <input type="hidden" name="id" value="{{$cliente->id}}">
+      <input type="hidden" name="is_new" value="false">
 
         <div class="row">
-
             <div class="col-md-6 form-group mb-3">
-                  <label><strong>Nombres</strong></label>
-                  <input type="text" name="nombres" class="form-control" id="nombres" placeholder="Nombres" required>
-            </div>
-            <div class="col-md-6 form-group mb-3">
-                  <label><strong>Apellidos</strong></label>
-                  <input type="text" name="apellidos" class="form-control" id="apellidos" placeholder="Apellidos" required="">
+              <label><strong>Documento / Nit:</strong></label>
+                   <input type="text" name="documento"  class="form-control" placeholder="000000" maxlength="20" required value="{{$cliente->documento}}">
             </div>
 
-            <div class="col-md-6 form-group mb-3">
-              <label><strong>Identificacion:</strong></label>
-                   <input type="text" name="identificacion" value="" class="form-control" placeholder="000000" maxlength="20" required>
+             <div class="col-md-6 form-group mb-3">
+              <label><strong>Nombre Cliente / Razón Social:</strong></label>
+                   <input type="text" name="razon_social"  class="form-control" placeholder="000000" maxlength="20" required value="{{$cliente->razon_social}}">
             </div>
+            <div class="col-md-6 form-group mb-3">
+                  <label><strong>Nombres Contacto</strong></label>
+                  <input type="text" name="nombres" class="form-control" id="nombres" placeholder="Nombres" required value="{{$cliente->nombres}}">
+            </div>
+            <div class="col-md-6 form-group mb-3">
+                  <label><strong>Apellidos Contacto</strong></label>
+                  <input type="text" name="apellidos" class="form-control" id="apellidos" placeholder="Apellidos" required value="{{$cliente->apellidos}}">
+            </div>
+
            <div class="col-md-6 form-group mb-3">
               <label><strong>Teléfono:</strong></label>
               <input type="number" name="telefono" class="form-control" placeholder="000000"
-                        value="" maxlength="10" required>
+                         maxlength="10" required value="{{$cliente->telefono}}">
             </div>
              <div class="col-md-6 form-group mb-3">
                    <label> <strong>Celular:</strong></label>
                     <input type="number" name="celular" class="form-control" placeholder="0000000000"
-                        value="" maxlength="255" required>
+                        maxlength="255" required value="{{$cliente->celular}}">
             </div>
             <div class="col-md-6 form-group mb-3">
                    <label> <strong>Whatsapp:</strong></label>
                     <input type="number" name="whatsapp" class="form-control" placeholder="0000000000"
-                        value="" maxlength="255" required>
+                         maxlength="255" required value="{{$cliente->whatsapp}}">
             </div>
            <div class="col-md-6 form-group mb-3">
               <label><strong>Departamento:</strong></label>
-                   <input type="text" name="departamento" value="" class="form-control" placeholder="" maxlength="20" required>
+                    <select class="form-control" name="departamento">
+                      <option value="{{$direccion->departamento_id}}">Antioquia</option>
+                    </select>
+                   
             </div>
            
            <div class="col-md-6 form-group mb-3">
               <label><strong>Ciudad:</strong></label>
-                   <input type="text" name="ciudad" value="" class="form-control" placeholder="" maxlength="20" required>
+                  <select class="form-control" name="ciudad">
+                    <option value="{{$direccion->ciudad_id}}">Medellín</option>
+                  </select>
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Dirección:</strong></label>
-                   <input type="text" name="ciudad" value="" class="form-control" placeholder="" maxlength="20" required>
+                   <input type="text" name="direccion" class="form-control" placeholder="" maxlength="20" required value="{{$direccion->direccion1}}">
             </div>
            
-            
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Detalle Dirección:</strong></label>
+                   <input type="text" name="direccion_detalle" class="form-control" placeholder="" maxlength="20"  value="{{$direccion->direccion2}}">
+            </div>
             <div class="col-md-6 form-group mb-3">
                     <label><strong>Email:</strong></label>
                     <input type="email" name="email" class="form-control" placeholder="example@email.com"
-                        value="" maxlength="255" required>
+                         maxlength="255" required value="{{$cliente->email_contacto}}">
             </div>
             <div class="col-md-6 form-group mb-3">
-        
-                   <label> <strong>Password:</strong></label>
+                   <label> <strong>Nuevo Password:</strong></label>
                     <input type="password" name="password" class="form-control" placeholder=""
-                        value="" maxlength="20" required>
-               
+                        value="" autocomplete="off" maxlength="20" required>
             </div>
 
-            <div class="col-md-6 form-group mb-3">
-        
-                   <label> <strong>Repetir Password:</strong></label>
-                    <input type="password" name="password" class="form-control" placeholder=""
-                        value="" maxlength="20" required>
-               
-            </div>
-           
-      
             <div class="col-xs-12 col-sm-12 col-md-12 ">
                 <button id="submit" type="submit" class="btn btn-primary">Enviar</button>
-                <a href="{{ route('users') }}" class="btn btn-danger">Cancelar</a>
+                <a href="{{ route('customers') }}" class="btn btn-danger">Cancelar</a>
             </div>
         </div>
 
@@ -142,10 +143,13 @@ $.validator.messages.email = 'Email invalido';
 
 $('#user-new-form').validate({
   rules: {
-        nombre: { required:true },
+        nombres: { required:true },
+        apellidos: { required:true },
+        razon_social: { required:true },
         email:{ required:true },
-        identificacion:{ required:true },
-        cargo:{ required:true },
+        documento:{ required:true },
+        departamento_id:{ required:true },
+        ciudad_id: { required:true },
         password:{ required:true },
         file: { 
               required:true ,
