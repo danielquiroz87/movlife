@@ -49,7 +49,7 @@
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Documento / Nit:</strong></label>
-                   <input type="text" name="identificacion" class="form-control" placeholder="000000" maxlength="20" required value="{{$cliente->documento}}">
+                   <input type="text" name="documento" class="form-control" placeholder="000000" maxlength="20" required value="{{$cliente->documento}}">
             </div>
            <div class="col-md-6 form-group mb-3">
               <label><strong>Teléfono:</strong></label>
@@ -163,10 +163,9 @@ $('#user-new-form').validate({
         nombres: { required:true },
         apellidos: { required:true },
         email:{ required:true },
-        identificacion:{ required:true },
+        documento:{ required:true },
         departamento_id:{ required:true },
         ciudad_id: { required:true },
-        password:{ required:true },
         
     },messages: {
                 
