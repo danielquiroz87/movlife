@@ -117,6 +117,8 @@ class PasajerosController extends Controller
             $pasajero->nombres=$request->get('nombres');
             $pasajero->apellidos=$request->get('apellidos');
             $pasajero->email_contacto=$request->get('email');
+            $pasajero->nombre_contacto=$request->get('nombre_contacto');
+            $pasajero->telefono_contacto=$request->get('telefono_contacto');
             $pasajero->celular=$request->get('celular');
             $pasajero->user_id=$user->id;
             $pasajero->direccion_id=$direccion->id;

@@ -55,4 +55,21 @@ Route::get('/propietarios/edit/{id}', 'PropietariosVehiculosController@edit')->n
 Route::post('/propietarios/save', 'PropietariosVehiculosController@save')->name('propietarios.save');
 Route::post('/propietarios/delete', 'PropietariosVehiculosController@delete')->name('propietarios.delete');
 
+Route::get('/conductores', 'ConductoresController@index')->name('conductores');
+Route::get('/conductores/new', 'ConductoresController@new')->name('conductores.new');
+Route::get('/conductores/edit/{id}', 'ConductoresController@edit')->name('conductores.edit');
+Route::post('/conductores/save', 'ConductoresController@save')->name('conductores.save');
+Route::post('/conductores/delete', 'ConductoresController@delete')->name('conductores.delete');
 
+Route::get('/vehiculos', 'VehiculosController@index')->name('vehiculos');
+Route::get('/vehiculos/new', 'VehiculosController@new')->name('vehiculos.new');
+Route::get('/vehiculos/edit/{id}', 'VehiculosController@edit')->name('vehiculos.edit');
+Route::post('/vehiculos/save', 'VehiculosController@save')->name('vehiculos.save');
+Route::post('/vehiculos/delete', 'VehiculosController@delete')->name('vehiculos.delete');
+
+
+Route::get('/servicios', 'ServiciosController@index')->name('servicios');
+Route::get('/servicios/new', 'ServiciosController@new')->name('servicios.new');
+Route::get('/servicios/edit/{id}', 'ServiciosController@edit')->name('servicios.edit');
+Route::post('/servicios/save', 'ServiciosController@save')->name('servicios.save');
+Route::post('/servicios/delete', 'ServiciosController@delete')->name('servicios.delete');

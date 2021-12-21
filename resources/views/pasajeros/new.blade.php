@@ -99,15 +99,24 @@
                         value="" maxlength="255" required>
             </div>
             <div class="col-md-6 form-group mb-3">
-        
                    <label> <strong>Password:</strong></label>
                     <input type="password" name="password" class="form-control" placeholder=""
                         value="" maxlength="20" required>
-               
             </div>
 
-           
-      
+             <div class="col-md-6 form-group mb-3">
+                   <label> <strong>Nombre Contacto:</strong></label>
+                    <input type="text" name="nombre_contacto" class="form-control" placeholder=""
+                        value="" maxlength="20" required>
+            </div>
+            
+             <div class="col-md-6 form-group mb-3">
+                   <label> <strong>Teléfono Contacto:</strong></label>
+                    <input type="number" name="telefono_contacto" class="form-control" placeholder=""
+                        value="" maxlength="20" required>
+            </div>
+         
+        
             <div class="col-xs-12 col-sm-12 col-md-12 ">
                 <button id="submit" type="submit" class="btn btn-primary">Enviar</button>
                 <a href="{{ route('pasajeros') }}" class="btn btn-danger">Cancelar</a>
