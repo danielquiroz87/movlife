@@ -42,6 +42,8 @@
           </li>
           <li class="nav-item"><a class="nav-link" id="historial-documentos-icon-tab" data-toggle="tab" href="#historial-documentos" role="tab" aria-controls="historial" aria-selected="false"><i class="nav-icon i-Home1 mr-1"></i> Historial Documentos</a>
           </li>
+          <li class="nav-item"><a class="nav-link" id="historial-documentos-icon-tab" data-toggle="tab" href="#cuentas_bancarias" role="tab" aria-controls="cuentas_bancarias" aria-selected="false"><i class="nav-icon i-Home1 mr-1"></i> Cuentas Bancarias</a>
+          </li>
         </ul>
 
         <div class="tab-content">
@@ -564,6 +566,36 @@
       
       </div>
 
+    </form>
+
+  </div>                      
+
+</div>
+
+<div class="tab-pane" id="cuentas_bancarias" role="tabpanel" aria-labelledby="historial-documentos-icon-tab">
+  <div class="box box-info">
+    <form action="{{route('conductores.save')}}" method="POST" id="user-new-form" enctype="multipart/form-data" >
+      {{ csrf_field() }}
+      <input type="hidden" name="id" value="{{$conductor->id}}">
+
+        <div class="card-body">
+                   <div class="row"> 
+
+                  <div class="col-md-3 form-group ">
+                        <label> <strong>Numero Cuenta:</strong></label>
+                        <input type="number" name="cuenta_bancaria_numero" class="form-control" placeholder="">
+                  </div>
+                   <div class="col-md-3 form-group ">
+                        <label> <strong>Banco:</strong></label>
+                        <input type="text" name="cuentas_bancaria_banco" class="form-control" placeholder="">
+                  </div>
+                  <div class="col-md-6 form-group ">
+                      <label> <strong>Archivo:</strong></label>
+                      <input type="file" class="form-control" name="rut">
+                  </div>
+                </div>
+        </div>
+     
     </form>
 
   </div>                      

@@ -23,14 +23,7 @@
 
 #origin-input,
 #destination-input {
-  background-color: #fff;
-  font-family: Roboto;
-  font-size: 15px;
-  font-weight: 300;
-  margin-left: 12px;
-  padding: 0 11px 0 13px;
-  text-overflow: ellipsis;
-  width: 200px;
+  
 }
 
 #origin-input:focus,
@@ -132,12 +125,12 @@
 
              <div class="col-md-6 form-group mb-3">
               <label><strong>Dirección Recogida:</strong></label>
-                   <input type="text" name="direccion_recogida" value="" class="form-control" placeholder="" maxlength="20" required>
+                   <input type="text" name="direccion_recogida" id="origin-input" value="" class="form-control" placeholder="" maxlength="20" required>
             </div>
 
              <div class="col-md-6 form-group mb-3">
               <label><strong>Dirección Final:</strong></label>
-                   <input type="text" name="direccion_destino" value="" class="form-control" placeholder="" maxlength="20" required>
+                   <input type="text" name="direccion_destino" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" required>
             </div>
 
              <div class="col-md-6 form-group mb-3">
@@ -168,12 +161,22 @@
 
             <div class="col-md-12 form-group mb-3">
               <label><strong> Horas de Espera Adicional</strong></label>
-                   <input type="number" name="valor" value="" class="form-control" placeholder="0" maxlength="11" required>
+                   <input type="number" name="valor" value="" class="form-control" min="0" max="24" placeholder="0" maxlength="11" required>
             </div>
+
+
+            <label>Información de Campos Extras</label>
+
+
             
             <div class="col-md-12 form-group mb-3">
-              <label><strong>Valor Servicio:</strong></label>
-                   <input type="number" name="valor" value="" class="form-control" placeholder="0" maxlength="11" required>
+              <label><strong>Valor Servicio Conductor:</strong></label>
+                   <input type="number" name="valor_conductor" value="" class="form-control" placeholder="0" maxlength="11" required>
+            </div>
+
+            <div class="col-md-12 form-group mb-3">
+              <label><strong>Valor Servicio Cliente:</strong></label>
+                   <input type="number" name="valor_cliente" value="" class="form-control" placeholder="0" maxlength="11" required>
             </div>
             
              <div class="col-md-12 form-group mb-3">
@@ -210,14 +213,14 @@
 
             <div style="display: block;">
       <input
-        id="origin-input"
+        id="origin-input-map"
         class="controls"
         type="text"
         placeholder="Enter an origin location"
       />
 
       <input
-        id="destination-input"
+        id="destination-input-map"
         class="controls"
         type="text"
         placeholder="Enter a destination location"
