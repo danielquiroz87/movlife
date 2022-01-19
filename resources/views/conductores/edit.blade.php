@@ -134,14 +134,9 @@
                   <label><strong>Detalle Dirección:</strong></label>
                   <input type="text" name="direccion_detalle" class="form-control" placeholder="" maxlength="20"  value="{{$direccion->direccion2}}">
                 </div>
-
-                <div class="col-md-6 form-group mb-3">
-                  <label><strong>Detalle Dirección:</strong></label>
-                  <input type="text" name="direccion_detalle" class="form-control" placeholder="" maxlength="20"  value="{{$direccion->direccion2}}">
-                </div>
                 <div class="col-md-6 form-group mb-3">
                   <label><strong>Estrato:</strong></label>
-                  <input type="number" name="estrato" class="form-control" placeholder="" min="0" max="20" maxlength="20"  value="{{$conductor->numero_hijos}}">
+                  <input type="number" name="estrato" class="form-control" placeholder="" min="0" max="20" maxlength="20"  value="{{$conductor->estrato}}">
                 </div>
 
                 <div class="col-md-6 form-group mb-3">
@@ -207,22 +202,22 @@
                          <div class="col-md-6 form-group">
                           <label> <strong>Eps:</strong></label>
                           <input type="text" name="eps" class="form-control" placeholder=""
-                          value="" maxlength="20" required>
+                          value="{{$conductor->hojavida->eps}}" maxlength="20" required>
                         </div>
                         <div class="col-md-6 form-group ">
                           <label> <strong>Fondo de Pensiones:</strong></label>
                           <input type="text" name="pensiones" class="form-control" placeholder=""
-                          value="" maxlength="20" required>
+                          value="{{$conductor->hojavida->pensiones}}" maxlength="20" required>
                         </div>
                         <div class="col-md-6 form-group ">
                           <label> <strong>Arl:</strong></label>
                           <input type="text" name="pensiones" class="form-control" placeholder=""
-                          value="" maxlength="20" required>
+                          value="{{$conductor->hojavida->arl}}" maxlength="20" required>
                         </div>
                         <div class="col-md-6 form-group ">
                           <label> <strong>Nivel de Riesgo Arl:</strong></label>
                           <input type="number" name="pensiones" min="0" max="10" class="form-control" placeholder=""
-                          value="" maxlength="20" required>
+                          value="{{$conductor->hojavida->nivel_riesgo_arl}}" maxlength="20" required>
                         </div>
                       </div>
                     </div>
@@ -387,30 +382,40 @@
             <div class="collapse" id="accordion-item-licencia" data-parent="#accordionExample">
               <div class="card-body">
                 <div class="row"> 
-
+                <form type="multipart/form-data" name="documentos-licencia" id="documentos-licencia"  >
+                  <input type="hidden" name="documento[tipo][1]">
+                  <input type="hidden" name="documento[tipo][1]">
+                  
                   <div class="col-md-3 form-group ">
                         <label> <strong>Fecha Inicial:</strong></label>
-                        <input type="date" name="licencia_fecha_inicial" class="form-control" placeholder="dd/mm/yyyy">
+                        <input type="date" name="licencia_fecha_inicial" class="form-control" placeholder="dd/mm/yyyy"
+                        name="documentos[fecha_inicial]" id="documentos_fecha_inicial" 
+                        >
                   </div>
 
                    <div class="col-md-3 form-group ">
                         <label> <strong>Fecha Final:</strong></label>
-                        <input type="date" name="licencia_fecha_final" class="form-control" placeholder="dd/mm/yyyy">
+                        <input type="date" name="documentos[fecha_final]" class="form-control" placeholder="dd/mm/yyyy">
                   </div>
 
-                   <div class="col-md-6 form-group ">
+                  <div class="col-md-6 form-group ">
                         <label> <strong>Categoria:</strong></label>
-                        <input type="number" name="licencia_categoria" class="form-control" min="0" max="10">
+                        <input type="text" name="documentos[extra1]" class="form-control" >
+                  </div>
+
+                  <div class="col-md-6 form-group ">
+                        <label> <strong>Número Documento:</strong></label>
+                        <input type="number" name="documentos[numero]" class="form-control" min="0" max="10">
                   </div>
 
                   <div class="col-md-6 form-group ">
                     <label> <strong>Foto Licencia Frontal:</strong></label>
-                    <input type="file" class="form-control" name="cedula_frontal">
+                    <input type="file" class="form-control" name="documentos[cara][1]">
 
                   </div>
                   <div class="col-md-6 form-group ">
                     <label> <strong>Foto Licencia Reverso:</strong></label>
-                    <input type="file" class="form-control" name="cedula_frontal">
+                    <input type="file" class="form-control" name="cedula_frontal" name="documentos[cara][2]">
 
                   </div>
                 </div>

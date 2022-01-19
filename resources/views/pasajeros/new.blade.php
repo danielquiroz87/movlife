@@ -39,6 +39,14 @@
         <div class="row">
 
            <div class="col-md-6 form-group mb-3">
+              <label><strong>Clientes:</strong></label>
+                    
+                    <select name="cliente_id" class="form-control">
+                      <?php echo Helper::selectClientes() ?>
+                    </select>
+            </div> 
+
+           <div class="col-md-6 form-group mb-3">
               <label><strong>Documento / Nit:</strong></label>
                    <input type="text" name="documento" value="" class="form-control" placeholder="000000" maxlength="20" required>
             </div>

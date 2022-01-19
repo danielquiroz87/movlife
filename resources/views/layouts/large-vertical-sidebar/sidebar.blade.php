@@ -126,6 +126,15 @@
                     <span class="item-name">Servicios</span>
                 </a>
             </li>
+
+            
+             <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='cotizaciones' ? 'open' : '' }}"
+                    href="{{route('cotizaciones')}}">
+                    <i class="nav-icon i-Car-Wheel"></i>
+                    <span class="item-name">Cotizaciones</span>
+                </a>
+            </li>
        </ul> 
 
         <ul class="childNav" data-parent="formularios">
@@ -172,6 +181,15 @@
                     <span class="item-name">Servicios</span>
                 </a>
             </li>
+
+
+             <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='cotizaciones' ? 'open' : '' }}"
+                    href="{{route('cotizaciones')}}">
+                    <i class="nav-icon i-Car-Wheel"></i>
+                    <span class="item-name">Cotizaciones</span>
+                </a>
+            </li>
             
         </ul>
 
@@ -212,11 +230,19 @@
                 </a>
             </li>
 
-             <li class="nav-item ">
+            <li class="nav-item ">
                 <a class="{{ Route::currentRouteName()=='servicios' ? 'open' : '' }}"
                     href="{{route('servicios')}}">
                     <i class="nav-icon i-Car-Wheel"></i>
                     <span class="item-name">Servicios</span>
+                </a>
+            </li>
+
+             <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='cotizaciones' ? 'open' : '' }}"
+                    href="{{route('cotizaciones')}}">
+                    <i class="nav-icon i-Car-Wheel"></i>
+                    <span class="item-name">Cotizaciones</span>
                 </a>
             </li>
             

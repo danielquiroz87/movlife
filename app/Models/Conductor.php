@@ -13,4 +13,10 @@ class Conductor extends  Model
     protected $table = 'conductores';
 
     protected $fillable = ['user_id','documento','nombres','apellidos','email_contacto','telefono','celular','direccion_id','whatsapp','activo'];
+
+
+    public function hojavida(){
+    	return $this->hasOne('App\Models\ConductorHojaDeVida');
+    }
+   
 }
