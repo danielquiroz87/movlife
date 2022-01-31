@@ -76,14 +76,14 @@
            <div class="col-md-6 form-group mb-3">
               <label><strong>Departamento:</strong></label>
                     <select name="departamento_id" class="form-control">
-                      <option value="70">Antioquia</option>
+                        <?php echo Helper::selectDepartamentos() ?>
                     </select>
             </div>
            
            <div class="col-md-6 form-group mb-3">
               <label><strong>Ciudad:</strong></label>
                   <select name="ciudad_id" class="form-control">
-                    <option value="2">Medellín</option>
+                        <?php echo Helper::selectMunicipios() ?>
                   </select>
             </div>
 
@@ -104,9 +104,8 @@
                         value="" maxlength="255" required>
             </div>
             <div class="col-md-6 form-group mb-3">
-        
-                   <label> <strong>Password:</strong></label>
-                    <input type="password" name="password" class="form-control" placeholder=""
+                  <label> <strong>Password:</strong></label>
+                  <input type="password" name="password" class="form-control" placeholder=""
                         value="" maxlength="20" required>
                
             </div>

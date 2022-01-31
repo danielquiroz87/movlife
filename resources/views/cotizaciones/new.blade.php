@@ -87,92 +87,90 @@
         <div class="row">
 
          
-           <div class="col-md-6 form-group mb-3">
+            <div class="col-md-6 form-group mb-3">
               <label><strong>Cliente:</strong></label>
-                    <select name="id_cliente" class="form-control">
-                      <?php echo Helper::selectClientes() ?>
-                    </select>
-            </div>
-            <div class="col-md-6 form-group mb-3">
-                <label><strong>Pasajero:</strong></label>
-                  <select name="id_pasajero" class="form-control">
-                    <option value="1">Pasajero Pruebas</option>
-                  </select>
-            </div>
-            
-
-            <div class="col-md-6 form-group mb-3">
-              <label><strong>Fecha Servicio:</strong></label>
-                   <input type="date" name="fecha_servicio" value="" class="form-control" placeholder="" maxlength="20" required>
+                <select name="id_cliente" class="form-control">
+                  <?php echo Helper::selectClientes() ?>
+                </select>
             </div>
 
              <div class="col-md-6 form-group mb-3">
-             
+              <label><strong>Forma de Pago:</strong></label>
+               <input type="text" name="forma-pago" class="form-control" placeholder="Forma de Pago" />
+                </select>
+            </div>
+            <div class="">
+            </div>
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Fecha Cotización:</strong></label>
+                   <input type="date" name="fecha_cotizacion" value="" class="form-control" placeholder="" maxlength="20" required>
             </div>
 
             <div class="col-md-6 form-group mb-3">
-              <label><strong>Hora Recogida:</strong></label>
-                   <input type="time" name="hora_recogida" value="00:00:00" class="form-control" max="23:59:59" min="00:00:00" step="1" required >
+              <label><strong>Fecha Vencimiento:</strong></label>
+                   <input type="date" name="fecha_vencimiento" value="" class="form-control" placeholder="" maxlength="20" required>
             </div>
 
-             <div class="col-md-6 form-group mb-3">
-              <label><strong>Hora Estimada Salida:</strong></label>
-                   <input type="time" name="hora_estimada_salida" value="00:00:00" class="form-control" max="23:59:59" min="00:00:00" step="1" required >
+
+             <div class="col-md-12 form-group mb-3">
+              <label><strong>Descripción:</strong></label>
+                   <input type="text" name="descripcion" value="" class="form-control" placeholder="" maxlength="255" required>
             </div>
 
+          
+
              <div class="col-md-6 form-group mb-3">
-              <label><strong>Dirección Recogida:</strong></label>
+              <label><strong>Origen:</strong></label>
                    <input type="text" name="direccion_recogida" id="origin-input" value="" class="form-control" placeholder="" maxlength="20" required>
             </div>
 
-             <div class="col-md-6 form-group mb-3">
-              <label><strong>Dirección Final:</strong></label>
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Destino1:</strong></label>
                    <input type="text" name="direccion_destino" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" required>
             </div>
 
              <div class="col-md-6 form-group mb-3">
-                  <a href="">Agregar Parada +</a>
+              <label><strong>Destino2:</strong></label>
+                   <input type="text" name="direccion_destino2" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" required>
             </div>
 
-            <div id="nueva_parada">
-              
+             <div class="col-md-6 form-group mb-3">
+              <label><strong>Destino3:</strong></label>
+                   <input type="text" name="direccion_destino3" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" required>
             </div>
 
-            <div class="opciones_viaje col-md-6 form-group mb-3 ">
-              <label class="radio radio-outline-warning">
-                <input type="radio" name="tipo_viaje"><span>Solo Ida</span><span class="checkmark"></span>
-              </label>
-              <label class="radio radio-outline-success">
-                    <input type="radio" checked="true" name="tipo_viaje"><span>Ida y Regreso</span><span class="checkmark"></span>
-              </label>
-              <label class="radio radio-outline-danger">
-                  <input type="radio" name="tipo_viaje"><span>Regreso</span><span class="checkmark"></span>
-              </label>
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Destino4:</strong></label>
+                   <input type="text" name="direccion_destino4" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" required>
             </div>
 
-            <div class="opciones_disponibilidad col-md-6 form-group mb-3 ">
-              <label class="checkbox checkbox-outline-primary">
-                    <input type="checkbox"  ><span>Disponibilidad de Tiempo Adicional</span><span class="checkmark"></span>
-                </label>
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Destino5:</strong></label>
+                   <input type="text" name="direccion_destino4" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" required>
+            </div>
+
+             <div class="col-md-6 form-group mb-3">
+              <label><strong>Fecha:</strong></label>
+                   <input type="date" name="fecha" id="destination-fecha" value="fecha" class="form-control" placeholder="" maxlength="20" required>
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Usuario:</strong></label>
+                   <input type="text" name="usuario" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" required>
+            </div>
+
+             <div class="col-md-6 form-group mb-3">
+              <label><strong>Cantidad:</strong></label>
+                   <input type="number" name="cantidad" id="cantidad" value="1" class="form-control" placeholder="" maxlength="1" required>
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Valor Unitario:</strong></label>
+                   <input type="number" name="valor_unitario" value="" class="form-control" placeholder="0" maxlength="11" required>
             </div>
 
             <div class="col-md-12 form-group mb-3">
-              <label><strong> Horas de Espera Adicional</strong></label>
-                   <input type="number" name="valor" value="" class="form-control" min="0" max="24" placeholder="0" maxlength="11" required>
-            </div>
-
-
-            <label>Información de Campos Extras</label>
-
-
-            
-            <div class="col-md-12 form-group mb-3">
-              <label><strong>Valor Servicio Conductor:</strong></label>
-                   <input type="number" name="valor_conductor" value="" class="form-control" placeholder="0" maxlength="11" required>
-            </div>
-
-            <div class="col-md-12 form-group mb-3">
-              <label><strong>Valor Servicio Cliente:</strong></label>
+              <label><strong>Valor:</strong></label>
                    <input type="number" name="valor_cliente" value="" class="form-control" placeholder="0" maxlength="11" required>
             </div>
             

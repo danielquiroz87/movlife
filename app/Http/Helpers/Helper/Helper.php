@@ -32,7 +32,7 @@ public static function selectDepartamentos(){
 	$option_departamentos="";
 	foreach ($departamentos as $departamento) { 
 		$nombres=$departamento->nombre;
-		$option_clientes.='<option value="'.$departamento->id.'">'.$nombres.'</option>';
+		$option_departamentos.='<option value="'.$departamento->id.'">'.$nombres.'</option>';
 	}
 	return $option_departamentos;
 }
@@ -46,11 +46,11 @@ public static function getMunicipios($departamentoId){
 
 
 public static function selectMunicipios(){
-	$municipios=self::getMunicipios();
+	$municipios=self::getMunicipios(2);
 	$option_municipios="";
 	foreach ($municipios as $municipio) { 
 		$nombres=$municipio->nombre;
-		$option_clientes.='<option value="'.$municipios->id.'">'.$nombres.'</option>';
+		$option_municipios.='<option value="'.$municipio->id.'">'.$nombres.'</option>';
 	}
 	return $option_municipios;
 }
