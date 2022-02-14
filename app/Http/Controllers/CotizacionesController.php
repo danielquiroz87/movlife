@@ -74,15 +74,16 @@ class CotizacionesController extends Controller
          if($is_new){
 
             $cotizacion->id_cliente=$request->id_cliente;
-            $cotizacion->id_pasajero=$request->id_pasajero;
-            $cotizacion->fecha_servicio=$request->fecha_servicio;
-            $cotizacion->hora_recogida=$request->hora_recogida;
-            $cotizacion->hora_estimada_salida=$request->hora_estimada_salida;
+            $cotizacion->descripcion=$request->descripcion;
+            $cotizacion->fecha_cotizacion=$request->fecha_cotizacion;
+            $cotizacion->fecha_vencimiento=$request->fecha_vencimiento;
             $cotizacion->direccion_recogida=$request->direccion_recogida;
             $cotizacion->direccion_destino=$request->direccion_destino;
             $cotizacion->tipo_viaje=2;
             $cotizacion->valor=$request->valor_cliente;
-            $cotizacion->valor_conductor=$request->valor_conductor;
+            $cotizacion->valor=$request->valor_unitario;
+            $cotizacion->cantidad=$request->cantidad;
+            $cotizacion->total=$request->valor_unitario*$request->cantidad;
             $cotizacion->observaciones=$request->observaciones;
             $cotizacion->comentarios=$request->comentarios;
             $cotizacion->save();
@@ -90,11 +91,26 @@ class CotizacionesController extends Controller
             //$user->create($request->all());
             \Session::flash('flash_message','Cotización agregada exitosamente!.');
 
-             return redirect()->route('cotizaciones');
+             return redirect()->route('cotizaciones.edit',['id'=>$cotizacion->id]);
 
          }else{
 
-             $vehiculo->save();
+            $cotizacion->id_cliente=$request->id_cliente;
+            $cotizacion->descripcion=$request->descripcion;
+            $cotizacion->fecha_cotizacion=$request->fecha_cotizacion;
+            $cotizacion->fecha_vencimiento=$request->fecha_vencimiento;
+            $cotizacion->direccion_recogida=$request->direccion_recogida;
+            $cotizacion->direccion_destino=$request->direccion_destino;
+            $cotizacion->tipo_viaje=2;
+            $cotizacion->valor=$request->valor_cliente;
+            $cotizacion->valor=$request->valor_unitario;
+            $cotizacion->cantidad=$request->cantidad;
+            $cotizacion->total=$request->valor_unitario*$request->cantidad;
+            $cotizacion->observaciones=$request->observaciones;
+            $cotizacion->comentarios=$request->comentarios;
+            $cotizacion->save();
+
+             $cotizacion->save();
 
             \Session::flash('flash_message','Cotización actualizada exitosamente!.');
 
@@ -108,6 +124,15 @@ class CotizacionesController extends Controller
     public function update()
     { 
        
+    }
+    public function delete(Cotizacion $cotizacion){
+        $cotizacion->delete();
+
+        \Session::flash('flash_message','Cotización eliminada exitosamente!.');
+
+        return redirect()->back();
+
+
     }
     private function getRepository(){
         return Cotizacion::paginate(25);

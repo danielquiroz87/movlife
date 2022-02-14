@@ -94,13 +94,14 @@
                 </select>
             </div>
 
-             <div class="col-md-6 form-group mb-3">
-              <label><strong>Forma de Pago:</strong></label>
-               <input type="text" name="forma-pago" class="form-control" placeholder="Forma de Pago" />
-                </select>
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Forma de Pago / Días:</strong></label>
+               <input type="number" name="forma-pago" class="form-control" placeholder="Forma de Pago" value="30" step="15" max="90" min="15" />
+                
             </div>
             <div class="">
             </div>
+            
             <div class="col-md-6 form-group mb-3">
               <label><strong>Fecha Cotización:</strong></label>
                    <input type="date" name="fecha_cotizacion" value="" class="form-control" placeholder="" maxlength="20" required>
@@ -125,23 +126,23 @@
             </div>
 
             <div class="col-md-6 form-group mb-3">
-              <label><strong>Destino1:</strong></label>
+              <label><strong>Destino:</strong></label>
                    <input type="text" name="direccion_destino" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" required>
             </div>
-
+            <!--
              <div class="col-md-6 form-group mb-3">
               <label><strong>Destino2:</strong></label>
-                   <input type="text" name="direccion_destino2" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" required>
+                   <input type="text" name="direccion_destino2" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" >
             </div>
 
              <div class="col-md-6 form-group mb-3">
               <label><strong>Destino3:</strong></label>
-                   <input type="text" name="direccion_destino3" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" required>
+                   <input type="text" name="direccion_destino3" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" >
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Destino4:</strong></label>
-                   <input type="text" name="direccion_destino4" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" required>
+                   <input type="text" name="direccion_destino4" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" >
             </div>
 
             <div class="col-md-6 form-group mb-3">
@@ -153,10 +154,10 @@
               <label><strong>Fecha:</strong></label>
                    <input type="date" name="fecha" id="destination-fecha" value="fecha" class="form-control" placeholder="" maxlength="20" required>
             </div>
-
+          !-->
             <div class="col-md-6 form-group mb-3">
               <label><strong>Usuario:</strong></label>
-                   <input type="text" name="usuario" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" required>
+                   <input type="text" name="usuario" id="destination-input" value="admin" class="form-control" placeholder="" maxlength="20" required>
             </div>
 
              <div class="col-md-6 form-group mb-3">
@@ -166,12 +167,12 @@
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Valor Unitario:</strong></label>
-                   <input type="number" name="valor_unitario" value="" class="form-control" placeholder="0" maxlength="11" required>
+                   <input type="number" name="valor_unitario" id="valor_unitario" value=""  class="form-control" placeholder="0" maxlength="11" required>
             </div>
 
-            <div class="col-md-12 form-group mb-3">
-              <label><strong>Valor:</strong></label>
-                   <input type="number" name="valor_cliente" value="" class="form-control" placeholder="0" maxlength="11" required>
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Total:</strong></label>
+                   <input type="number" name="total" value="0" id="total" class="form-control" placeholder="0" maxlength="11" required>
             </div>
             
              <div class="col-md-12 form-group mb-3">
@@ -187,7 +188,7 @@
         
             <div class="col-xs-12 col-sm-12 col-md-12 ">
                 <button id="submit" type="submit" class="btn btn-primary">Enviar</button>
-                <a href="{{ route('pasajeros') }}" class="btn btn-danger">Cancelar</a>
+                <a href="{{ route('cotizaciones') }}" class="btn btn-danger">Cancelar</a>
             </div>
         </div>
 
@@ -344,22 +345,6 @@ class AutocompleteDirectionsHandler {
 </script>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <script>
 
 
@@ -379,6 +364,26 @@ $('#user-new-form').validate({
                 
             },
     
+})
+
+
+function totalizar(){
+  var cantidad=$("#cantidad").val();
+  var valor_unitario=$("#valor_unitario").val();
+  var total=cantidad*valor_unitario;
+  $('#total').val(total);
+
+}
+
+$("#cantidad").change(function(){
+  totalizar();
+})
+
+$("#valor_unitario").change(function(){
+  totalizar();
+})
+$("#valor_unitario").blur(function(){
+  totalizar();
 })
 
 $("#submit").validate({ 

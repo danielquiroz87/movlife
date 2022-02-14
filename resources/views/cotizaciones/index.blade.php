@@ -33,28 +33,44 @@
                     <tr>
                       <th>Id</th>
                       <th>Cliente</th>
-                      <th>Fecha</th>
-                      <th>Hora Recogida</th>
+                      <th>Fecha Creación</th>
+                      <th>Fecha Cotización</th>
+                      <th>Fecha Vencimiento</th>
                       <th>Dirección Recogida</th>
                       <th>Dirección Destino</th>
-                      <th>Valor Conductor</th>
-                      <th>Valor Cliente</th>
-                      <th>Acciones</th>
+                      <th>Valor</th>
+                      <th>Cantidad</th>
+                      <th>Total</th>
+                      <th colspan="3">Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
                   	@foreach ($cotizaciones as $cotizacion)
                     <tr>
-                      <td>{{$cotizacion->id}}</td>
-                     <td>{{$cotizacion->cliente->nombres}}</td>
-                     <td>{{$cotizacion->fecha_servicio}}</td>
-                     <td>{{$cotizacion->hora_recogida}}</td>
+                    <td>{{$cotizacion->id}}</td>
+                     <td>{{$cotizacion->cliente->documento}}, {{$cotizacion->cliente->nombres}} {{$cotizacion->cliente->apellidos}}</td>
+                     <td>{{$cotizacion->created_at}}</td>
+                     <td>{{$cotizacion->fecha_cotizacion}}</td>
+                     <td>{{$cotizacion->fecha_vencimiento}}</td>
                      <td>{{$cotizacion->direccion_recogida}}</td>
                      <td>{{$cotizacion->direccion_destino}}</td>
-                     <td>{{$cotizacion->valor_conductor}}</td>
                      <td>{{$cotizacion->valor}}</td>
-                     <td><a href="#">Convertir en Orden Servicio</a></td>
-                     <td><a href="#">Eliminar</a></td>
+                     <td>{{$cotizacion->cantidad}}</td>
+                     <td>{{$cotizacion->total}}</td>
+
+                     <td>
+                      <a class="text-success mr-2" href="{{route('cotizaciones.edit',['id'=>$cotizacion->id])}}" title="Editar">
+                          <i class="nav-icon i-Pen-2 font-weight-bold"></i>
+                        </a>
+
+                     </td>
+                     <td>
+                      <a class="text-danger mr-2 eliminar" href="{{route('cotizaciones.delete', $cotizacion->id)}}" title="Eliminar"><i class="nav-icon i-Close-Window font-weight-bold"></i></a>
+                     </td>
+                     <td>
+                        <a href="#">Convertir en Orden Servicio</a>
+                      </td>
+
                     </tr>
                   	@endforeach
                   </tbody>
