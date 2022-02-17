@@ -28,6 +28,16 @@ class ServiciosController extends Controller
         $servicios=$this->getRepository();
         return view('servicios.index')->with(['servicios'=>$servicios]);
     }
+    public function importar(){
+
+        return view('servicios.importar');
+ 
+    }
+    public function delete(){
+
+        return view('servicios.importar');
+ 
+    }
     public function new()
     { 
         return view('servicios.new');

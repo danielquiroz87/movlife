@@ -73,6 +73,8 @@ Route::get('/servicios/new', 'ServiciosController@new')->name('servicios.new');
 Route::get('/servicios/edit/{id}', 'ServiciosController@edit')->name('servicios.edit');
 Route::post('/servicios/save', 'ServiciosController@save')->name('servicios.save');
 Route::post('/servicios/delete', 'ServiciosController@delete')->name('servicios.delete');
+Route::get('/servicios/importar', 'ServiciosController@delete')->name('servicios.importar');
+
 
 Route::get('/cotizaciones', 'CotizacionesController@index')->name('cotizaciones');
 Route::get('/cotizaciones/new', 'CotizacionesController@new')->name('cotizaciones.new');

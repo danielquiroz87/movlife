@@ -4,8 +4,8 @@
   <div class="breadcrumb">
       <ul>
           <li><a href="/">Inicio</a></li>
-          <li><a href="{{route('pasajeros')}}">Pasajeros</a></li>
-          <li>Nuevo Pasajero</li>
+          <li><a href="{{route('pasajeros')}}">Servicios</a></li>
+          <li>Nuevo Servicio</li>
       </ul>
   </div>
   <div class="separator-breadcrumb border-top"></div>
@@ -28,7 +28,7 @@
 <div class="col-md-8 mb-4">
       <div class="card text-left">
           <div class="card-body">
-                <h3 class="card-title mb3">Editar Pasajero</h3>
+                <h3 class="card-title mb3">Editar Servicio</h3>
   
  <div class="box box-info">
     <form action="{{route('pasajeros.save')}}" method="POST" id="user-new-form" enctype="multipart/form-data" >

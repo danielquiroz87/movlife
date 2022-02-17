@@ -16,8 +16,10 @@
             <h1>Servicios</h1>
             <div class="d-sm-flex mb-3" data-view="print">
                   <span class="m-auto"></span>
-                    <a class="btn btn-primary" href="{{route('servicios.new')}}">Nuevo</a>
+                    <a class="btn btn-primary" href="{{route('servicios.new')}}">Nuevo</a>&nbsp;&nbsp;
+                    <a class="btn btn-success" href="{{route('servicios.importar')}}">Importar</a>
             </div>
+            
           </div>
   </div>
 
