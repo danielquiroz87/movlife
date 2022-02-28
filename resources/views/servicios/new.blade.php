@@ -73,7 +73,7 @@
 </div>
 <div class="row">
 
-<div class="col-md-6">
+<div class="col-md-8">
       <div class="card text-left">
           <div class="card-body">
                 <h3 class="card-title mb3">Nuevo Servicio</h3>
@@ -83,28 +83,32 @@
     {{ csrf_field() }}
       <input type="hidden" name="id" value="0">
       <input type="hidden" name="is_new" value="true">
-
+      @if($cotizacion) 
+        <input type="hidden" name="cotizacion_id" value="{{$cotizacion->id}}">
+      @else 
+        <input type="hidden" name="cotizacion_id" value="0">
+      @endif 
         <div class="row">
 
          
            <div class="col-md-6 form-group mb-3">
               <label><strong>Cliente:</strong></label>
                     <select name="id_cliente" class="form-control">
-                      <option value="1">Cliente Pruebas</option>
+                      <?php echo Helper::selectClientes() ?>
                     </select>
             </div>
            
            <div class="col-md-6 form-group mb-3">
               <label><strong>Conductor:</strong></label>
                   <select name="id_conductor" class="form-control">
-                    <option value="1">Conductor Pruebas</option>
+                      <?php echo Helper::selectConductores() ?>
                   </select>
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Pasajero:</strong></label>
                   <select name="id_pasajero" class="form-control">
-                    <option value="1">Pasajero Pruebas</option>
+                    <?php echo Helper::selectPasajeros() ?>
                   </select>
             </div>
 
@@ -124,22 +128,36 @@
             </div>
 
              <div class="col-md-6 form-group mb-3">
-              <label><strong>Dirección Recogida:</strong></label>
-                   <input type="text" name="direccion_recogida" id="origin-input" value="" class="form-control" placeholder="" maxlength="20" required>
+              <label><strong>Origen:</strong></label>
+                   <input type="text" name="origen" id="" class="form-control" placeholder="" maxlength="20" value="{{$detalle->origen}}" >
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Destino1:</strong></label>
+                   <input type="text" name="destino" id="" class="form-control" placeholder=""  maxlength="20" value="{{$detalle->destino}}">
             </div>
 
              <div class="col-md-6 form-group mb-3">
-              <label><strong>Dirección Final:</strong></label>
-                   <input type="text" name="direccion_destino" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" required>
+              <label><strong>Destino2:</strong></label>
+                   <input type="text" name="direccion_destino2"  value="" class="form-control" placeholder="" maxlength="20" >
             </div>
 
              <div class="col-md-6 form-group mb-3">
-                  <a href="">Agregar Parada +</a>
+              <label><strong>Destino3:</strong></label>
+                   <input type="text" name="direccion_destino3"  value="" class="form-control" placeholder="" maxlength="20" >
             </div>
 
-            <div id="nueva_parada">
-              
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Destino4:</strong></label>
+                   <input type="text" name="direccion_destino4"  value="" class="form-control" placeholder="" maxlength="20" >
             </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Destino5:</strong></label>
+                   <input type="text" name="direccion_destino5"  value="" class="form-control" placeholder="" maxlength="20" >
+            </div>
+
+
 
             <div class="opciones_viaje col-md-6 form-group mb-3 ">
               <label class="radio radio-outline-warning">
@@ -209,30 +227,18 @@
             <!-- /.card -->
           </div>
 
-          <div class="col-md-6">
+               <div class="col-md-4">
 
-            <div style="display: block;">
-      <input
-        id="origin-input-map"
-        class="controls"
-        type="text"
-        placeholder="Enter an origin location"
-      />
+            <div>
+                <div id="mode-selector" class="controls">
+                  <input type="radio" name="type" id="changemode-driving" checked="checked"  />
+                  <label for="changemode-driving"  >Manejando</label>
+                </div>
+            </div>
 
-      <input
-        id="destination-input-map"
-        class="controls"
-        type="text"
-        placeholder="Enter a destination location"
-      />
-
-      <div id="mode-selector" class="controls">
-        <input type="radio" name="type" id="changemode-driving" />
-        <label for="changemode-driving"  checked="checked">Manejando</label>
-      </div>
+    <div id="map">
+      
     </div>
-
-    <div id="map"></div>
 
 
           </div>

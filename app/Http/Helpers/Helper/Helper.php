@@ -3,6 +3,10 @@
 namespace App\Http\Helpers\Helper;
 
 use App\Models\Cliente;
+use App\Models\Conductor;
+use App\Models\Pasajero;
+
+
 use Illuminate\Support\Facades\DB;
 
 class Helper{
@@ -10,7 +14,12 @@ class Helper{
 public static function getClientes(){
  	return Cliente::orderBy('nombres', 'Asc')->get();
 }
-
+public static function getConductores(){
+ 	return Conductor::orderBy('nombres', 'Asc')->get();
+}
+public static function getPasajeros(){
+ 	return Pasajero::orderBy('nombres', 'Asc')->get();
+}
 public static function selectClientes(){
 	$clientes=self::getClientes();
 	$option_clientes="";
@@ -19,6 +28,27 @@ public static function selectClientes(){
 		$option_clientes.='<option value="'.$cliente->id.'">'.$nombres.'</option>';
 	}
 	return $option_clientes;
+}
+
+public static function selectConductores(){
+	$conductores=self::getConductores();
+	$option_conductores="";
+	foreach ($conductores as $conductor) { 
+		$nombres=$conductor->documento.','.$conductor->nombres.' '.$conductor->apellidos;
+		$option_conductores.='<option value="'.$conductor->id.'">'.$nombres.'</option>';
+	}
+	return $option_conductores;
+}
+
+
+public static function selectPasajeros(){
+	$pasajeros=self::getPasajeros();
+	$option_pasajeros="";
+	foreach ($pasajeros as $pasajero) { 
+		$nombres=$pasajero->documento.','.$pasajero->nombres.' '.$pasajero->apellidos;
+		$option_pasajeros.='<option value="'.$pasajero->id.'">'.$nombres.'</option>';
+	}
+	return $option_pasajeros;
 }
 
 public static function getDepartamentos(){

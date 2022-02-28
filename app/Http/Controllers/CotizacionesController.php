@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cotizacion;
 use App\Models\User;
 use App\Models\Direccion;
+use App\Models\CotizacionDetalle;
 
 
 use Illuminate\Support\Facades\Validator;
@@ -35,8 +36,8 @@ class CotizacionesController extends Controller
      public function edit($id)
     {   
         $cotizacion=Cotizacion::find($id);
-       
-        return view('cotizaciones.edit')->with(['cotizacion'=>$cotizacion]);
+        $direcciones=CotizacionDetalle::where('cotizacion_id','=',$cotizacion->id)->get();    
+        return view('cotizaciones.edit')->with(['cotizacion'=>$cotizacion,'direcciones'=>$direcciones]);
 
     }
     public function save(Request $request)
@@ -99,8 +100,6 @@ class CotizacionesController extends Controller
             $cotizacion->descripcion=$request->descripcion;
             $cotizacion->fecha_cotizacion=$request->fecha_cotizacion;
             $cotizacion->fecha_vencimiento=$request->fecha_vencimiento;
-            $cotizacion->direccion_recogida=$request->direccion_recogida;
-            $cotizacion->direccion_destino=$request->direccion_destino;
             $cotizacion->tipo_viaje=2;
             $cotizacion->valor=$request->valor_cliente;
             $cotizacion->valor=$request->valor_unitario;
@@ -110,7 +109,19 @@ class CotizacionesController extends Controller
             $cotizacion->comentarios=$request->comentarios;
             $cotizacion->save();
 
-             $cotizacion->save();
+            if($request->get('origen')!=""){
+
+                $cd=new CotizacionDetalle();
+                $cd->cotizacion_id=$cotizacion->id;
+                $cd->origen=$request->get('direccion_recogida');
+                $cd->destino=$request->get('destino');
+                $cd->destino1=$request->get('destino1');
+                $cd->destino2=$request->get('destino2');
+                $cd->destino3=$request->get('destino3');
+                $cd->destino4=$request->get('destino4');
+                $cd->destino5=$request->get('destino5');
+                $cd->save();
+            }
 
             \Session::flash('flash_message','Cotización actualizada exitosamente!.');
 
@@ -120,7 +131,30 @@ class CotizacionesController extends Controller
 
 
     }
-   
+    public function saveItem(Cotizacion $cotizacion,Request $request){
+
+        if($request->get('origen')!=""){
+
+            $cd=new CotizacionDetalle();
+            $cd->cotizacion_id=$cotizacion->id;
+            $cd->origen=$request->get('origen');
+            $cd->destino=$request->get('destino');
+            $cd->destino2=$request->get('destino2');
+            $cd->destino3=$request->get('destino3');
+            $cd->destino4=$request->get('destino4');
+            $cd->destino5=$request->get('destino5');
+            $cd->save();
+
+        \Session::flash('flash_message','Cotización actualizada exitosamente!.');
+
+        }
+       
+        return response()->json([
+            'code' => '200',
+            'message' => 'Cotización actualizada exitosamente!.',
+        ]);
+    }
+
     public function update()
     { 
        

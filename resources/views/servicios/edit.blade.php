@@ -1,6 +1,53 @@
 @extends('layouts.master')
 
 @section('main-content')
+
+<style type="text/css">
+  
+/* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+#map {
+  height: 100%;
+}
+
+.controls {
+  margin-top: 10px;
+  border: 1px solid transparent;
+  border-radius: 2px 0 0 2px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  height: 32px;
+  outline: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+#origin-input,
+#destination-input {
+  
+}
+
+#origin-input:focus,
+#destination-input:focus {
+  border-color: #4d90fe;
+}
+
+#mode-selector {
+  color: #fff;
+  background-color: #4d90fe;
+  margin-left: 12px;
+  padding: 5px 11px 0px 11px;
+}
+
+#mode-selector label {
+  font-family: Roboto;
+  font-size: 13px;
+  font-weight: 300;
+}
+
+
+
+</style>
+
   <div class="breadcrumb">
       <ul>
           <li><a href="/">Inicio</a></li>
@@ -141,55 +188,112 @@
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.js"></script>
 
 
-<script>
+<script type="text/javascript">
 
+class AutocompleteDirectionsHandler {
+  map;
+  originPlaceId;
+  destinationPlaceId;
+  travelMode;
+  directionsService;
+  directionsRenderer;
+  constructor(map) {
+    this.map = map;
+    this.originPlaceId = "";
+    this.destinationPlaceId = "";
+    this.travelMode = google.maps.TravelMode.DRIVING;
+    this.directionsService = new google.maps.DirectionsService();
+    this.directionsRenderer = new google.maps.DirectionsRenderer();
+    this.directionsRenderer.setMap(map);
 
+    const originInput = document.getElementById("origin-input");
+    const destinationInput = document.getElementById("destination-input");
+    const modeSelector = document.getElementById("mode-selector");
+    const originAutocomplete = new google.maps.places.Autocomplete(originInput);
 
-// just for the demos, avoids form submit
-var form = $( "#user-new-form" );
-$.validator.messages.required = 'Este campo es requerido';
-$.validator.messages.email = 'Email invalido';
+    // Specify just the place data fields that you need.
+    originAutocomplete.setFields(["place_id"]);
 
-$('#user-new-form').validate({
-  rules: {
-        nombres: { required:true },
-        apellidos: { required:true },
-        email:{ required:true },
-        documento:{ required:true },
-        departamento_id:{ required:true },
-        ciudad_id: { required:true },
-        password:{ required:true },
-        
-    },messages: {
-                
-            },
+    const destinationAutocomplete = new google.maps.places.Autocomplete(
+      destinationInput
+    );
+
+    // Specify just the place data fields that you need.
+    destinationAutocomplete.setFields(["place_id"]);
     
-})
-
-$("#submit").validate({ 
- onsubmit: false,
-  
- submitHandler: function(form) {  
-   if ($(form).valid())
-   {
-       form.submit(); 
-   }
-   return false; // prevent normal form posting
- }
-});
-
-
-
-/*
-$( "#submit" ).click(function(e) {
-  e.preventDefault();
-  if($( "#user-new-form" ).valid()){
-    alert('valido');
-    $( "#user-new-form" ).submit();
-  }else{
-    alert('ERRORES')
+    this.setupClickListener(
+      "changemode-driving",
+      google.maps.TravelMode.DRIVING
+    );
+    this.setupPlaceChangedListener(originAutocomplete, "ORIG");
+    this.setupPlaceChangedListener(destinationAutocomplete, "DEST");
+    //this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
+    //this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(destinationInput);
+    this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(modeSelector);
   }
-});
-*/
+  // Sets a listener on a radio button to change the filter type on Places
+  // Autocomplete.
+  setupClickListener(id, mode) {
+    const radioButton = document.getElementById(id);
+
+    radioButton.addEventListener("click", () => {
+      this.travelMode = mode;
+      this.route();
+    });
+  }
+  setupPlaceChangedListener(autocomplete, mode) {
+    autocomplete.bindTo("bounds", this.map);
+    autocomplete.addListener("place_changed", () => {
+      const place = autocomplete.getPlace();
+
+      if (!place.place_id) {
+        window.alert("Please select an option from the dropdown list.");
+        return;
+      }
+
+      if (mode === "ORIG") {
+        this.originPlaceId = place.place_id;
+      } else {
+        this.destinationPlaceId = place.place_id;
+      }
+
+      this.route();
+    });
+  }
+  route() {
+    if (!this.originPlaceId || !this.destinationPlaceId) {
+      return;
+    }
+
+    const me = this;
+
+    this.directionsService.route(
+      {
+        origin: { placeId: this.originPlaceId },
+        destination: { placeId: this.destinationPlaceId },
+        travelMode: this.travelMode,
+      },
+      (response, status) => {
+        if (status === "OK") {
+          me.directionsRenderer.setDirections(response);
+        } else {
+          window.alert("Directions request failed due to " + status);
+        }
+      }
+    );
+  }
+}
+
+
+ function initMap() {
+  const map = new google.maps.Map(document.getElementById("map"), {
+    mapTypeControl: false,
+    center: { lat: 4.60971, lng: -74.08175 },
+    zoom: 13,
+  });
+
+  new AutocompleteDirectionsHandler(map);
+}
+
 </script>
 @endsection

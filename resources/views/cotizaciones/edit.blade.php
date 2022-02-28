@@ -73,7 +73,7 @@
 </div>
 <div class="row">
 
-<div class="col-md-6">
+<div class="col-md-8">
       <div class="card text-left">
           <div class="card-body">
                 <h3 class="card-title mb3">Editar Cotización</h3>
@@ -82,6 +82,7 @@
     <form action="{{route('cotizaciones.save')}}" method="POST" id="cotizacion-new-form" enctype="multipart/form-data" >
     {{ csrf_field() }}
       <input type="hidden" name="id" value="{{$cotizacion->id}}">
+      
       <input type="hidden" name="is_new" value="false">
 
         <div class="row">
@@ -119,15 +120,14 @@
             </div>
 
           
-
-             <div class="col-md-6 form-group mb-3">
+            <div class="col-md-6 form-group mb-3">
               <label><strong>Origen:</strong></label>
-                   <input type="text" name="direccion_recogida" id="origin-input" class="form-control" placeholder="" maxlength="20" value="" required>
+                   <input type="text" name="origen" id="origin-input" class="form-control" placeholder="" maxlength="20" value="" >
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Destino1:</strong></label>
-                   <input type="text" name="direccion_destino" id="destination-input" class="form-control" placeholder="" value="" maxlength="20" required>
+                   <input type="text" name="destino" id="destination-input" class="form-control" placeholder="" value="" maxlength="20">
             </div>
 
              <div class="col-md-6 form-group mb-3">
@@ -147,35 +147,42 @@
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Destino5:</strong></label>
-                   <input type="text" name="direccion_destino4" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" >
+                   <input type="text" name="direccion_destino5" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" >
             </div>
 
             <div class="col-md-12 form-group mb-3">
-              <button id="submit" type="submit" class="btn btn-success">Guardar Item Dirección</button>
+              <button id="btn-submit" type="button" data-url={{route('cotizaciones.save.item',$cotizacion->id)}} class="btn btn-success">Guardar Item Dirección</button>
             </div>
-            
+          
             <div class="col-md-12 form-group mb-3">
  
-            <table class="display table table-striped table-bordered dataTable dtr-inline" style="width: 100%;" role="grid">
+            <table  class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
               <thead>
-              <th>Dir Recogida</th>
-              <th>Dir Destino 1</th>
+              <th>Origen</th>
+              <th>Destino</th>
               <th>Dir Destino 2</th>
               <th>Dir Destino 3</th>
               <th>Dir Destino 4</th>
-              <th>Acciones</th>
+              <th>Dir Destino 5</th>
+              <th colspan="2">Acciones</th>
               </thead>
               <tbody>
+             @foreach ($direcciones as $direccion)
+             <tr>
               <td>
-                {{$cotizacion->direccion_recogida}}
+                {{$direccion->origen}}
               </td>  
               <td>
-                {{$cotizacion->direccion_destino}}
+                {{$direccion->destino}}
               </td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td><a href="#">Convertir en OS</a></td>
+              <td>{{$direccion->destino2}}</td>
+              <td>{{$direccion->destino3}}</td>
+              <td>{{$direccion->destino4}}</td>
+              <td>{{$direccion->destino5}} </td>
+              <td><a href="{{route('servicios.new.fromaddress',[$direccion->id])}}">Nueva Orden De Servicio</a></td>
+              <td> <a class="text-danger mr-2 eliminar" href="{{route('cotizaciones.delete.item', $direccion->id)}}" title="Eliminar"><i class="nav-icon i-Close-Window font-weight-bold"></i></a></td>
+              </tr>
+              @endforeach
               </tbody>
               
             </table>
@@ -228,30 +235,24 @@
 
 </div>
              
-   </div>
+  </div>
               <!-- /.card-body -->
-            </div>
+</div>
             <!-- /.card -->
-
-
             <!-- /.card -->
-          </div>
+</div>
 
-          <div class="col-md-6">
-
-            <div>
-                <div id="mode-selector" class="controls">
-                  <input type="radio" name="type" id="changemode-driving" checked="checked"  />
-                  <label for="changemode-driving"  >Manejando</label>
-                </div>
-            </div>
-
-    <div id="map">
+<div class="col-md-4">
+  <div>
+      <div id="mode-selector" class="controls">
+        <input type="radio" name="type" id="changemode-driving" checked="checked"  />
+        <label for="changemode-driving"  >Manejando</label>
+      </div>
+  </div>
+  <div id="map">
       
-    </div>
-
-
-          </div>
+  </div>
+</div>
 
 
 </div>
@@ -306,6 +307,19 @@ $("#valor_unitario").change(function(){
 })
 $("#valor_unitario").blur(function(){
   totalizar();
+})
+
+
+$('#btn-submit').click(function(e){
+  e.preventDefault();
+  var data=$('#cotizacion-new-form').serializeArray();
+  var url=$(this).data('url');
+  console.log(data);
+
+  $.post(url,data,function(response){
+    console.log(response);
+  });
+
 })
 
 $("#submit").validate({ 

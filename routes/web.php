@@ -1,4 +1,4 @@
-<?php
+	<?php
 
 use Illuminate\Support\Facades\Route;
 
@@ -70,6 +70,8 @@ Route::post('/vehiculos/delete', 'VehiculosController@delete')->name('vehiculos.
 
 Route::get('/servicios', 'ServiciosController@index')->name('servicios');
 Route::get('/servicios/new', 'ServiciosController@new')->name('servicios.new');
+Route::get('/servicios/new/fromaddress/{id}', 'ServiciosController@fromAddress')->name('servicios.new.fromaddress');
+
 Route::get('/servicios/edit/{id}', 'ServiciosController@edit')->name('servicios.edit');
 Route::post('/servicios/save', 'ServiciosController@save')->name('servicios.save');
 Route::post('/servicios/delete', 'ServiciosController@delete')->name('servicios.delete');
@@ -81,4 +83,7 @@ Route::get('/cotizaciones/new', 'CotizacionesController@new')->name('cotizacione
 Route::get('/cotizaciones/edit/{id}', 'CotizacionesController@edit')->name('cotizaciones.edit');
 Route::post('/cotizaciones/save', 'CotizacionesController@save')->name('cotizaciones.save');
 Route::post('/cotizaciones/delete', 'CotizacionesController@delete')->name('cotizaciones.delete');
+Route::post('/cotizaciones/save/item', 'CotizacionesController@saveItem')->name('cotizaciones.save.item');
+Route::post('/cotizaciones/delete/item', 'CotizacionesController@delete')->name('cotizaciones.delete.item');
+
 

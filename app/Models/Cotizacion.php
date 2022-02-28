@@ -19,4 +19,9 @@ class Cotizacion extends  Model
     	return $this->hasOne('App\Models\Cliente','id','id_cliente');
     }
 
+    public function direcciones()
+	{
+	    return hasMany('App/Models/CotizacionDetalle','cotizacion_id');
+	}
+
 }

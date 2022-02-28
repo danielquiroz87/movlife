@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Servicio;
+use App\Models\Cotizacion;
+use App\Models\CotizacionDetalle;
+
+
 use App\Models\User;
 use App\Models\Direccion;
 
@@ -40,8 +44,22 @@ class ServiciosController extends Controller
     }
     public function new()
     { 
-        return view('servicios.new');
+        $dt=new CotizacionDetalle();
+        return view('servicios.new')->with(['detalle'=>$dt,'cotizacion'=>false]);
     }
+
+    public function fromAddress($id,Request $request){
+        $dt=CotizacionDetalle::find($id);
+        $cotizacion=Cotizacion::find($dt->cotizacion_id);
+        $data=[
+            'detalle'=>$dt,
+            'cotizacion'=>$cotizacion
+        ];
+
+        return view('servicios.new')->with($data);
+
+    }
+
      public function edit($id)
     {   
         $vehiculo=Servicio::find($id);
