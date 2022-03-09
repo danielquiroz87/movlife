@@ -317,7 +317,24 @@ $('#btn-submit').click(function(e){
   console.log(data);
 
   $.post(url,data,function(response){
-    console.log(response);
+        Swal
+      .fire({
+          title: "Ok",
+          text: "Registro guardado exitosamente",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: "Ok",
+          cancelButtonText: "Cerrar",
+      })
+      .then(resultado => {
+          if (resultado.value) {
+              // Hicieron click en "Sí"
+            location.reload();
+          } else {
+              // Dijeron que no
+            location.reload();
+          }
+      });
   });
 
 })

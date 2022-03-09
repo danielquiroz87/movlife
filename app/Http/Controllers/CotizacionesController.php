@@ -136,6 +136,7 @@ class CotizacionesController extends Controller
         if($request->get('origen')!=""){
 
             $cd=new CotizacionDetalle();
+            $cotizacion=Cotizacion::find($request->get('id'));
             $cd->cotizacion_id=$cotizacion->id;
             $cd->origen=$request->get('origen');
             $cd->destino=$request->get('destino');

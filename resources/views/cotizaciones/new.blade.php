@@ -237,6 +237,25 @@
 
 <script type="text/javascript">
 
+function totalizar(){
+  var cantidad=$("#cantidad").val();
+  var valor_unitario=$("#valor_unitario").val();
+  var total=cantidad*valor_unitario;
+  $('#total').val(total);
+
+}
+
+$("#cantidad").change(function(){
+  totalizar();
+})
+
+$("#valor_unitario").change(function(){
+  totalizar();
+})
+$("#valor_unitario").blur(function(){
+  totalizar();
+})
+
 class AutocompleteDirectionsHandler {
   map;
   originPlaceId;
