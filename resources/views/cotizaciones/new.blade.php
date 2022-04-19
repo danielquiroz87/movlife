@@ -23,7 +23,8 @@
 
 #origin-input,
 #destination-input {
-  
+  float: left;
+  display: block;
 }
 
 #origin-input:focus,

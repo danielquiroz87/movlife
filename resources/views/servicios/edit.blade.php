@@ -23,7 +23,7 @@
 
 #origin-input,
 #destination-input {
-  
+ 
 }
 
 #origin-input:focus,
@@ -48,11 +48,12 @@
 
 </style>
 
+
   <div class="breadcrumb">
       <ul>
           <li><a href="/">Inicio</a></li>
-          <li><a href="{{route('pasajeros')}}">Servicios</a></li>
-          <li>Nuevo Servicio</li>
+          <li><a href="{{route('servicios')}}">Servicios</a></li>
+          <li>Editar Servicio</li>
       </ul>
   </div>
   <div class="separator-breadcrumb border-top"></div>
@@ -72,95 +73,138 @@
 </div>
 <div class="row">
 
-<div class="col-md-8 mb-4">
+<div class="col-md-8">
       <div class="card text-left">
           <div class="card-body">
                 <h3 class="card-title mb3">Editar Servicio</h3>
   
  <div class="box box-info">
-    <form action="{{route('pasajeros.save')}}" method="POST" id="user-new-form" enctype="multipart/form-data" >
+    <form action="{{route('servicios.save')}}" method="POST" id="nuevo-servicio" enctype="multipart/form-data" >
     {{ csrf_field() }}
-      <input type="hidden" name="id" value="{{$pasajero->id}}">
-      <input type="hidden" name="is_new" value="false">
-
+      <input type="hidden" name="id" value="0">
+      <input type="hidden" name="is_new" value="true">
+      @if($cotizacion) 
+        <input type="hidden" name="cotizacion_id" value="{{$cotizacion->id}}">
+      @else 
+        <input type="hidden" name="cotizacion_id" value="0">
+      @endif 
         <div class="row">
-            <div class="col-md-6 form-group mb-3">
-              <label><strong>Documento / Nit:</strong></label>
-                   <input type="text" name="documento"  class="form-control" placeholder="000000" maxlength="20" required value="{{$pasajero->documento}}">
-            </div>
 
-            <div class="col-md-6 form-group mb-3">
-                  <label><strong>Nombres Contacto</strong></label>
-                  <input type="text" name="nombres" class="form-control" id="nombres" placeholder="Nombres" required value="{{$pasajero->nombres}}">
-            </div>
-            <div class="col-md-6 form-group mb-3">
-                  <label><strong>Apellidos Contacto</strong></label>
-                  <input type="text" name="apellidos" class="form-control" id="apellidos" placeholder="Apellidos" required value="{{$pasajero->apellidos}}">
-            </div>
-
+         
            <div class="col-md-6 form-group mb-3">
-              <label><strong>Teléfono:</strong></label>
-              <input type="number" name="telefono" class="form-control" placeholder="000000"
-                         maxlength="10" required value="{{$pasajero->telefono}}">
-            </div>
-             <div class="col-md-6 form-group mb-3">
-                   <label> <strong>Celular:</strong></label>
-                    <input type="number" name="celular" class="form-control" placeholder="0000000000"
-                        maxlength="255" required value="{{$pasajero->celular}}">
-            </div>
-            <div class="col-md-6 form-group mb-3">
-                   <label> <strong>Whatsapp:</strong></label>
-                    <input type="number" name="whatsapp" class="form-control" placeholder="0000000000"
-                         maxlength="255" required value="{{$pasajero->whatsapp}}">
-            </div>
-           <div class="col-md-6 form-group mb-3">
-              <label><strong>Departamento:</strong></label>
-                    <select class="form-control" name="departamento">
-                      <option value="{{$direccion->departamento_id}}">Antioquia</option>
+              <label><strong>Cliente:</strong></label>
+                    <select name="id_cliente" class="form-control">
+                      <?php echo Helper::selectClientes() ?>
                     </select>
-                   
             </div>
            
            <div class="col-md-6 form-group mb-3">
-              <label><strong>Ciudad:</strong></label>
-                  <select class="form-control" name="ciudad">
-                    <option value="{{$direccion->ciudad_id}}">Medellín</option>
+              <label><strong>Conductor:</strong></label>
+                  <select name="id_conductor" class="form-control">
+                      <?php echo Helper::selectConductores() ?>
                   </select>
             </div>
 
             <div class="col-md-6 form-group mb-3">
-              <label><strong>Dirección:</strong></label>
-                   <input type="text" name="direccion" class="form-control" placeholder="" maxlength="20" required value="{{$direccion->direccion1}}">
-            </div>
-           
-            <div class="col-md-6 form-group mb-3">
-              <label><strong>Detalle Dirección:</strong></label>
-                   <input type="text" name="direccion_detalle" class="form-control" placeholder="" maxlength="20"  value="{{$direccion->direccion2}}">
-            </div>
-            <div class="col-md-6 form-group mb-3">
-                    <label><strong>Email:</strong></label>
-                    <input type="email" name="email" class="form-control" placeholder="example@email.com"
-                         maxlength="255" required value="{{$pasajero->email_contacto}}">
-            </div>
-            <div class="col-md-6 form-group mb-3">
-                   <label> <strong>Nuevo Password:</strong></label>
-                    <input type="password" name="password" class="form-control" placeholder=""
-                        value="" autocomplete="off" maxlength="20" >
+              <label><strong>Pasajero:</strong></label>
+                  <select name="id_pasajero" class="form-control">
+                    <?php echo Helper::selectPasajeros() ?>
+                  </select>
             </div>
 
             <div class="col-md-6 form-group mb-3">
-                   <label> <strong>Nombre Contacto:</strong></label>
-                    <input type="text" name="nombre_contacto" class="form-control" placeholder=""
-                        value="" maxlength="20" required>
+              <label><strong>Fecha Servicio:</strong></label>
+                   <input type="date" name="fecha_servicio" value="" class="form-control" placeholder="" maxlength="20" required>
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Hora Recogida:</strong></label>
+                   <input type="time" name="hora_recogida" value="10:00:00" class="form-control" max="23:59:59" min="00:00:00"  required >
+            </div>
+
+             <div class="col-md-6 form-group mb-3">
+              <label><strong>Hora Estimada Salida:</strong></label>
+                   <input type="time" name="hora_estimada_salida" value="10:00:00" class="form-control" max="23:59:59" min="00:00:00"  required >
+            </div>
+
+             <div class="col-md-6 form-group mb-3">
+              <label><strong>Origen:</strong></label>
+                   <input type="text" name="origen" id="origin-input" class="form-control" placeholder="" maxlength="600" value="{{$detalle->origen}}" >
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Destino1:</strong></label>
+                   <input type="text" name="destino" id="destination-input" class="form-control" placeholder=""  maxlength="600" value="{{$detalle->destino}}">
+            </div>
+
+             <div class="col-md-6 form-group mb-3">
+              <label><strong>Destino2:</strong></label>
+                   <input type="text" name="destino2"  value="" class="form-control" placeholder="" maxlength="600" >
+            </div>
+
+             <div class="col-md-6 form-group mb-3">
+              <label><strong>Destino3:</strong></label>
+                   <input type="text" name="destino2"  value="" class="form-control" placeholder="" maxlength="600" >
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Destino4:</strong></label>
+                   <input type="text" name="destino4"  value="" class="form-control" placeholder="" maxlength="600" >
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Destino5:</strong></label>
+                   <input type="text" name="destino5"  value="" class="form-control" placeholder="" maxlength="600" >
+            </div>
+
+
+
+            <div class="opciones_viaje col-md-6 form-group mb-3 ">
+              <label class="radio radio-outline-warning">
+                <input type="radio" name="tipo_viaje"><span>Solo Ida</span><span class="checkmark"></span>
+              </label>
+              <label class="radio radio-outline-success">
+                    <input type="radio" name="tipo_viaje"><span>Ida y Regreso</span><span class="checkmark"></span>
+              </label>
+              <label class="radio radio-outline-danger">
+                  <input type="radio" name="tipo_viaje"><span>Regreso</span><span class="checkmark"></span>
+              </label>
+            </div>
+
+            <div class="opciones_disponibilidad col-md-6 form-group mb-3 ">
+              <label class="checkbox checkbox-outline-primary">
+                    <input type="checkbox" name="tiempo_adicional" id="tiempo_adicional"><span>Disponibilidad de Tiempo Adicional</span><span class="checkmark"></span>
+                </label>
+            </div>
+
+            <div class="col-md-12 form-group mb-3" id="div-tiempo-adicional" style="display: none" >
+              <label><strong> Horas de Espera Adicional</strong></label>
+                   <input type="number" name="valor" value="0" class="form-control" min="0" max="24" placeholder="0" maxlength="11" required>
+            </div>
+
+
+            
+            <div class="col-md-12 form-group mb-3">
+              <label><strong>Valor Servicio Conductor:</strong></label>
+                   <input type="number" name="valor_conductor" value="" class="form-control" placeholder="0" maxlength="11" required>
+            </div>
+
+            <div class="col-md-12 form-group mb-3">
+              <label><strong>Valor Servicio Cliente:</strong></label>
+                   <input type="number" name="valor_cliente" value="" class="form-control" placeholder="0" maxlength="11" required>
             </div>
             
-             <div class="col-md-6 form-group mb-3">
-                   <label> <strong>Teléfono Contacto:</strong></label>
-                    <input type="number" name="telefono_contacto" class="form-control" placeholder=""
-                        value="" maxlength="20" required>
+             <div class="col-md-12 form-group mb-3">
+              <label><strong>Observaciones Servicio:</strong></label><br/>
+                   <textarea class="form-control" name="observaciones" rows="3"></textarea>
             </div>
+             <div class="col-md-12 form-group mb-3">
+              <label><strong>Comentarios Servicio:</strong></label>
+                  <textarea class="form-control" name="comentarios" rows="3"></textarea>
+            </div>
+            
          
-
+        
             <div class="col-xs-12 col-sm-12 col-md-12 ">
                 <button id="submit" type="submit" class="btn btn-primary">Enviar</button>
                 <a href="{{ route('pasajeros') }}" class="btn btn-danger">Cancelar</a>
@@ -180,12 +224,34 @@
             <!-- /.card -->
           </div>
 
+               <div class="col-md-4">
+
+            <div>
+                <div id="mode-selector" class="controls">
+                  <input type="radio" name="type" id="changemode-driving" checked="checked"  />
+                  <label for="changemode-driving"  >Manejando</label>
+                </div>
+            </div>
+
+    <div id="map">
+      
+    </div>
+
+
+          </div>
+
 
 </div>
 @endsection
 @section('bottom-js')
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.js"></script>
+
+<script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAAXnAaSyOMKc7h9pXnQowO8sO4vpz5ZvQ&callback=initMap&libraries=places&v=weekly"
+      async
+    ></script>
+
 
 
 <script type="text/javascript">
@@ -225,11 +291,16 @@ class AutocompleteDirectionsHandler {
       "changemode-driving",
       google.maps.TravelMode.DRIVING
     );
+   
     this.setupPlaceChangedListener(originAutocomplete, "ORIG");
     this.setupPlaceChangedListener(destinationAutocomplete, "DEST");
-    //this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
-    //this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(destinationInput);
+   
+    /*this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
+    this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
+      destinationInput
+    );
     this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(modeSelector);
+    */
   }
   // Sets a listener on a radio button to change the filter type on Places
   // Autocomplete.
@@ -294,6 +365,55 @@ class AutocompleteDirectionsHandler {
 
   new AutocompleteDirectionsHandler(map);
 }
+
+</script>
+
+
+<script>
+
+$('#tiempo_adicional').change(function(){
+  if( $(this).prop('checked')){
+    $('#div-tiempo-adicional').show();
+  }else{
+    $('#div-tiempo-adicional').hide();
+  }
+})
+
+// just for the demos, avoids form submit
+var form = $("#nuevo-servicio");
+$.validator.messages.required = 'Este campo es requerido';
+$.validator.messages.email = 'Email invalido';
+
+$(form).validate({
+  rules: {
+        origen: { required:true },
+        destino: { required:true },
+        tipo_viaje:{ required:true },
+        valor_conductor:{ required:true },
+        valor_cliente:{ required:true },
+        
+        
+    },messages: {
+                
+    },
+    
+})
+
+
+
+$("#submit").validate({ 
+ onsubmit: false,
+  
+ submitHandler: function(form) {  
+   if ($(form).valid())
+   {
+       form.submit(); 
+   }
+   return false; // prevent normal form posting
+ }
+});
+
+
 
 </script>
 @endsection

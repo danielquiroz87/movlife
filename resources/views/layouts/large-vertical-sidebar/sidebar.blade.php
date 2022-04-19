@@ -23,6 +23,15 @@
                 </a>
                 <div class="triangle"></div>
             </li>
+
+              <li class="nav-item {{ request()->is('customers/*') ? 'active' : '' }}" data-item="contabilidad">
+                <a class="nav-item-hold" href="#">
+                    <i class="nav-icon i-Split-Horizontal-2-Window"></i>
+                    <span class="nav-text">Contabilidad</span>
+                </a>
+                <div class="triangle"></div>
+            </li>
+
              <li class="nav-item {{ request()->is('customers/*') ? 'active' : '' }}" data-item="formularios">
                 <a class="nav-item-hold" href="#">
                     <i class="nav-icon i-File-Clipboard-File--Text"></i>
@@ -137,6 +146,27 @@
             </li>
        </ul> 
 
+
+       <ul class="childNav" data-parent="contabilidad">
+            <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='dashboard_version_1' ? 'open' : '' }}"
+                    href="{{route('anticipos')}}">
+                    <i class="nav-icon i-Clock-3"></i>
+                    <span class="item-name">Anticipos</span>
+                </a>
+            </li>
+
+             <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='dashboard_version_1' ? 'open' : '' }}"
+                    href="{{route('anticipos')}}">
+                    <i class="nav-icon i-Clock-3"></i>
+                    <span class="item-name">Facturas</span>
+                </a>
+            </li>
+
+            
+        </ul>
+
         <ul class="childNav" data-parent="formularios">
             <li class="nav-item ">
                 <a class="{{ Route::currentRouteName()=='customers' ? 'open' : '' }}"
@@ -245,6 +275,26 @@
                     <span class="item-name">Cotizaciones</span>
                 </a>
             </li>
+            
+        </ul>
+
+
+         <ul class="childNav" data-parent="informes">
+            <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='contabilidad' ? 'open' : '' }}"
+                    href="{{route('anticipos')}}">
+                    <i class="nav-icon i-Car-Wheel"></i>
+                    <span class="item-name">Anticipos</span>
+                </a>
+            </li>
+            <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='contabilidad' ? 'open' : '' }}"
+                    href="{{route('anticipos')}}">
+                    <i class="nav-icon i-Car-Wheel"></i>
+                    <span class="item-name">Facturas</span>
+                </a>
+            </li>
+        
             
         </ul>
       

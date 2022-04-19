@@ -5,7 +5,7 @@
   <div class="breadcrumb">
       <ul>
           <li><a href="/">Inicio</a></li>
-          <li>Servicios</li>
+          <li>Anticipos</li>
       </ul>
   </div>
   <div class="separator-breadcrumb border-top"></div>
@@ -13,11 +13,10 @@
 
   <div class="row">
           <div class="col-md-12">
-            <h1>Servicios</h1>
+            <h1>Anticipos</h1>
             <div class="d-sm-flex mb-3" data-view="print">
                   <span class="m-auto"></span>
-                    <a class="btn btn-primary" href="{{route('servicios.new')}}">Nuevo</a>&nbsp;&nbsp;
-                    <a class="btn btn-success" href="{{route('servicios.importar')}}">Importar</a>
+                    <a class="btn btn-primary" href="{{route('anticipos.new')}}">Nuevo</a>
             </div>
             
           </div>
@@ -28,40 +27,33 @@
   <div class="col-md-12 mb-4">
       <div class="card text-left">
           <div class="card-body">
-                <h3 class="card-title mb3">Lista Servicios</h3>
+                <h3 class="card-title mb3">Lista Anticipos</h3>
               <!-- /.card-header -->
              <table id="hidden_column_table" class="display table table-striped table-bordered dataTable dtr-inline" style="width: 100%;" role="grid" aria-describedby="hidden_column_table_info">
                   <thead>
                     <tr>
-                      <th>Cliente</th>
-                      <th>Conductor</th>
-                      <th>Pasajero</th>
+                      <th>Id</th>
                       <th>Fecha</th>
-                      <th>Dirección Recogida</th>
-                      <th>Dirección Destino</th>
-                      <th>Hora Recogida</th>
-                      <th>Hora Estimada Salida</th>
-                      <th>Valor Cliente</th>
+                      <th>Conductor</th>
+                      <th>Valor</th>
+                      <th>Estado</th>
                       <th>Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
-                  	@foreach ($servicios as $servicio)
+                  	@foreach ($anticipos as $anticipo)
                     <tr>
-                     <td>{{$servicio->cliente->nombres}}</td>
-                     <td>{{$servicio->conductor->nombres}}</td>
-                     <td>{{$servicio->pasajero->nombres}}</td>
-                    <td>{{$servicio->fecha_servicio}}</td>
-                     <td>{{$servicio->origen}}</td>
-                     <td>{{$servicio->destino}}</td>
-                     <td>{{$servicio->hora_recogida}}</td>
-                     <td>{{$servicio->hora_estimada_salida}}</td>
-                     <td>{{$servicio->valor_cliente}}</td>
+                     <td>{{$anticipo->id}}</td>
+                     <td>{{$anticipo->created_at}}</td>
+                     <td>{{$anticipo->conductor->nombres}} {{$anticipo->conductor->apellidos}}</td>
+                     <td>{{$anticipo->valor}}</td>
+                     <td>Activo</td>
+                     
                      <td>
-                        <a class="text-success mr-2" href="{{route('servicios.edit',['id'=>$servicio->id])}}" title="Editar">
+                        <a class="text-success mr-2" href="{{route('anticipos.edit',['id'=>$anticipo->id])}}" title="Editar">
                           <i class="nav-icon i-Pen-2 font-weight-bold"></i>
                         </a>
-                        <a class="text-danger mr-2 eliminar" href="{{route('servicios.delete', $servicio->id)}}" title="Eliminar" >
+                        <a class="text-danger mr-2 eliminar" href="{{route('anticipos.delete', $anticipo->id)}}" title="Eliminar" >
                         <i class="nav-icon i-Close-Window font-weight-bold"></i></i></a>
 
                      </td>
@@ -78,7 +70,7 @@
 
                 <div class="d-flex justify-content-center">
    				    <div class="">
-   				    	<?php echo $servicios->links(); ?>
+   				    	<?php echo $anticipos->links(); ?>
    				    </div>
 
 				</div>

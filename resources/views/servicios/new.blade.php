@@ -23,7 +23,7 @@
 
 #origin-input,
 #destination-input {
-  
+ 
 }
 
 #origin-input:focus,
@@ -79,7 +79,7 @@
                 <h3 class="card-title mb3">Nuevo Servicio</h3>
   
  <div class="box box-info">
-    <form action="{{route('pasajeros.save')}}" method="POST" id="user-new-form" enctype="multipart/form-data" >
+    <form action="{{route('servicios.save')}}" method="POST" id="nuevo-servicio" enctype="multipart/form-data" >
     {{ csrf_field() }}
       <input type="hidden" name="id" value="0">
       <input type="hidden" name="is_new" value="true">
@@ -119,71 +119,68 @@
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Hora Recogida:</strong></label>
-                   <input type="time" name="hora_recogida" value="00:00:00" class="form-control" max="23:59:59" min="00:00:00" step="1" required >
+                   <input type="time" name="hora_recogida" value="10:00:00" class="form-control" max="23:59:59" min="00:00:00"  required >
             </div>
 
              <div class="col-md-6 form-group mb-3">
               <label><strong>Hora Estimada Salida:</strong></label>
-                   <input type="time" name="hora_estimada_salida" value="00:00:00" class="form-control" max="23:59:59" min="00:00:00" step="1" required >
+                   <input type="time" name="hora_estimada_salida" value="10:00:00" class="form-control" max="23:59:59" min="00:00:00"  required >
             </div>
 
              <div class="col-md-6 form-group mb-3">
               <label><strong>Origen:</strong></label>
-                   <input type="text" name="origen" id="" class="form-control" placeholder="" maxlength="20" value="{{$detalle->origen}}" >
+                   <input type="text" name="origen" id="origin-input" class="form-control" placeholder="" maxlength="600" value="{{$detalle->origen}}" >
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Destino1:</strong></label>
-                   <input type="text" name="destino" id="" class="form-control" placeholder=""  maxlength="20" value="{{$detalle->destino}}">
+                   <input type="text" name="destino" id="destination-input" class="form-control" placeholder=""  maxlength="600" value="{{$detalle->destino}}">
             </div>
 
              <div class="col-md-6 form-group mb-3">
               <label><strong>Destino2:</strong></label>
-                   <input type="text" name="direccion_destino2"  value="" class="form-control" placeholder="" maxlength="20" >
+                   <input type="text" name="destino2"  value="" class="form-control" placeholder="" maxlength="600" >
             </div>
 
              <div class="col-md-6 form-group mb-3">
               <label><strong>Destino3:</strong></label>
-                   <input type="text" name="direccion_destino3"  value="" class="form-control" placeholder="" maxlength="20" >
+                   <input type="text" name="destino2"  value="" class="form-control" placeholder="" maxlength="600" >
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Destino4:</strong></label>
-                   <input type="text" name="direccion_destino4"  value="" class="form-control" placeholder="" maxlength="20" >
+                   <input type="text" name="destino4"  value="" class="form-control" placeholder="" maxlength="600" >
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Destino5:</strong></label>
-                   <input type="text" name="direccion_destino5"  value="" class="form-control" placeholder="" maxlength="20" >
+                   <input type="text" name="destino5"  value="" class="form-control" placeholder="" maxlength="600" >
             </div>
 
 
 
             <div class="opciones_viaje col-md-6 form-group mb-3 ">
               <label class="radio radio-outline-warning">
-                <input type="radio" name="radio"><span>Solo Ida</span><span class="checkmark"></span>
+                <input type="radio" name="tipo_viaje"><span>Solo Ida</span><span class="checkmark"></span>
               </label>
               <label class="radio radio-outline-success">
-                    <input type="radio" name="radio"><span>Ida y Regreso</span><span class="checkmark"></span>
+                    <input type="radio" name="tipo_viaje"><span>Ida y Regreso</span><span class="checkmark"></span>
               </label>
               <label class="radio radio-outline-danger">
-                  <input type="radio" name="radio"><span>Regreso</span><span class="checkmark"></span>
+                  <input type="radio" name="tipo_viaje"><span>Regreso</span><span class="checkmark"></span>
               </label>
             </div>
 
             <div class="opciones_disponibilidad col-md-6 form-group mb-3 ">
               <label class="checkbox checkbox-outline-primary">
-                    <input type="checkbox" checked="checked"><span>Disponibilidad de Tiempo Adicional</span><span class="checkmark"></span>
+                    <input type="checkbox" name="tiempo_adicional" id="tiempo_adicional"><span>Disponibilidad de Tiempo Adicional</span><span class="checkmark"></span>
                 </label>
             </div>
 
-            <div class="col-md-12 form-group mb-3">
+            <div class="col-md-12 form-group mb-3" id="div-tiempo-adicional" style="display: none" >
               <label><strong> Horas de Espera Adicional</strong></label>
-                   <input type="number" name="valor" value="" class="form-control" min="0" max="24" placeholder="0" maxlength="11" required>
+                   <input type="number" name="valor" value="0" class="form-control" min="0" max="24" placeholder="0" maxlength="11" required>
             </div>
-
-
-            <label>Información de Campos Extras</label>
 
 
             
@@ -294,13 +291,16 @@ class AutocompleteDirectionsHandler {
       "changemode-driving",
       google.maps.TravelMode.DRIVING
     );
+   
     this.setupPlaceChangedListener(originAutocomplete, "ORIG");
     this.setupPlaceChangedListener(destinationAutocomplete, "DEST");
-    this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
+   
+    /*this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
     this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
       destinationInput
     );
     this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(modeSelector);
+    */
   }
   // Sets a listener on a radio button to change the filter type on Places
   // Autocomplete.
@@ -369,46 +369,37 @@ class AutocompleteDirectionsHandler {
 </script>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <script>
 
-
+$('#tiempo_adicional').change(function(){
+  if( $(this).prop('checked')){
+    $('#div-tiempo-adicional').show();
+  }else{
+    $('#div-tiempo-adicional').hide();
+  }
+})
 
 // just for the demos, avoids form submit
-var form = $( "#user-new-form" );
+var form = $("#nuevo-servicio");
 $.validator.messages.required = 'Este campo es requerido';
 $.validator.messages.email = 'Email invalido';
 
-$('#user-new-form').validate({
+$(form).validate({
   rules: {
-        nombres: { required:true },
-        apellidos: { required:true },
-        email:{ required:true },
-        documento:{ required:true },
-        departamento_id:{ required:true },
-        ciudad_id: { required:true },
-        password:{ required:true },
+        origen: { required:true },
+        destino: { required:true },
+        tipo_viaje:{ required:true },
+        valor_conductor:{ required:true },
+        valor_cliente:{ required:true },
+        
         
     },messages: {
                 
-            },
+    },
     
 })
+
+
 
 $("#submit").validate({ 
  onsubmit: false,
@@ -424,16 +415,5 @@ $("#submit").validate({
 
 
 
-/*
-$( "#submit" ).click(function(e) {
-  e.preventDefault();
-  if($( "#user-new-form" ).valid()){
-    alert('valido');
-    $( "#user-new-form" ).submit();
-  }else{
-    alert('ERRORES')
-  }
-});
-*/
 </script>
 @endsection

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Servicio;
+use App\Models\OrdenServicioDetalle;
+
 use App\Models\Cotizacion;
 use App\Models\CotizacionDetalle;
 
@@ -62,9 +64,10 @@ class ServiciosController extends Controller
 
      public function edit($id)
     {   
-        $vehiculo=Servicio::find($id);
-       
-        return view('servicios.edit')->with(['servicio'=>$servicio]);
+        $servicio=Servicio::find($id);
+        $cotizacion=Cotizacion::find($servicio->cotizacion_id);
+        $detalle=OrdenServicioDetalle::where('orden_servicio_id',$servicio->id)->first();
+        return view('servicios.edit')->with(['servicio'=>$servicio,'cotizacion'=>$cotizacion,'detalle'=>$detalle]);
 
     }
     public function save(Request $request)
@@ -78,33 +81,39 @@ class ServiciosController extends Controller
         }else{
             $id=(int) $request->input('id');
             if($id>0){
-                $vehiculo=Vehiculo::find($id);
+                $vehiculo=Servicio::find($id);
             }
         }
         if($is_new){
             $v = Validator::make($request->all(), [
-                'placa' => 'required|max:6|min:6',
-                'codigo_interno' => 'required|max:10|min:1',
-                'modelo' => 'required|max:4|min:4',
-                'color' => 'required|max:20|min:3',
-                'cilindraje' => 'required|max:10|min:1',
-                'pasajeros' => 'required|max:10|min:1',
-                'departamento_id' => 'required|max:2|min:1',
-                'ciudad_id' => 'required|max:2|min:1',
+                'id_cliente' => 'required',
+                'id_pasajero' => 'required',
+                'id_conductor' => 'required',
+                'fecha_servicio' => 'required',
+                'hora_recogida' => 'required',
+                'origen' => 'required|max:600|min:3',
+                'destino' => 'required|max:600|min:3',
+                'tipo_viaje' => 'required',
+                'valor_conductor' => 'required',
+                'valor_cliente' => 'required',
+
+
             ]);   
 
           
         }else{
 
             $v = Validator::make($request->all(), [
-                'placa' => 'required|max:6|min:6',
-                'codigo_interno' => 'required|max:10|min:1',
-                'modelo' => 'required|max:4|min:4',
-                'color' => 'required|max:20|min:3',
-                'cilindraje' => 'required|max:10|min:1',
-                'pasajeros' => 'required|max:10|min:1',
-                'departamento_id' => 'required|max:2|min:1',
-                'ciudad_id' => 'required|max:2|min:1',
+                'id_cliente' => 'required',
+                'id_pasajero' => 'required',
+                'id_conductor' => 'required',
+                'fecha_servicio' => 'required',
+                'hora_recogida' => 'required',
+                'origen' => 'required|max:600|min:3',
+                'destino' => 'required|max:600|min:3',
+                'tipo_viaje' => 'required',
+                'valor_conductor' => 'required',
+                'valor_cliente' => 'required',
             ]);   
           
 
@@ -116,26 +125,21 @@ class ServiciosController extends Controller
             return redirect()->back()->withErrors($v->errors());
         }
 
-          
-        
-
            
          if($is_new){
 
-          
-
-            //$user->create($request->all());
+            $servicio->create($request->all());
             \Session::flash('flash_message','Servicio agregado exitosamente!.');
 
-             return redirect()->route('conductores');
+             return redirect()->route('servicios');
 
          }else{
 
-             $vehiculo->save();
+            $servicio->update($request->all());
 
             \Session::flash('flash_message','Servicio actualizado exitosamente!.');
 
-            return redirect()->back();
+             return redirect()->route('servicios');
 
          }
 

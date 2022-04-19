@@ -87,3 +87,12 @@ Route::post('/cotizaciones/save/item', 'CotizacionesController@saveItem')->name(
 Route::post('/cotizaciones/delete/item', 'CotizacionesController@delete')->name('cotizaciones.delete.item');
 
 
+Route::get('/anticipos', 'AnticiposController@index')->name('anticipos');
+Route::get('/anticipos/new', 'AnticiposController@new')->name('anticipos.new');
+Route::get('/anticipos/edit/{id}', 'AnticiposController@edit')->name('anticipos.edit');
+Route::post('/anticipos/save', 'AnticiposController@save')->name('anticipos.save');
+Route::post('/anticipos/delete', 'AnticiposController@delete')->name('anticipos.delete');
+
+
+
+
