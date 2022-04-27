@@ -76,7 +76,7 @@
 <div class="col-md-8">
       <div class="card text-left">
           <div class="card-body">
-                <h3 class="card-title mb3">Editar Servicio</h3>
+                <h3 class="card-title mb3">Editar Servicio / Coordinador: xxxxx</h3>
   
  <div class="box box-info">
     <form action="{{route('servicios.save')}}" method="POST" id="nuevo-servicio" enctype="multipart/form-data" >
@@ -114,7 +114,15 @@
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Fecha Servicio:</strong></label>
-                   <input type="date" name="fecha_servicio" value="" class="form-control" placeholder="" maxlength="20" required>
+                   <input type="date" name="fecha_servicio" value="<?php echo date('Y-m-d',strtotime($servicio->fecha_servicio)) ?>" class="form-control" placeholder="" maxlength="20" required>
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Tipo Servicio:</strong></label>
+                <select name="id_cliente" class="form-control">
+                     <option>Visitas Domiciliarias</option>
+                     <option>Traslado Pacientes</option>
+                  </select>   
             </div>
 
             <div class="col-md-6 form-group mb-3">
@@ -125,6 +133,11 @@
              <div class="col-md-6 form-group mb-3">
               <label><strong>Hora Estimada Salida:</strong></label>
                    <input type="time" name="hora_estimada_salida" value="10:00:00" class="form-control" max="23:59:59" min="00:00:00"  required >
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Barrio:</strong></label>
+                   <input type="text" name="barrio" id="barrio" class="form-control" placeholder="" maxlength="600" value="" >
             </div>
 
              <div class="col-md-6 form-group mb-3">
@@ -158,13 +171,23 @@
             </div>
 
 
+             <div class="col-md-12 form-group mb-3">
+              <label><strong>Turno:</strong></label>
+                   <select class="form-control">
+                      <option>1</option>
+                      <option>2</option>
+                       <option>3</option>
+                        <option>4</option>
+                         <option>NA</option>
+                   </select>
+            </div>
 
             <div class="opciones_viaje col-md-6 form-group mb-3 ">
               <label class="radio radio-outline-warning">
                 <input type="radio" name="tipo_viaje"><span>Solo Ida</span><span class="checkmark"></span>
               </label>
               <label class="radio radio-outline-success">
-                    <input type="radio" name="tipo_viaje"><span>Ida y Regreso</span><span class="checkmark"></span>
+                    <input type="radio" name="tipo_viaje" checked="checked"><span>Ida y Regreso</span><span class="checkmark"></span>
               </label>
               <label class="radio radio-outline-danger">
                   <input type="radio" name="tipo_viaje"><span>Regreso</span><span class="checkmark"></span>
@@ -186,14 +209,61 @@
             
             <div class="col-md-12 form-group mb-3">
               <label><strong>Valor Servicio Conductor:</strong></label>
-                   <input type="number" name="valor_conductor" value="" class="form-control" placeholder="0" maxlength="11" required>
+                   <input type="number" name="valor_conductor" value="{{$servicio->valor_conductor}}" class="form-control" placeholder="0" maxlength="11" required>
             </div>
 
             <div class="col-md-12 form-group mb-3">
               <label><strong>Valor Servicio Cliente:</strong></label>
-                   <input type="number" name="valor_cliente" value="" class="form-control" placeholder="0" maxlength="11" required>
+                   <input type="number" name="valor_cliente" value="{{$servicio->valor_cliente}}" class="form-control" placeholder="0" maxlength="11" required>
             </div>
             
+            <div class="col-md-12 form-group mb-3">
+              <label><strong>Educador / Coordinador:</strong></label>
+                   <select class="form-control">
+                      <option>Lizeth G</option>
+                   </select>
+            </div>
+
+            <div class="col-md-12 form-group mb-3">
+              <label><strong>URI SEDE:</strong></label>
+                   <select class="form-control">
+                      <option>Riomar</option>
+                      <option>Otra Sede</option>
+                   </select>
+            </div>
+
+            
+
+            <div class="col-md-12 form-group mb-3">
+              <label><strong>Alimentación:</strong></label>
+                   <select class="form-control">
+                      <option>Si</option>
+                      <option>No</option>
+                   </select>
+            </div>
+            
+            <div class="col-md-12 form-group mb-3">
+              <label><strong>Estado Servicio:</strong></label>
+                   <select class="form-control">
+                      <option>Iniciado</option>
+                      <option>En Proceso</option>
+                      <option>Cumplido</option>
+                      <option>Cancelado</option>
+
+                   </select>
+            </div>
+
+             <div class="col-md-12 form-group mb-3">
+              <label><strong>Motivo Cancelación:</strong></label>
+                   <select class="form-control">
+                      <option>Pasajero no Requiere</option>
+                      <option>Pasajero Cancelo</option>
+                      <option>Conductor no Cumplio</option>
+                      <option>Programado no Cancelado</option>
+
+                   </select>
+            </div>
+
              <div class="col-md-12 form-group mb-3">
               <label><strong>Observaciones Servicio:</strong></label><br/>
                    <textarea class="form-control" name="observaciones" rows="3"></textarea>

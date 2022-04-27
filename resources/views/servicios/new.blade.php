@@ -76,7 +76,7 @@
 <div class="col-md-8">
       <div class="card text-left">
           <div class="card-body">
-                <h3 class="card-title mb3">Nuevo Servicio</h3>
+                <h3 class="card-title mb3">Nuevo Servicio / Coordinador: xxxxx</h3>
   
  <div class="box box-info">
     <form action="{{route('servicios.save')}}" method="POST" id="nuevo-servicio" enctype="multipart/form-data" >
@@ -115,6 +115,20 @@
             <div class="col-md-6 form-group mb-3">
               <label><strong>Fecha Servicio:</strong></label>
                    <input type="date" name="fecha_servicio" value="" class="form-control" placeholder="" maxlength="20" required>
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Tipo Servicio:</strong></label>
+                   <select name="id_cliente" class="form-control">
+                     <option>Visitas Domiciliarias</option>
+                     <option>Traslado Pacientes</option>
+
+                    </select>
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Semana:</strong></label>
+                   <input type="number" name="valor_cliente" value="" class="form-control" min="1" max="5">
             </div>
 
             <div class="col-md-6 form-group mb-3">

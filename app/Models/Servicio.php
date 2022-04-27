@@ -23,7 +23,7 @@ class Servicio extends  Model
     }
 
     public function pasajero(){
-    	return $this->hasOne('App\Models\Conductor','id','id_pasajero');
+    	return $this->hasOne('App\Models\Pasajero','id','id_pasajero');
     }
 
     public function detalle(){

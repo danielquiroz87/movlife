@@ -53,6 +53,15 @@
                         <a class="text-success mr-2" href="{{route('anticipos.edit',['id'=>$anticipo->id])}}" title="Editar">
                           <i class="nav-icon i-Pen-2 font-weight-bold"></i>
                         </a>
+
+                        <a class="text-success mr-2" href="#">
+                          Abonar 
+                        </a>
+
+                         <a class="text mr-2" href="#">
+                          Listar Abonos 
+                        </a>
+
                         <a class="text-danger mr-2 eliminar" href="{{route('anticipos.delete', $anticipo->id)}}" title="Eliminar" >
                         <i class="nav-icon i-Close-Window font-weight-bold"></i></i></a>
 
