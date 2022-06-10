@@ -139,32 +139,32 @@
           
             <div class="col-md-6 form-group mb-3">
               <label><strong>Origen:</strong></label>
-                   <input type="text" name="origen" id="origin-input" class="form-control" placeholder="" maxlength="20" value="" >
+                   <input type="text" name="origen" id="origin-input" class="form-control" placeholder=""  >
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Destino1:</strong></label>
-                   <input type="text" name="destino" id="destination-input" class="form-control" placeholder="" value="" maxlength="20">
+                   <input type="text" name="destino" id="destination-input" class="form-control" placeholder="" >
             </div>
 
              <div class="col-md-6 form-group mb-3">
               <label><strong>Destino2:</strong></label>
-                   <input type="text" name="direccion_destino2" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" >
+                   <input type="text" name="destino2" id="destination-input2" value="" class="form-control" placeholder=""  >
             </div>
 
              <div class="col-md-6 form-group mb-3">
               <label><strong>Destino3:</strong></label>
-                   <input type="text" name="direccion_destino3" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" >
+                   <input type="text" name="destino3" id="destination-input3" value="" class="form-control" placeholder=""  >
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Destino4:</strong></label>
-                   <input type="text" name="direccion_destino4" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" >
+                   <input type="text" name="destino4" id="destination-input4" value="" class="form-control" placeholder=""  >
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Destino5:</strong></label>
-                   <input type="text" name="direccion_destino5" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" >
+                   <input type="text" name="destino5" id="destination-input5" value="" class="form-control" placeholder=""  >
             </div>
 
             <div class="opciones_viaje col-md-6 form-group mb-3 ">
@@ -189,13 +189,13 @@
 
           <div class="opciones_disponibilidad col-md-6 form-group mb-3 ">
               <label class="checkbox checkbox-outline-primary">
-                    <input type="checkbox" name="tiempo_adicional" id="tiempo_adicional"  @if($cotizacion->tiempo_adicional==1 ) checked="checked" @endif><span>Disponibilidad de Tiempo Adicional</span><span class="checkmark"></span>
+                    <input type="checkbox" name="tiempo_adicional" id="tiempo_adicional" value="1"  @if($cotizacion->tiempo_adicional==1 )  checked="checked"  @endif><span>Disponibilidad de Tiempo Adicional</span><span class="checkmark"></span>
                 </label>
             </div>
 
             <div class="col-md-12 form-group mb-3" id="div-tiempo-adicional" >
               <label><strong> Horas de Espera Adicional</strong></label>
-                   <input type="number" name="horas_adicionales" id="horas_adicionales" value="{{$cotizacion->horas_tiempo_adicional}}" class="form-control" min="0" max="24" placeholder="0" maxlength="11" required>
+                   <input type="number" name="horas_tiempo_adicional" id="horas_tiempo_adicional" value="{{$cotizacion->horas_tiempo_adicional}}" class="form-control" min="0" max="24" placeholder="0" maxlength="11" required>
             </div>
           
 

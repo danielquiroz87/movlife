@@ -86,8 +86,8 @@ class CotizacionesController extends Controller
             $cotizacion->tipo_viaje=$request->tipo_viaje;
             $cotizacion->tiempo_adicional=$request->tiempo_adicional;
             $cotizacion->horas_tiempo_adicional=$request->horas_tiempo_adicional;
-            $cotizacion->direccion_recogida=$request->direccion_recogida;
-            $cotizacion->direccion_destino=$request->direccion_destino;
+            $cotizacion->direccion_recogida=$request->origen;
+            $cotizacion->direccion_destino=$request->destino;
 
             $cotizacion->valor=$request->valor_unitario;
             $cotizacion->cantidad=$request->cantidad;
@@ -105,7 +105,6 @@ class CotizacionesController extends Controller
                 $cd->cotizacion_id=$cotizacion->id;
                 $cd->origen=$request->get('origen');
                 $cd->destino=$request->get('destino');
-                $cd->destino1=$request->get('destino1');
                 $cd->destino2=$request->get('destino2');
                 $cd->destino3=$request->get('destino3');
                 $cd->destino4=$request->get('destino4');
@@ -150,7 +149,6 @@ class CotizacionesController extends Controller
                 $cd->cotizacion_id=$cotizacion->id;
                 $cd->origen=$request->get('origen');
                 $cd->destino=$request->get('destino');
-                $cd->destino1=$request->get('destino1');
                 $cd->destino2=$request->get('destino2');
                 $cd->destino3=$request->get('destino3');
                 $cd->destino4=$request->get('destino4');

@@ -138,12 +138,12 @@
 
              <div class="col-md-6 form-group mb-3">
               <label><strong>Origen:</strong></label>
-                   <input type="text" name="origen" id="origin-input" value="" class="form-control" placeholder="" maxlength="20" required>
+                   <input type="text" name="origen" id="origin-input" value="" class="form-control" placeholder="" required>
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Destino:</strong></label>
-                   <input type="text" name="destino" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" required>
+                   <input type="text" name="destino" id="destination-input" value="" class="form-control" placeholder=""  required>
             </div>
            
             <div class="opciones_viaje col-md-6 form-group mb-3 ">
@@ -160,13 +160,13 @@
 
             <div class="opciones_disponibilidad col-md-6 form-group mb-3 ">
               <label class="checkbox checkbox-outline-primary">
-                    <input type="checkbox" name="tiempo_adicional" id="tiempo_adicional"><span>Disponibilidad de Tiempo Adicional</span><span class="checkmark"></span>
+                    <input type="checkbox" name="tiempo_adicional" id="tiempo_adicional" value="1"><span>Disponibilidad de Tiempo Adicional</span><span class="checkmark"></span>
                 </label>
             </div>
 
             <div class="col-md-12 form-group mb-3" id="div-tiempo-adicional" style="display: none" >
               <label><strong> Horas de Espera Adicional</strong></label>
-                   <input type="number" name="horas_adicionales" id="horas_adicionales" value="0" class="form-control" min="0" max="24" placeholder="0" maxlength="11" required>
+                   <input type="number" name="horas_tiempo_adicional" id="horas_tiempo_adicional" value="0" class="form-control" min="0" max="24" placeholder="0" maxlength="11" required>
             </div>
           
             <div class="col-md-6 form-group mb-3">
