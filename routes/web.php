@@ -94,5 +94,5 @@ Route::post('/anticipos/save', 'AnticiposController@save')->name('anticipos.save
 Route::post('/anticipos/delete', 'AnticiposController@delete')->name('anticipos.delete');
 
 
-
+Route::get('/municipios', 'UtilsController@municipios')->name('utils.municipios');
 

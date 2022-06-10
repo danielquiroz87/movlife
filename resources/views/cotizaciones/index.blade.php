@@ -36,6 +36,8 @@
                       <th>Fecha Creación</th>
                       <th>Fecha Cotización</th>
                       <th>Fecha Vencimiento</th>
+                      <th>Fecha Servicio</th>
+                      <th>Hora Recogida</th>
                       <th>Dirección Recogida</th>
                       <th>Dirección Destino</th>
                       <th>Valor</th>
@@ -52,6 +54,8 @@
                      <td>{{$cotizacion->created_at}}</td>
                      <td>{{$cotizacion->fecha_cotizacion}}</td>
                      <td>{{$cotizacion->fecha_vencimiento}}</td>
+                     <td>{{$cotizacion->fecha_servicio}}</td>
+                     <td>{{$cotizacion->hora_recogida}}</td>
                      <td>{{$cotizacion->direccion_recogida}}</td>
                      <td>{{$cotizacion->direccion_destino}}</td>
                      <td>{{$cotizacion->valor}}</td>
@@ -62,15 +66,10 @@
                       <a class="text-success mr-2" href="{{route('cotizaciones.edit',['id'=>$cotizacion->id])}}" title="Editar">
                           <i class="nav-icon i-Pen-2 font-weight-bold"></i>
                         </a>
-
-                     </td>
-                     <td>
                       <a class="text-danger mr-2 eliminar" href="{{route('cotizaciones.delete', $cotizacion->id)}}" title="Eliminar"><i class="nav-icon i-Close-Window font-weight-bold"></i></a>
+                    
                      </td>
-                     <td>
-                        <a href="#">Convertir en Orden Servicio</a>
-                      </td>
-
+                     
                     </tr>
                   	@endforeach
                   </tbody>

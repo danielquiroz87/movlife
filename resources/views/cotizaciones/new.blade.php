@@ -77,13 +77,15 @@
 <div class="col-md-6">
       <div class="card text-left">
           <div class="card-body">
-                <h3 class="card-title mb3">Nueva Cotización</h3>
+                <h3 class="card-title mb3">Nueva Cotización / Usuario: {{ Auth::user()->name }} </h3>
   
  <div class="box box-info">
     <form action="{{route('cotizaciones.save')}}" method="POST" id="cotizacion-new-form" enctype="multipart/form-data" >
     {{ csrf_field() }}
       <input type="hidden" name="id" value="0">
       <input type="hidden" name="is_new" value="true">
+      <input type="hidden" name="id_user" id="id_user" value="{{Auth::user()->id}}">
+
 
         <div class="row">
 
@@ -97,7 +99,7 @@
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Forma de Pago / Días:</strong></label>
-               <input type="number" name="forma-pago" class="form-control" placeholder="Forma de Pago" value="30" step="15" max="90" min="15" />
+               <input type="number" name="forma_pago" class="form-control" placeholder="Forma de Pago" value="30" step="15" max="90" min="15" />
                 
             </div>
             <div class="">
@@ -114,54 +116,60 @@
             </div>
 
 
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Fecha Servicio:</strong></label>
+                   <input type="date" name="fecha_servicio" value="" class="form-control" placeholder="" maxlength="20" required>
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Hora Recogida (Desde):</strong></label>
+                   <input type="time" name="hora_recogida" value="06:00:00" class="form-control" max="23:59:59" min="00:00:00"  required >
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Hora Estimada Salida (Hasta):</strong></label>
+                   <input type="time" name="hora_salida" value="10:00:00" class="form-control" max="23:59:59" min="00:00:00"  required >
+            </div>
+
              <div class="col-md-12 form-group mb-3">
               <label><strong>Descripción:</strong></label>
                    <input type="text" name="descripcion" value="" class="form-control" placeholder="" maxlength="255" required>
             </div>
 
-          
-
              <div class="col-md-6 form-group mb-3">
               <label><strong>Origen:</strong></label>
-                   <input type="text" name="direccion_recogida" id="origin-input" value="" class="form-control" placeholder="" maxlength="20" required>
+                   <input type="text" name="origen" id="origin-input" value="" class="form-control" placeholder="" maxlength="20" required>
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Destino:</strong></label>
-                   <input type="text" name="direccion_destino" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" required>
+                   <input type="text" name="destino" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" required>
             </div>
-            <!--
-             <div class="col-md-6 form-group mb-3">
-              <label><strong>Destino2:</strong></label>
-                   <input type="text" name="direccion_destino2" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" >
+           
+            <div class="opciones_viaje col-md-6 form-group mb-3 ">
+              <label class="radio radio-outline-warning">
+                <input type="radio" name="tipo_viaje" value="1"><span>Solo Ida</span><span class="checkmark"></span>
+              </label>
+              <label class="radio radio-outline-success">
+                    <input type="radio" name="tipo_viaje" value="2"><span>Ida y Regreso</span><span class="checkmark"></span>
+              </label>
+              <label class="radio radio-outline-danger">
+                  <input type="radio" name="tipo_viaje" value="3"><span>Regreso</span><span class="checkmark"></span>
+              </label>
             </div>
 
-             <div class="col-md-6 form-group mb-3">
-              <label><strong>Destino3:</strong></label>
-                   <input type="text" name="direccion_destino3" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" >
+            <div class="opciones_disponibilidad col-md-6 form-group mb-3 ">
+              <label class="checkbox checkbox-outline-primary">
+                    <input type="checkbox" name="tiempo_adicional" id="tiempo_adicional"><span>Disponibilidad de Tiempo Adicional</span><span class="checkmark"></span>
+                </label>
             </div>
 
+            <div class="col-md-12 form-group mb-3" id="div-tiempo-adicional" style="display: none" >
+              <label><strong> Horas de Espera Adicional</strong></label>
+                   <input type="number" name="horas_adicionales" id="horas_adicionales" value="0" class="form-control" min="0" max="24" placeholder="0" maxlength="11" required>
+            </div>
+          
             <div class="col-md-6 form-group mb-3">
-              <label><strong>Destino4:</strong></label>
-                   <input type="text" name="direccion_destino4" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" >
-            </div>
-
-            <div class="col-md-6 form-group mb-3">
-              <label><strong>Destino5:</strong></label>
-                   <input type="text" name="direccion_destino4" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" required>
-            </div>
-
-             <div class="col-md-6 form-group mb-3">
-              <label><strong>Fecha:</strong></label>
-                   <input type="date" name="fecha" id="destination-fecha" value="fecha" class="form-control" placeholder="" maxlength="20" required>
-            </div>
-          !-->
-            <div class="col-md-6 form-group mb-3">
-              <label><strong>Usuario:</strong></label>
-                   <input type="text" name="usuario" id="destination-input" value="admin" class="form-control" placeholder="" maxlength="20" required>
-            </div>
-
-             <div class="col-md-6 form-group mb-3">
               <label><strong>Cantidad:</strong></label>
                    <input type="number" name="cantidad" id="cantidad" value="1" class="form-control" placeholder="" maxlength="1" required>
             </div>
@@ -171,7 +179,7 @@
                    <input type="number" name="valor_unitario" id="valor_unitario" value=""  class="form-control" placeholder="0" maxlength="11" required>
             </div>
 
-            <div class="col-md-6 form-group mb-3">
+            <div class="col-md-12 form-group mb-3">
               <label><strong>Total:</strong></label>
                    <input type="number" name="total" value="0" id="total" class="form-control" placeholder="0" maxlength="11" required>
             </div>
@@ -255,6 +263,15 @@ $("#valor_unitario").change(function(){
 })
 $("#valor_unitario").blur(function(){
   totalizar();
+})
+
+$('#tiempo_adicional').change(function(){
+  if( $(this).prop('checked')){
+    $('#div-tiempo-adicional').show();
+  }else{
+    $("#horas_adicionales").val(0);
+    $('#div-tiempo-adicional').hide();
+  }
 })
 
 class AutocompleteDirectionsHandler {
@@ -376,6 +393,13 @@ $.validator.messages.email = 'Email invalido';
 
 $('#user-new-form').validate({
   rules: {
+        id_cliente : { required:true },
+        fecha_cotizacion: { required:true },
+        fecha_vencimiento : { required:true },
+        fecha_servicio : { required:true },
+        hora_recogida : { required:true },
+        hora_salida : { required:true },
+        tipo_viaje: { required:true },
         direccion_recogida: { required:true },
         direccion_destino:{ required:true},
         valor_conductor: {required:true},

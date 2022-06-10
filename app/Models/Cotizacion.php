@@ -12,11 +12,15 @@ class Cotizacion extends  Model
 
     protected $table = 'cotizacion';
 
-    protected $fillable = ['id_cliente','fecha_cotizacion','fecha_vencimiento','direccion_recogida','hora_recogida','direccion_destino','hora_estimada_salida','valor','cantidad','total' ,'observaciones','comentarios'];
+    protected $fillable = ['id_cliente','forma_pago','fecha_cotizacion','fecha_vencimiento','fecha_servicio','hora_recogida','hora_salida','tiempo_adicional','horas_tiempo_adicional','direccion_recogida','direccion_destino','valor','cantidad','total','finalizada','observaciones','comentarios','id_user'];
 
 
     public function cliente(){
     	return $this->hasOne('App\Models\Cliente','id','id_cliente');
+    }
+
+    public function user(){
+        return $this->hasOne('App\Models\User','id','id_user');
     }
 
     public function direcciones()

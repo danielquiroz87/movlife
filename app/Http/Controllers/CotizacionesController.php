@@ -76,18 +76,45 @@ class CotizacionesController extends Controller
 
             $cotizacion->id_cliente=$request->id_cliente;
             $cotizacion->descripcion=$request->descripcion;
+            $cotizacion->forma_pago=$request->forma_pago;
+
             $cotizacion->fecha_cotizacion=$request->fecha_cotizacion;
             $cotizacion->fecha_vencimiento=$request->fecha_vencimiento;
+            $cotizacion->fecha_servicio=$request->fecha_servicio;
+            $cotizacion->hora_recogida=$request->hora_recogida;
+            $cotizacion->hora_salida=$request->hora_salida;
+            $cotizacion->tipo_viaje=$request->tipo_viaje;
+            $cotizacion->tiempo_adicional=$request->tiempo_adicional;
+            $cotizacion->horas_tiempo_adicional=$request->horas_tiempo_adicional;
             $cotizacion->direccion_recogida=$request->direccion_recogida;
             $cotizacion->direccion_destino=$request->direccion_destino;
-            $cotizacion->tipo_viaje=2;
-            $cotizacion->valor=$request->valor_cliente;
+
             $cotizacion->valor=$request->valor_unitario;
             $cotizacion->cantidad=$request->cantidad;
             $cotizacion->total=$request->valor_unitario*$request->cantidad;
             $cotizacion->observaciones=$request->observaciones;
             $cotizacion->comentarios=$request->comentarios;
+            $cotizacion->finalizada=0;
+            $cotizacion->id_user=$request->id_user;
             $cotizacion->save();
+
+
+             if($request->get('origen')!=""){
+
+                $cd=new CotizacionDetalle();
+                $cd->cotizacion_id=$cotizacion->id;
+                $cd->origen=$request->get('origen');
+                $cd->destino=$request->get('destino');
+                $cd->destino1=$request->get('destino1');
+                $cd->destino2=$request->get('destino2');
+                $cd->destino3=$request->get('destino3');
+                $cd->destino4=$request->get('destino4');
+                $cd->destino5=$request->get('destino5');
+                $cd->save();
+            }
+
+
+
 
             //$user->create($request->all());
             \Session::flash('flash_message','Cotización agregada exitosamente!.');
@@ -98,22 +125,30 @@ class CotizacionesController extends Controller
 
             $cotizacion->id_cliente=$request->id_cliente;
             $cotizacion->descripcion=$request->descripcion;
+            $cotizacion->forma_pago=$request->forma_pago;
+ 
             $cotizacion->fecha_cotizacion=$request->fecha_cotizacion;
             $cotizacion->fecha_vencimiento=$request->fecha_vencimiento;
-            $cotizacion->tipo_viaje=2;
-            $cotizacion->valor=$request->valor_cliente;
+            $cotizacion->fecha_servicio=$request->fecha_servicio;
+            $cotizacion->hora_recogida=$request->hora_recogida;
+            $cotizacion->hora_salida=$request->hora_salida;
+            $cotizacion->tipo_viaje=$request->tipo_viaje;
+            $cotizacion->tiempo_adicional=$request->tiempo_adicional;
+            $cotizacion->horas_tiempo_adicional=$request->horas_tiempo_adicional;
+            
             $cotizacion->valor=$request->valor_unitario;
             $cotizacion->cantidad=$request->cantidad;
             $cotizacion->total=$request->valor_unitario*$request->cantidad;
             $cotizacion->observaciones=$request->observaciones;
             $cotizacion->comentarios=$request->comentarios;
+            $cotizacion->finalizada=$request->finalizada;
             $cotizacion->save();
 
             if($request->get('origen')!=""){
 
                 $cd=new CotizacionDetalle();
                 $cd->cotizacion_id=$cotizacion->id;
-                $cd->origen=$request->get('direccion_recogida');
+                $cd->origen=$request->get('origen');
                 $cd->destino=$request->get('destino');
                 $cd->destino1=$request->get('destino1');
                 $cd->destino2=$request->get('destino2');

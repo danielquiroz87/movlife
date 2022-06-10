@@ -42,6 +42,7 @@
               <label><strong>Clientes:</strong></label>
                     
                     <select name="cliente_id" class="form-control">
+                      <option value="">Sin Cliente</option>
                       <?php echo Helper::selectClientes() ?>
                     </select>
             </div> 
@@ -78,38 +79,38 @@
             </div>
            <div class="col-md-6 form-group mb-3">
               <label><strong>Departamento:</strong></label>
-                    <select name="departamento_id" class="form-control">
-                      <option value="70">Antioquia</option>
+                     <select name="departamento_id" class="form-control departamentos">
+                       <?php echo Helper::selectDepartamentos() ?>
                     </select>
             </div>
            
            <div class="col-md-6 form-group mb-3">
               <label><strong>Ciudad:</strong></label>
-                  <select name="ciudad_id" class="form-control">
-                    <option value="2">Medellín</option>
+                  <select name="ciudad_id" class="form-control municipios">
+                     <?php echo Helper::selectMunicipios() ?>
                   </select>
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Dirección:</strong></label>
-                   <input type="text" name="direccion" value="" class="form-control" placeholder="" maxlength="20" required>
+                   <input type="text" name="direccion" value="" class="form-control" placeholder="" maxlength="255" required>
             </div>
 
              <div class="col-md-6 form-group mb-3">
               <label><strong>Detalle Dirección:</strong></label>
-                   <input type="text" name="direccion_detalle" value="" class="form-control" placeholder="" maxlength="20" required>
+                   <input type="text" name="direccion_detalle" value="" class="form-control" placeholder="" maxlength="255" required>
             </div>
            
             
             <div class="col-md-6 form-group mb-3">
                     <label><strong>Email:</strong></label>
                     <input type="email" name="email" class="form-control" placeholder="example@email.com"
-                        value="" maxlength="255" required>
+                        value="" maxlength="255" >
             </div>
             <div class="col-md-6 form-group mb-3">
                    <label> <strong>Password:</strong></label>
                     <input type="password" name="password" class="form-control" placeholder=""
-                        value="" maxlength="20" required>
+                        value="" maxlength="20" >
             </div>
 
              <div class="col-md-6 form-group mb-3">
@@ -165,11 +166,12 @@ $('#user-new-form').validate({
   rules: {
         nombres: { required:true },
         apellidos: { required:true },
-        email:{ required:true },
+        //email:{ required:true },
+        //password:{ required:true },
         documento:{ required:true },
         departamento_id:{ required:true },
         ciudad_id: { required:true },
-        password:{ required:true },
+       
         
     },messages: {
                 

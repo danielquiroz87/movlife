@@ -20,33 +20,46 @@ public static function getConductores(){
 public static function getPasajeros(){
  	return Pasajero::orderBy('nombres', 'Asc')->get();
 }
-public static function selectClientes(){
+public static function selectClientes($id=0){
 	$clientes=self::getClientes();
-	$option_clientes="";
+	$option_clientes="<option value=''>Sin Cliente</option>";
 	foreach ($clientes as $cliente) { 
-		$nombres=$cliente->documento.','.$cliente->nombres.' '.$cliente->apellidos;
-		$option_clientes.='<option value="'.$cliente->id.'">'.$nombres.'</option>';
+		$nombres=$cliente->documento.','.$cliente->razon_social;
+		if($id>0){
+			$option_clientes.='<option value="'.$cliente->id.'" selected="selected">'.$nombres.'</option>';
+		}
+		else{
+			$option_clientes.='<option value="'.$cliente->id.'">'.$nombres.'</option>';
+		}
 	}
 	return $option_clientes;
 }
 
-public static function selectConductores(){
+public static function selectConductores($id=0){
 	$conductores=self::getConductores();
 	$option_conductores="";
 	foreach ($conductores as $conductor) { 
 		$nombres=$conductor->documento.','.$conductor->nombres.' '.$conductor->apellidos;
-		$option_conductores.='<option value="'.$conductor->id.'">'.$nombres.'</option>';
+		if($id>0){
+			$option_conductores.='<option value="'.$conductor->id.'" selected="selected">'.$nombres.'</option>';
+		}else{
+			$option_conductores.='<option value="'.$conductor->id.'">'.$nombres.'</option>';
+		}
 	}
 	return $option_conductores;
 }
 
 
-public static function selectPasajeros(){
+public static function selectPasajeros($id=0){
 	$pasajeros=self::getPasajeros();
 	$option_pasajeros="";
 	foreach ($pasajeros as $pasajero) { 
 		$nombres=$pasajero->documento.','.$pasajero->nombres.' '.$pasajero->apellidos;
-		$option_pasajeros.='<option value="'.$pasajero->id.'">'.$nombres.'</option>';
+		if($id>0){
+			$option_pasajeros.='<option value="'.$pasajero->id.'" selected="selected" >'.$nombres.'</option>';
+		}else{
+			$option_pasajeros.='<option value="'.$pasajero->id.'">'.$nombres.'</option>';
+		}
 	}
 	return $option_pasajeros;
 }
@@ -75,9 +88,9 @@ public static function getMunicipios($departamentoId){
 }
 
 
-public static function selectMunicipios(){
-	$municipios=self::getMunicipios(2);
-	$option_municipios="";
+public static function selectMunicipios($id_departamento=1){
+	$municipios=self::getMunicipios($id_departamento);
+	$option_municipios="<option value=''>Seleccione un municipio</option>";
 	foreach ($municipios as $municipio) { 
 		$nombres=$municipio->nombre;
 		$option_municipios.='<option value="'.$municipio->id.'">'.$nombres.'</option>';

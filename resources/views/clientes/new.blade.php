@@ -40,12 +40,12 @@
 
            <div class="col-md-6 form-group mb-3">
               <label><strong>Documento / Nit:</strong></label>
-                   <input type="text" name="documento" value="" class="form-control" placeholder="000000" maxlength="20" required>
+                   <input type="text" name="documento" value="" class="form-control" placeholder="000000" maxlength="11" required>
             </div>
 
              <div class="col-md-6 form-group mb-3">
               <label><strong>Nombre Cliente / Razón Social:</strong></label>
-                   <input type="text" name="razon_social" value="" class="form-control" placeholder="000000" maxlength="20" required>
+                   <input type="text" name="razon_social" value="" class="form-control" placeholder="000000" maxlength="255" required>
             </div>
 
             <div class="col-md-6 form-group mb-3">
@@ -75,26 +75,26 @@
             </div>
            <div class="col-md-6 form-group mb-3">
               <label><strong>Departamento:</strong></label>
-                    <select name="departamento_id" class="form-control">
+                    <select name="departamento_id" id="departamento"  class="form-control departamentos">
                         <?php echo Helper::selectDepartamentos() ?>
                     </select>
             </div>
            
            <div class="col-md-6 form-group mb-3">
               <label><strong>Ciudad:</strong></label>
-                  <select name="ciudad_id" class="form-control">
+                  <select name="ciudad_id" id="municipio"  class="form-control municipios">
                         <?php echo Helper::selectMunicipios() ?>
                   </select>
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Dirección:</strong></label>
-                   <input type="text" name="direccion" value="" class="form-control" placeholder="" maxlength="20" required>
+                   <input type="text" name="direccion" value="" class="form-control" placeholder="" maxlength="255" required>
             </div>
 
              <div class="col-md-6 form-group mb-3">
               <label><strong>Detalle Dirección:</strong></label>
-                   <input type="text" name="direccion_detalle" value="" class="form-control" placeholder="" maxlength="20" required>
+                   <input type="text" name="direccion_detalle" value="" class="form-control" placeholder="" maxlength="255" required>
             </div>
            
             
@@ -140,7 +140,6 @@
 
 
 <script>
-
 
 
 // just for the demos, avoids form submit

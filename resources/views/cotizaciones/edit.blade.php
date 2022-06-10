@@ -76,7 +76,7 @@
 <div class="col-md-8">
       <div class="card text-left">
           <div class="card-body">
-                <h3 class="card-title mb3">Editar Cotización</h3>
+                <h3 class="card-title mb3">Editar Cotización / Usuario: {{$cotizacion->user->name }}</h3>
   
  <div class="box box-info">
     <form action="{{route('cotizaciones.save')}}" method="POST" id="cotizacion-new-form" enctype="multipart/form-data" >
@@ -84,6 +84,8 @@
       <input type="hidden" name="id" value="{{$cotizacion->id}}">
       
       <input type="hidden" name="is_new" value="false">
+      <input type="hidden" id="finalizada" name="finalizada" value="{{$cotizacion->finalizada}}">
+      <input type="hidden" name="id_user" id="id_user" value="{{$cotizacion->user_id}}" >
 
         <div class="row">
 
@@ -91,13 +93,13 @@
            <div class="col-md-6 form-group mb-3">
               <label><strong>Cliente:</strong></label>
                     <select name="id_cliente" class="form-control">
-                      <?php echo Helper::selectClientes() ?>
+                      <?php echo Helper::selectClientes($cotizacion->id_cliente) ?>
                     </select>
             </div>
             
             <div class="col-md-6 form-group mb-3">
               <label><strong>Forma de Pago / Días:</strong></label>
-               <input type="number" name="forma-pago" class="form-control" placeholder="Forma de Pago" value="{{$cotizacion->forma_pago}}" step="15" max="90" min="15" />
+               <input type="number" name="forma_pago" class="form-control" placeholder="Forma de Pago" value="{{$cotizacion->forma_pago}}" step="15" max="90" min="15" />
                 
             </div>
             <div class="">
@@ -111,6 +113,21 @@
             <div class="col-md-6 form-group mb-3">
               <label><strong>Fecha Vencimiento:</strong></label>
                    <input type="date" name="fecha_vencimiento" class="form-control" placeholder="" maxlength="20" value="{{ date('Y-m-d', strtotime($cotizacion->fecha_vencimiento)) }}""  required>
+            </div>
+
+              <div class="col-md-6 form-group mb-3">
+              <label><strong>Fecha Servicio:</strong></label>
+                   <input type="date" name="fecha_servicio" value="{{$cotizacion->fecha_servicio}}" class="form-control" placeholder="" maxlength="20" required>
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Hora Recogida (Desde):</strong></label>
+                   <input type="time" name="hora_recogida" value="{{$cotizacion->hora_recogida}}" class="form-control" max="23:59:59" min="00:00:00"  required >
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Hora Estimada Salida (Hasta):</strong></label>
+                   <input type="time" name="hora_salida" value="{{$cotizacion->hora_salida}}" class="form-control" max="23:59:59" min="00:00:00"  required >
             </div>
 
 
@@ -150,10 +167,38 @@
                    <input type="text" name="direccion_destino5" id="destination-input" value="" class="form-control" placeholder="" maxlength="20" >
             </div>
 
+            <div class="opciones_viaje col-md-6 form-group mb-3 ">
+              <label class="radio radio-outline-warning">
+                <input type="radio" name="tipo_viaje" value="1" @if($cotizacion->tipo_viaje==1) checked="checked" @endif ><span>Solo Ida</span><span class="checkmark"></span>
+              </label>
+              <label class="radio radio-outline-success">
+                    <input type="radio" name="tipo_viaje" value="2" @if($cotizacion->tipo_viaje==2 ) checked="checked" @endif ><span>Ida y Regreso</span><span class="checkmark"></span>
+              </label>
+              <label class="radio radio-outline-danger">
+                  <input type="radio" name="tipo_viaje" value="3" @if($cotizacion->tipo_viaje==3 ) checked="checked" @endif><span>Regreso</span><span class="checkmark"></span>
+              </label>
+            </div>
+
+          @if($cotizacion->finalizada==0)
+
             <div class="col-md-12 form-group mb-3">
               <button id="btn-submit" type="button" data-url={{route('cotizaciones.save.item',$cotizacion->id)}} class="btn btn-success">Guardar Item Dirección</button>
             </div>
           
+          @endif
+
+          <div class="opciones_disponibilidad col-md-6 form-group mb-3 ">
+              <label class="checkbox checkbox-outline-primary">
+                    <input type="checkbox" name="tiempo_adicional" id="tiempo_adicional"  @if($cotizacion->tiempo_adicional==1 ) checked="checked" @endif><span>Disponibilidad de Tiempo Adicional</span><span class="checkmark"></span>
+                </label>
+            </div>
+
+            <div class="col-md-12 form-group mb-3" id="div-tiempo-adicional" >
+              <label><strong> Horas de Espera Adicional</strong></label>
+                   <input type="number" name="horas_adicionales" id="horas_adicionales" value="{{$cotizacion->horas_tiempo_adicional}}" class="form-control" min="0" max="24" placeholder="0" maxlength="11" required>
+            </div>
+          
+
             <div class="col-md-12 form-group mb-3">
  
             <table  class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
@@ -187,16 +232,7 @@
               
             </table>
             </div>
-             <div class="col-md-6 form-group mb-3">
-              <label><strong>Fecha:</strong></label>
-                   <input type="date" name="fecha" id="destination-fecha" value="{{ date('Y-m-d', strtotime($cotizacion->created_at)) }}" class="form-control" placeholder="" maxlength="20" required>
-            </div>
-
-            <div class="col-md-6 form-group mb-3">
-              <label><strong>Usuario:</strong></label>
-                   <input type="text" name="usuario" id="destination-input" value="admin" class="form-control" placeholder="" maxlength="20" required>
-            </div>
-
+             
             <div class="col-md-6 form-group mb-3">
               <label><strong>Cantidad:</strong></label>
                    <input type="number" name="cantidad" id="cantidad" value="{{$cotizacion->cantidad}}" class="form-control" placeholder="" maxlength="1" required>
@@ -222,12 +258,17 @@
                   <textarea class="form-control" name="comentarios" rows="3">{{$cotizacion->comentarios}}</textarea>
             </div>
             
-         
-        
             <div class="col-xs-12 col-sm-12 col-md-12 ">
-                <button id="submit" type="submit" class="btn btn-primary">Cerrar Cotización</button>
 
-                <a href="{{ route('cotizaciones') }}" class="btn btn-danger">Cancelar</a>
+            @if($cotizacion->finalizada==0)
+                <button id="submit-guardar" type="submit" id="finalizar" value="guardar" class="btn btn-primary">Guardar Cotización</button>
+
+                  <button id="submit-finalizar" type="submit" id="finalizar" value="finalizar" class="btn btn-success">Cerrar Cotización</button>
+            @else
+
+
+            @endif
+                <a href="{{ route('cotizaciones') }}" class="btn btn-danger">Listar Cotizaciones</a>
             </div>
         </div>
 
@@ -309,6 +350,14 @@ $("#valor_unitario").blur(function(){
   totalizar();
 })
 
+$('#tiempo_adicional').change(function(){
+  if( $(this).prop('checked')){
+    $('#div-tiempo-adicional').show();
+  }else{
+    $('#div-tiempo-adicional').hide();
+  }
+})
+
 
 $('#btn-submit').click(function(e){
   e.preventDefault();
@@ -317,7 +366,7 @@ $('#btn-submit').click(function(e){
   console.log(data);
 
   $.post(url,data,function(response){
-        Swal
+      Swal
       .fire({
           title: "Ok",
           text: "Registro guardado exitosamente",
@@ -339,7 +388,33 @@ $('#btn-submit').click(function(e){
 
 })
 
-$("#submit").validate({ 
+
+$('#submit-finalizar').click(function(e){
+  e.preventDefault();
+
+  Swal.fire({
+  title: 'Está seguro de cerrar la cotización?',
+  icon: 'warning',
+  showCancelButton: true,
+  confirmButtonText: `Si`,
+  cancelButtonText: `No`,
+
+}).then((result) => {
+  /* Read more about isConfirmed, isDenied below */
+  if (result.isConfirmed) {
+    $("#finalizada").val(1);
+    $("#submit-guardar").click();
+  } else  {
+    Swal.fire('Solicitud Cancelada', '', 'info')
+  }
+})
+
+
+
+    
+})
+
+$("#submit-guardar").validate({ 
  onsubmit: false,
   
  submitHandler: function(form) {  

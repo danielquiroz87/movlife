@@ -90,64 +90,76 @@
       @endif 
         <div class="row">
 
-         
-           <div class="col-md-6 form-group mb-3">
+          <div class="col-md-6 form-group mb-3">
               <label><strong>Cliente:</strong></label>
                     <select name="id_cliente" class="form-control">
-                      <?php echo Helper::selectClientes() ?>
+                      @if ($servicio) 
+                        <?php echo Helper::selectClientes($servicio->id_cliente) ?>
+                      @else
+                        <?php echo Helper::selectClientes() ?>
+                      @endif
                     </select>
             </div>
            
            <div class="col-md-6 form-group mb-3">
               <label><strong>Conductor:</strong></label>
                   <select name="id_conductor" class="form-control">
-                      <?php echo Helper::selectConductores() ?>
+                    <?php echo Helper::selectConductores($servicio->id_conductor) ?>
                   </select>
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Pasajero:</strong></label>
                   <select name="id_pasajero" class="form-control">
-                    <?php echo Helper::selectPasajeros() ?>
+                    <?php echo Helper::selectPasajeros($servicio->id_pasajero) ?>
                   </select>
             </div>
 
+           
             <div class="col-md-6 form-group mb-3">
               <label><strong>Fecha Servicio:</strong></label>
-                   <input type="date" name="fecha_servicio" value="<?php echo date('Y-m-d',strtotime($servicio->fecha_servicio)) ?>" class="form-control" placeholder="" maxlength="20" required>
+                   <input type="date" name="fecha_servicio" value="{{$servicio->fecha_servicio}}" class="form-control" placeholder="" maxlength="20" required>
             </div>
 
-            <div class="col-md-6 form-group mb-3">
-              <label><strong>Tipo Servicio:</strong></label>
-                <select name="id_cliente" class="form-control">
-                     <option>Visitas Domiciliarias</option>
-                     <option>Traslado Pacientes</option>
-                  </select>   
-            </div>
 
             <div class="col-md-6 form-group mb-3">
-              <label><strong>Hora Recogida:</strong></label>
-                   <input type="time" name="hora_recogida" value="10:00:00" class="form-control" max="23:59:59" min="00:00:00"  required >
+              <label><strong>Hora Recogida (Desde):</strong></label>
+                   <input type="time" name="hora_recogida" value="{{$servicio->hora_recogida}}" class="form-control" max="23:59:59" min="00:00:00"  required >
             </div>
 
              <div class="col-md-6 form-group mb-3">
-              <label><strong>Hora Estimada Salida:</strong></label>
-                   <input type="time" name="hora_estimada_salida" value="10:00:00" class="form-control" max="23:59:59" min="00:00:00"  required >
+              <label><strong>Hora Estimada Salida (Hasta):</strong></label>
+                   <input type="time" name="hora_estimada_salida" value="{{$servicio->hora_estimada_salida}}" class="form-control" max="23:59:59" min="00:00:00"  required >
+            </div>
+
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Tipo Servicio:</strong></label>
+                   <select name="tipo_servicio" class="form-control">
+                     <option value="1">Visitas Domiciliarias</option>
+                     <option value="2">Traslado Pacientes</option>
+
+                    </select>
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Semana:</strong></label>
+                   <input type="number" name="valor_cliente" value="{{$servicio->semana}}" class="form-control" min="1" max="5">
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Barrio:</strong></label>
-                   <input type="text" name="barrio" id="barrio" class="form-control" placeholder="" maxlength="600" value="" >
+                   <input type="text" name="barrio" id="barrio" class="form-control" placeholder="" maxlength="600" value="{{$servicio->barrio}}" >
             </div>
 
              <div class="col-md-6 form-group mb-3">
               <label><strong>Origen:</strong></label>
-                   <input type="text" name="origen" id="origin-input" class="form-control" placeholder="" maxlength="600" value="{{$detalle->origen}}" >
+                   <input type="text" name="origen" id="origin-input" class="form-control" placeholder="" maxlength="600" value="{{$servicio->origen}}" >
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Destino1:</strong></label>
-                   <input type="text" name="destino" id="destination-input" class="form-control" placeholder=""  maxlength="600" value="{{$detalle->destino}}">
+                   <input type="text" name="destino" id="destination-input" class="form-control" placeholder=""  maxlength="600" value="{{$servicio->destino}}">
             </div>
 
              <div class="col-md-6 form-group mb-3">
@@ -184,13 +196,13 @@
 
             <div class="opciones_viaje col-md-6 form-group mb-3 ">
               <label class="radio radio-outline-warning">
-                <input type="radio" name="tipo_viaje"><span>Solo Ida</span><span class="checkmark"></span>
+                <input type="radio" name="tipo_viaje" value="1" @if($servicio->tipo_viaje==1) checked="checked" @endif ><span>Solo Ida</span><span class="checkmark"></span>
               </label>
               <label class="radio radio-outline-success">
-                    <input type="radio" name="tipo_viaje" checked="checked"><span>Ida y Regreso</span><span class="checkmark"></span>
+                    <input type="radio" name="tipo_viaje" value="2" @if($servicio->tipo_viaje==2 ) checked="checked" @endif ><span>Ida y Regreso</span><span class="checkmark"></span>
               </label>
               <label class="radio radio-outline-danger">
-                  <input type="radio" name="tipo_viaje"><span>Regreso</span><span class="checkmark"></span>
+                  <input type="radio" name="tipo_viaje" value="3" @if($servicio->tipo_viaje==3 ) checked="checked" @endif><span>Regreso</span><span class="checkmark"></span>
               </label>
             </div>
 
@@ -256,6 +268,7 @@
              <div class="col-md-12 form-group mb-3">
               <label><strong>Motivo Cancelación:</strong></label>
                    <select class="form-control">
+                      <option >No Cancelado</option>
                       <option>Pasajero no Requiere</option>
                       <option>Pasajero Cancelo</option>
                       <option>Conductor no Cumplio</option>

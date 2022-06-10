@@ -93,24 +93,22 @@
              <div class="col-md-6 form-group mb-3">
         
                    <label> <strong>Area Empresa:</strong></label>
-                   <select name="cargo" class="form-control">
-                    <option value="1">Gerencia</option>
-                    <option value="2">Comercial</option>
-                    <option value="3">Operaciones</option>
+                  <select name="cargo" class="form-control">
+                      <option value="1">Dirección General</option>
+                      <option value="2">Dirección SIG</option>
+                      <option value="3">Dirección Administrativa Financiera</option>
+                      <option value="4">Dirección de RRHH</option>
+                      <option value="5">Dirección de Operaciones</option>
+                      <option value="6">Dirección de Servicio al Cliente</option>
                   </select>
                
             </div>
 
-             <div class="col-md-6 form-group mb-3">
+            <div class="col-md-6 form-group mb-3">
               <label><strong>Cargo:</strong></label>
-              <select name="cargo" class="form-control">
-                    <option value="1">Gerencia General</option>
-                    <option value="2">Directora Comercial</option>
-                    <option value="3">Supervisor De Operaciones</option>
-                    <option value="4">Call Center</option>
-
-                  </select>
+                   <input type="text" name="cargo" value="{{$cliente->cargo}}" class="form-control" placeholder="" maxlength="255" required>
             </div>
+            
             <div class="col-md-6 form-group mb-3">
                     <label><strong>Email:</strong></label>
                     <input type="email" name="email" class="form-control" placeholder="example@email.com"
@@ -124,7 +122,7 @@
 
             <div class="col-xs-12 col-sm-12 col-md-12 ">
                 <button id="submit" type="submit" class="btn btn-primary">Enviar</button>
-                <a href="{{ route('customers') }}" class="btn btn-danger">Cancelar</a>
+                <a href="{{ route('employes') }}" class="btn btn-danger">Cancelar</a>
             </div>
         </div>
 
@@ -166,6 +164,7 @@ $('#user-new-form').validate({
         documento:{ required:true },
         departamento_id:{ required:true },
         ciudad_id: { required:true },
+        cargo: {required:true}
         
     },messages: {
                 

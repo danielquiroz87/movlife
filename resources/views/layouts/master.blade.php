@@ -169,6 +169,17 @@
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+        <script type="text/javascript">
+            
+
+            $('.departamentos').change(function(){
+               id=$(this).val();
+               $.get('/municipios',{id:id},function(response){
+                  $('.municipios').html(response);
+               })
+            })
+
+        </script>
 
         @yield('bottom-js')
     </body>

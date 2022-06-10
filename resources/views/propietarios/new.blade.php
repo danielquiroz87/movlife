@@ -4,8 +4,8 @@
   <div class="breadcrumb">
       <ul>
           <li><a href="/">Inicio</a></li>
-          <li><a href="{{route('propietarios')}}">Clientes</a></li>
-          <li>Nuevo Cliente</li>
+          <li><a href="{{route('propietarios')}}">Propietarios</a></li>
+          <li>Nuevo Propietario</li>
       </ul>
   </div>
   <div class="separator-breadcrumb border-top"></div>
@@ -40,12 +40,12 @@
 
            <div class="col-md-6 form-group mb-3">
               <label><strong>Documento / Nit:</strong></label>
-                   <input type="text" name="documento" value="" class="form-control" placeholder="000000" maxlength="20" required>
+                   <input type="text" name="documento" value="" class="form-control" placeholder="000000" maxlength="11" required>
             </div>
 
              <div class="col-md-6 form-group mb-3">
               <label><strong>Nombre Cliente / Razón Social:</strong></label>
-                   <input type="text" name="razon_social" value="" class="form-control" placeholder="000000" maxlength="20" required>
+                   <input type="text" name="razon_social" value="" class="form-control" placeholder="000000" maxlength="255" required>
             </div>
 
             <div class="col-md-6 form-group mb-3">
@@ -76,14 +76,14 @@
            <div class="col-md-6 form-group mb-3">
               <label><strong>Departamento:</strong></label>
                     <select name="departamento_id" class="form-control">
-                      <option value="70">Antioquia</option>
+                      <?php echo Helper::selectDepartamentos() ?>
                     </select>
             </div>
            
            <div class="col-md-6 form-group mb-3">
               <label><strong>Ciudad:</strong></label>
                   <select name="ciudad_id" class="form-control">
-                    <option value="2">Medellín</option>
+                   <?php echo Helper::selectMunicipios() ?>
                   </select>
             </div>
 

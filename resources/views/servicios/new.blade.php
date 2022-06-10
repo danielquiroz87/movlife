@@ -94,7 +94,11 @@
            <div class="col-md-6 form-group mb-3">
               <label><strong>Cliente:</strong></label>
                     <select name="id_cliente" class="form-control">
-                      <?php echo Helper::selectClientes() ?>
+                      @if ($cotizacion) 
+                        <?php echo Helper::selectClientes($cotizacion->id_cliente) ?>
+                      @else
+                        <?php echo Helper::selectClientes() ?>
+                      @endif
                     </select>
             </div>
            
@@ -117,11 +121,23 @@
                    <input type="date" name="fecha_servicio" value="" class="form-control" placeholder="" maxlength="20" required>
             </div>
 
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Hora Recogida (Desde):</strong></label>
+                   <input type="time" name="hora_recogida" value="10:00:00" class="form-control" max="23:59:59" min="00:00:00"  required >
+            </div>
+
+             <div class="col-md-6 form-group mb-3">
+              <label><strong>Hora Estimada Salida (Hasta):</strong></label>
+                   <input type="time" name="hora_estimada_salida" value="10:00:00" class="form-control" max="23:59:59" min="00:00:00"  required >
+            </div>
+
+
             <div class="col-md-6 form-group mb-3">
               <label><strong>Tipo Servicio:</strong></label>
-                   <select name="id_cliente" class="form-control">
-                     <option>Visitas Domiciliarias</option>
-                     <option>Traslado Pacientes</option>
+                   <select name="tipo_servicio" class="form-control">
+                     <option value="1">Visitas Domiciliarias</option>
+                     <option value="2">Traslado Pacientes</option>
 
                     </select>
             </div>
@@ -131,16 +147,12 @@
                    <input type="number" name="valor_cliente" value="" class="form-control" min="1" max="5">
             </div>
 
-            <div class="col-md-6 form-group mb-3">
-              <label><strong>Hora Recogida:</strong></label>
-                   <input type="time" name="hora_recogida" value="10:00:00" class="form-control" max="23:59:59" min="00:00:00"  required >
+               <div class="col-md-6 form-group mb-3">
+              <label><strong>Barrio:</strong></label>
+                   <input type="text" name="barrio" id="barrio" class="form-control" placeholder="" maxlength="600" value="" >
             </div>
 
-             <div class="col-md-6 form-group mb-3">
-              <label><strong>Hora Estimada Salida:</strong></label>
-                   <input type="time" name="hora_estimada_salida" value="10:00:00" class="form-control" max="23:59:59" min="00:00:00"  required >
-            </div>
-
+          
              <div class="col-md-6 form-group mb-3">
               <label><strong>Origen:</strong></label>
                    <input type="text" name="origen" id="origin-input" class="form-control" placeholder="" maxlength="600" value="{{$detalle->origen}}" >
@@ -171,8 +183,6 @@
                    <input type="text" name="destino5"  value="" class="form-control" placeholder="" maxlength="600" >
             </div>
 
-
-
             <div class="opciones_viaje col-md-6 form-group mb-3 ">
               <label class="radio radio-outline-warning">
                 <input type="radio" name="tipo_viaje"><span>Solo Ida</span><span class="checkmark"></span>
@@ -193,10 +203,8 @@
 
             <div class="col-md-12 form-group mb-3" id="div-tiempo-adicional" style="display: none" >
               <label><strong> Horas de Espera Adicional</strong></label>
-                   <input type="number" name="valor" value="0" class="form-control" min="0" max="24" placeholder="0" maxlength="11" required>
+                   <input type="number" name="horas_adicionales" id="horas_adicionales" value="0" class="form-control" min="0" max="24" placeholder="0" maxlength="11" required>
             </div>
-
-
             
             <div class="col-md-12 form-group mb-3">
               <label><strong>Valor Servicio Conductor:</strong></label>
@@ -389,6 +397,8 @@ $('#tiempo_adicional').change(function(){
   if( $(this).prop('checked')){
     $('#div-tiempo-adicional').show();
   }else{
+
+    $("#horas_adicionales").val(0);
     $('#div-tiempo-adicional').hide();
   }
 })

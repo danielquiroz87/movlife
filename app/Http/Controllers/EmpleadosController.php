@@ -75,7 +75,7 @@ class EmpleadosController extends Controller
             $direccion->departamento_id=$request->get('departamento_id');
             $direccion->ciudad_id=$request->get('ciudad_id');
             $direccion->direccion1=$request->get('direccion');
-            //$direccion->direccion2=$request->get('direccion_detalle');
+            $direccion->direccion2=$request->get('direccion_detalle');
             $direccion->tipo_usuario=2;
             $direccion->save();
         }else{
@@ -118,6 +118,7 @@ class EmpleadosController extends Controller
             $empleado->apellidos=$request->get('apellidos');
             $empleado->email_contacto=$request->get('email');
             $empleado->celular=$request->get('celular');
+            $empleado->cargo=$request->get('cargo');
             $empleado->user_id=$user->id;
             $empleado->direccion_id=$direccion->id;
             $empleado->activo=1;

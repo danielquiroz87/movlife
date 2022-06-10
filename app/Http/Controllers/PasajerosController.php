@@ -60,9 +60,9 @@ class PasajerosController extends Controller
             $v = Validator::make($request->all(), [
                 'nombres' => 'required|max:255',
                 'apellidos' => 'required|max:255',
-                'email'=>'required|email|max:255',
+                //'email'=>'required|email|max:255',
+                //'password'=>'required|max:20',
                 'celular'=>'required',
-                'password'=>'required|max:20',
                 'documento'=>'required|max:20',
                 'departamento_id'=>'required',
                 'ciudad_id'=>'required',
@@ -102,25 +102,31 @@ class PasajerosController extends Controller
             return redirect()->back()->withErrors($v->errors());
         }
 
-          
-            $user->name=$request->get('nombres');
-            $user->email=$request->get('email');
-            //Si el password es diferente de vacio lo cambiamos
-            if($request->get('password')!=""){
-                $user->password=Hash::make($request->get('password'));
-            }
+            if($request->get('email')!=""){
 
-            $user->save();
+                $user->name=$request->get('nombres');
+                $user->email=$request->get('email');
+
+                if($request->get('password')!=""){
+                    $user->password=Hash::make($request->get('password'));
+                }
+
+                $user->save();
+
+                $pasajero->user_id=$user->id;
+
+                
+            }
+            //Si el password es diferente de vacio lo cambiamos
+           
 
             $pasajero->documento=$request->get('documento');
-
             $pasajero->nombres=$request->get('nombres');
             $pasajero->apellidos=$request->get('apellidos');
             $pasajero->email_contacto=$request->get('email');
             $pasajero->nombre_contacto=$request->get('nombre_contacto');
             $pasajero->telefono_contacto=$request->get('telefono_contacto');
             $pasajero->celular=$request->get('celular');
-            $pasajero->user_id=$user->id;
             $pasajero->direccion_id=$direccion->id;
             $pasajero->activo=1;
             

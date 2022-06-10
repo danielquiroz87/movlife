@@ -67,7 +67,23 @@
                         <label><strong>Modelo</strong></label>
                         <input type="number" name="modelo" class="form-control" id="modelo" min="1900" max="<?php echo date('Y') ?>" placeholder="" value="{{$vehiculo->modelo}}" required>
                   </div>
-                 
+                  
+                   <div class="col-md-6 form-group mb-3">
+                        <label><strong>Marca</strong></label>
+                        <input type="hidden" name="marca" value="{{$vehiculo->marca->id}}">
+                        <input type="text" name="marca_nombre" class="form-control" value="{{$vehiculo->marca->nombre}}" required>
+                  </div>
+
+                  <div class="col-md-6 form-group mb-3">
+                    <label><strong>Linea</strong></label>
+                    <input type="text" name="linea" class="form-control" id="linea"  placeholder="Logan" value="{{$vehiculo->linea}}" required>
+                  </div>
+
+
+                  <div class="col-md-6 form-group mb-3">
+                    <label><strong>Color</strong></label>
+                    <input type="text" name="color" class="form-control" id="color"  placeholder="Color" value="{{$vehiculo->color}}" required>
+                  </div>
 
                <div class="col-xs-12 col-sm-12 col-md-12 ">
                 <button id="submit" type="submit" class="btn btn-primary">Enviar</button>

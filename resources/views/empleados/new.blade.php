@@ -49,7 +49,7 @@
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Documento / Nit:</strong></label>
-                   <input type="text" name="documento" value="" class="form-control" placeholder="000000" maxlength="20" required>
+                   <input type="text" name="documento" value="" class="form-control" placeholder="000000" maxlength="11" required>
             </div>
            <div class="col-md-6 form-group mb-3">
               <label><strong>Teléfono:</strong></label>
@@ -68,52 +68,49 @@
             </div>
            <div class="col-md-6 form-group mb-3">
               <label><strong>Departamento:</strong></label>
-                    <select name="departamento_id" class="form-control">
-                      <option value="70">Antioquia</option>
+                    <select name="departamento_id" class="form-control departamentos">
+                       <?php echo Helper::selectDepartamentos() ?>
                     </select>
             </div>
            
            <div class="col-md-6 form-group mb-3">
               <label><strong>Ciudad:</strong></label>
-                  <select name="ciudad_id" class="form-control">
-                    <option value="2">Medellín</option>
+                  <select name="ciudad_id" class="form-control municipios">
+                     <?php echo Helper::selectMunicipios() ?>
                   </select>
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Dirección:</strong></label>
-                   <input type="text" name="direccion" value="" class="form-control" placeholder="" maxlength="20" required>
+                   <input type="text" name="direccion" value="" class="form-control" placeholder="" maxlength="255" required>
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Detalle Dirección:</strong></label>
-                   <input type="text" name="direccion_detalle" value="" class="form-control" placeholder="" maxlength="20" required>
+                   <input type="text" name="direccion_detalle" value="" class="form-control" placeholder="" maxlength="255" required>
             </div>
            
               <div class="col-md-6 form-group mb-3">
         
                    <label> <strong>Area Empresa:</strong></label>
                    <select name="cargo" class="form-control">
-                    <option value="1">Gerencia</option>
-                    <option value="2">Comercial</option>
-                    <option value="3">Operaciones</option>
+                      <option value="1">Dirección General</option>
+                      <option value="2">Dirección SIG</option>
+                      <option value="3">Dirección Administrativa Financiera</option>
+                      <option value="4">Dirección de RRHH</option>
+                      <option value="5">Dirección de Operaciones</option>
+                      <option value="6">Dirección de Servicio al Cliente</option>
                   </select>
                
             </div>
 
              <div class="col-md-6 form-group mb-3">
               <label><strong>Cargo:</strong></label>
-              <select name="cargo" class="form-control">
-                    <option value="1">Gerencia General</option>
-                    <option value="2">Directora Comercial</option>
-                    <option value="3">Supervisor De Operaciones</option>
-                    <option value="4">Call Center</option>
-
-                  </select>
+                   <input type="text" name="cargo" value="" class="form-control" placeholder="" maxlength="255" required>
             </div>
             
             <div class="col-md-6 form-group mb-3">
-                    <label><strong>Email:</strong></label>
+                    <label><strong>Email Corporativo:</strong></label>
                     <input type="email" name="email" class="form-control" placeholder="example@email.com"
                         value="" maxlength="255" required>
             </div>
@@ -124,9 +121,6 @@
                         value="" maxlength="20" required>
                
             </div>
-
-         
-
            
       
             <div class="col-xs-12 col-sm-12 col-md-12 ">
