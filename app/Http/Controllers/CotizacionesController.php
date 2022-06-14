@@ -13,6 +13,9 @@ use App\Models\CotizacionDetalle;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 
+use Illuminate\Support\Facades\Storage;
+
+
 class CotizacionesController extends Controller
 {
     /**
@@ -96,6 +99,16 @@ class CotizacionesController extends Controller
             $cotizacion->comentarios=$request->comentarios;
             $cotizacion->finalizada=0;
             $cotizacion->id_user=$request->id_user;
+
+
+            $file = $request->file('foto');
+
+            if(is_object($file)){
+                $destinationPath = 'uploads';
+                $file->move($destinationPath,$file->getClientOriginalName());
+                $cotizacion->foto_vehiculo=$destinationPath.'/'.$file->getClientOriginalName();
+            }
+
             $cotizacion->save();
 
 
@@ -112,7 +125,7 @@ class CotizacionesController extends Controller
                 $cd->save();
             }
 
-
+            
 
 
             //$user->create($request->all());
@@ -141,6 +154,19 @@ class CotizacionesController extends Controller
             $cotizacion->observaciones=$request->observaciones;
             $cotizacion->comentarios=$request->comentarios;
             $cotizacion->finalizada=$request->finalizada;
+
+            $file = $request->file('foto');
+
+            if(is_object($file)){
+                $destinationPath = 'uploads';
+                if($cotizacion->foto_vehiculo!=""){
+                    unlink($cotizacion->foto_vehiculo);
+                }
+                $file->move($destinationPath,$file->getClientOriginalName());
+                $cotizacion->foto_vehiculo=$destinationPath.'/'.$file->getClientOriginalName();
+            }
+            
+
             $cotizacion->save();
 
             if($request->get('origen')!=""){

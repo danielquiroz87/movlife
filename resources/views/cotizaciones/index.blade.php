@@ -67,7 +67,10 @@
                           <i class="nav-icon i-Pen-2 font-weight-bold"></i>
                         </a>
                       <a class="text-danger mr-2 eliminar" href="{{route('cotizaciones.delete', $cotizacion->id)}}" title="Eliminar"><i class="nav-icon i-Close-Window font-weight-bold"></i></a>
+                      
+                      <a class="text-danger mr-2 pdf" href="#" title="Descargar Ficha"><i class="nav-icon i-pdf font-weight-bold"></i>Ficha</a>
                     
+
                      </td>
                      
                     </tr>

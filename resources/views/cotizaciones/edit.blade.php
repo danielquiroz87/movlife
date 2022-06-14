@@ -249,6 +249,15 @@
                    <input type="number" name="total" id="total" value="{{$cotizacion->total}}" class="form-control" placeholder="0" maxlength="11" disabled="disabled" required>
             </div>
             
+            <div class="col-md-12 form-group mb-3">
+              <label><strong>Foto Vehiculo:</strong></label>
+                  @if($cotizacion->foto_vehiculo!="")
+                  <img src="{{asset($cotizacion->foto_vehiculo)}}" style="max-width: 200px" >
+                  @else
+                  
+                  @endif
+                  <input type="file" name="foto" value="" id="foto" class="form-control" >
+            </div>
              <div class="col-md-12 form-group mb-3">
               <label><strong>Observaciones Servicio:</strong></label><br/>
                    <textarea class="form-control" name="observaciones" rows="3">{{$cotizacion->observaciones}}</textarea>

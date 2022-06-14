@@ -183,6 +183,11 @@
               <label><strong>Total:</strong></label>
                    <input type="number" name="total" value="0" id="total" class="form-control" placeholder="0" maxlength="11" required>
             </div>
+
+              <div class="col-md-12 form-group mb-3">
+              <label><strong>Foto Vehiculo:</strong></label>
+                   <input type="file" name="foto" value="" id="foto" class="form-control" >
+            </div>
             
              <div class="col-md-12 form-group mb-3">
               <label><strong>Observaciones Servicio:</strong></label><br/>
@@ -193,7 +198,7 @@
                   <textarea class="form-control" name="comentarios" rows="3"></textarea>
             </div>
             
-         
+          
         
             <div class="col-xs-12 col-sm-12 col-md-12 ">
                 <button id="submit" type="submit" class="btn btn-primary">Enviar</button>
