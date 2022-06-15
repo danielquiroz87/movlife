@@ -98,5 +98,46 @@ public static function selectMunicipios($id_departamento=1){
 	return $option_municipios;
 }
 
+public static function getClaseVehiculos(){
+	return DB::table('vehiculos_clase')
+         -> orderBy('nombre', 'asc')
+         -> get();
+}
+public static function selectClaseVehiculos($id=0){
+	$clase=self::getClaseVehiculos();
+	$option_clase="<option value=''>Sin Cliente</option>";
+	foreach ($clase as $clase) { 
+		if($id>0){
+			$option_clase.='<option value="'.$clase->id.'" selected="selected">'.$clase->nombre.'</option>';
+		}
+		else{
+			$option_clase.='<option value="'.$clase->id.'">'.$clase->nombre.'</option>';
+		}
+	}
+	return $option_clase;
+}
+
+
+public static function getPropietarios(){
+	return DB::table('propietarios')
+         -> orderBy('nombres', 'asc')
+         -> get();
+}
+
+public static function selectPropietarios($id=0){
+	$clase=self::getPropietarios();
+	$option_clase="<option value=''>Seleccione un Propietario</option>";
+	foreach ($clase as $clase) { 
+		$name=$clase->documento.','.$clase->nombres.' '.$clase->apellidos;
+		if($id>0){
+			$option_clase.='<option value="'.$clase->id.'" selected="selected">'.$name. '</option>';
+		}
+		else{
+			$option_clase.='<option value="'.$clase->id.'">'.$name.'</option>';
+		}
+	}
+	return $option_clase;
+}
+
 
 }

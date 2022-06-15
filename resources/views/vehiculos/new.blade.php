@@ -100,7 +100,7 @@
                   <label><strong>Linea</strong></label>
                   <input type="text" name="linea" class="form-control" id="linea"  placeholder="Logan" required>
             </div>
-              <div class="col-md-6 form-group mb-3">
+            <div class="col-md-6 form-group mb-3">
               <label><strong>Clase:</strong></label>
               <select name="id_vehiculo_clase" class="form-control select-busqueda">
                   <option value="" selected="selected">Seleccione</option>
@@ -120,6 +120,18 @@
 
 
 
+                </select>
+              </div>
+
+              <div class="col-md-6 form-group mb-3">
+              <label><strong>Clasificación Vehículo:</strong></label>
+              <select name="id_vehiculo_clase" class="form-control select-busqueda">
+                  <option value="" selected="selected">Seleccione</option>
+                  <option value="1">Publico</option>
+                  <option value="2">Especial</option>
+                  <option value="3">Particular</option>
+                  <option value="4">Taxi</option>
+                  <option value="5">Otro</option>
                 </select>
               </div>
             <div class="col-md-6 form-group mb-3">
@@ -164,7 +176,7 @@
            
            <div class="col-md-6 form-group mb-3">
               <label><strong>Ciudad:</strong></label>
-                  <select name="ciudad_id" id="municipio"  class="form-control municipios">
+                  <select name="ciudad_id" id="ciudad_id"  class="form-control municipios">
                         <?php echo Helper::selectMunicipios() ?>
                   </select>
             </div>

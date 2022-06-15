@@ -114,15 +114,15 @@ class VehiculosController extends Controller
            $vehiculo->save();
 
             //$user->create($request->all());
-            \Session::flash('flash_message','Conductor agregado exitosamente!.');
+            \Session::flash('flash_message','Vehiculo agregado exitosamente!.');
 
-             return redirect()->route('conductores');
+             return redirect()->route('vehiculos');
 
          }else{
 
              $vehiculo->save();
 
-            \Session::flash('flash_message','Conductor actualizado exitosamente!.');
+            \Session::flash('flash_message','Vehiculo actualizado exitosamente!.');
 
             return redirect()->back();
 

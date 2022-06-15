@@ -28,11 +28,14 @@
   <div class="col-md-8 mb-4">
     <div class="card text-left">
       <div class="card-body">
-        <h3 class="card-title mb3">Editar Vehículo</h3>
+        <h3 class="card-title mb3">Editar Vehículo / Placa: {{$vehiculo->placa}},({{$vehiculo->marca->nombre}}-{{$vehiculo->color}})</h3>
 
         <ul class="nav nav-tabs" id="myIconTab" role="tablist">
           <li class="nav-item">
             <a class="nav-link active show" id="general-icon-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true"><i class="nav-icon i-Home1 mr-1"></i>General</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="general-icon-tab" data-toggle="tab" href="#admin-conductores" role="tab" aria-controls="general" aria-selected="true"><i class="nav-icon i-Home1 mr-1"></i>Conductores</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" id="general-icon-tab" data-toggle="tab" href="#hoja_vida" role="tab" aria-controls="general" aria-selected="true"><i class="nav-icon i-Home1 mr-1"></i>Hoja de Vida</a>
@@ -49,7 +52,7 @@
 
           <div class="tab-pane fade active show" id="general" role="tabpanel" aria-labelledby="general-icon-tab">
             <div class="box box-info">
-              <form action="{{route('conductores.save')}}" method="POST" id="user-new-form" enctype="multipart/form-data" >
+              <form action="{{route('vehiculos.save')}}" method="POST" id="user-new-form" enctype="multipart/form-data" >
                 {{ csrf_field() }}
                 <input type="hidden" name="id" value="{{$vehiculo->id}}">
                 <input type="hidden" name="is_new" value="false">
@@ -79,11 +82,95 @@
                     <input type="text" name="linea" class="form-control" id="linea"  placeholder="Logan" value="{{$vehiculo->linea}}" required>
                   </div>
 
-
                   <div class="col-md-6 form-group mb-3">
-                    <label><strong>Color</strong></label>
-                    <input type="text" name="color" class="form-control" id="color"  placeholder="Color" value="{{$vehiculo->color}}" required>
+                    <label><strong>Clase:</strong></label>
+                    <select name="id_vehiculo_clase" class="form-control select-busqueda">
+                        <?php echo Helper::selectClaseVehiculos($vehiculo->id_vehiculo_clase) ?>
+                    </select>
                   </div>
+
+
+                <div class="col-md-6 form-group mb-3">
+                <label><strong>Clasificación Vehículo:</strong></label>
+                <select name="id_vehiculo_clase" class="form-control select-busqueda">
+                    <option value="" selected="selected">Seleccione</option>
+                    <option value="1">Publico</option>
+                    <option value="2">Especial</option>
+                    <option value="3">Particular</option>
+                    <option value="4">Taxi</option>
+                    <option value="5">Otro</option>
+                  </select>
+                </div>
+                <div class="col-md-6 form-group mb-3">
+                <label><strong>Tipo Combustible:</strong></label>
+                <select name="id_vehiculo_tipo_combustible" class="form-control select-busqueda">
+                    <option value="" selected="selected">Seleccione</option>
+                    <option value="1">Acpm</option>
+                    <option value="2">Diesel</option>
+                    <option value="3">Gas-Gasolina</option>
+                    <option value="4">Gasolina</option>
+                    <option value="5">Gnb</option>
+                 
+                  </select>
+                </div>
+                <div class="col-md-6 form-group mb-3">
+                  <label><strong>Pasajeros</strong></label>
+                  <input type="number" name="pasajeros" class="form-control" id="pasajeros" min="0" max="100" placeholder="" required>
+                </div>
+
+                <div class="col-md-6 form-group mb-3">
+                      <label><strong>Color</strong></label>
+                      <input type="text" name="color" class="form-control" id="color"  placeholder="Color" required>
+                </div>
+
+                <div class="col-md-6 form-group mb-3">
+                      <label><strong>Nro Chasis</strong></label>
+                      <input type="text" name="numero_chasis" class="form-control" id="chasis"  placeholder="# Chasis" required>
+                </div>
+
+                <div class="col-md-6 form-group mb-3">
+                      <label><strong>Nro Motor</strong></label>
+                      <input type="text" name="numero_motor" class="form-control" id="motor"  placeholder="# Motor" required>
+                </div>
+
+                <div class="col-md-6 form-group mb-3">
+                      <label><strong>Cilindraje</strong></label>
+                      <input type="text" name="cilindraje" class="form-control" id="cilindraje"  placeholder="Cilindraje" required>
+                </div>
+                <div class="col-md-6 form-group mb-3">
+                  <label><strong>Departamento:</strong></label>
+                        <select name="departamento_id" id="departamento"  class="form-control departamentos">
+                            <?php echo Helper::selectDepartamentos() ?>
+                        </select>
+                </div>
+               
+               <div class="col-md-6 form-group mb-3">
+                  <label><strong>Ciudad:</strong></label>
+                      <select name="ciudad_id" id="ciudad_id"  class="form-control municipios">
+                            <?php echo Helper::selectMunicipios() ?>
+                      </select>
+                </div>
+
+                <div class="col-md-6 form-group mb-3">
+              <label><strong>Propietario:</strong></label>
+                  <select name="id_propietario" class="form-control">
+                    <option value="1">Propietario Pruebas</option>
+                  </select>
+            </div>
+            
+            <div class="col-md-6 form-group mb-3">
+              <label class="switch pr-5 switch-success mr-3"><span>Vinculado</span>
+                  <input type="checkbox" name="Vinculado" ><span class="slider"></span>
+              </label>
+            </div>
+             <div class="col-md-6 form-group mb-3">
+               <label class="switch pr-5 switch-success mr-3"><span>Convenio Firmado</span>
+                  <input type="checkbox" name="convenio" ><span class="slider"></span>
+              </label>
+            </div>
+
+
+                 
 
                <div class="col-xs-12 col-sm-12 col-md-12 ">
                 <button id="submit" type="submit" class="btn btn-primary">Enviar</button>
@@ -97,6 +184,44 @@
 
       </div>
 
+        <div class="tab-pane" id="admin-conductores" role="tabpanel" aria-labelledby="general-icon-tab">
+            <div class="box box-info">
+                <div class="row">
+                  <div class="col-md-6 form-group mb-3">
+                    <label><strong>Administrar Conductores:</strong></label>
+                  </div>
+              </div>
+
+
+              <form action="{{route('vehiculos.save')}}" method="POST" id="user-new-form" enctype="multipart/form-data" >
+                {{ csrf_field() }}
+                <input type="hidden" name="id" value="{{$vehiculo->id}}">
+                <input type="hidden" name="is_new" value="false">
+
+                <div class="row">
+                  
+                  <div class="col-md-6 form-group mb-3">
+                    <label><strong>Propietario:</strong></label>
+                      <select name="id_propietario" class="form-control">
+                        <?php echo Helper::selectPropietarios() ?>
+                      </select>
+                  </div>
+
+                  <div class="col-md-6 form-group mb-3">
+                    <label><strong>Conductores:</strong></label>
+                      <select name="id_conductor" class="form-control">
+                        <?php echo Helper::selectConductores() ?>
+                      </select>
+                  </div>
+                  <div class="col-xs-12 col-sm-12 col-md-12 ">
+                    <button id="submit" type="submit" class="btn btn-primary">Enviar</button>
+                    <a href="{{ route('vehiculos') }}" class="btn btn-danger">Cancelar</a>
+                  </div>
+
+                </div>
+              </form>
+        </div>
+      </div>
 
       <div class="tab-pane" id="hoja_vida" role="tabpanel" aria-labelledby="documentos-icon-tab">
         <div class="box box-info">
@@ -572,22 +697,17 @@
 
          <div class="tab-pane" id="historial-documentos" role="tabpanel" aria-labelledby="general-icon-tab">
             <div class="box box-info">
-               
                 <div class="row">
                   <div class="col-md-6 form-group mb-3">
                     <label><strong>Historial Documentos:</strong></label>
                    
                   </div>
-               <div class="col-xs-12 col-sm-12 col-md-12 ">
-                <a href="{{ route('vehiculos') }}" class="btn btn-danger">Regresar a lista de Vehiculos</a>
+                   <div class="col-xs-12 col-sm-12 col-md-12 ">
+                      <a href="{{ route('vehiculos') }}" class="btn btn-danger">Regresar a lista de Vehiculos</a>
+                  </div>
               </div>
             </div>
-
-          </form>
-
-        </div>                      
-
-      </div>
+        </div>
 
 
 

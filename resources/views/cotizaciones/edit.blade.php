@@ -252,7 +252,7 @@
             <div class="col-md-12 form-group mb-3">
               <label><strong>Foto Vehiculo:</strong></label>
                   @if($cotizacion->foto_vehiculo!="")
-                  <img src="{{asset($cotizacion->foto_vehiculo)}}" style="max-width: 200px" >
+                  <img src="{{asset($cotizacion->foto_vehiculo)}}" style="max-width: 200px;margin:10px" >
                   @else
                   
                   @endif
