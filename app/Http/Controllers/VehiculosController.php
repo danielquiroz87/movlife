@@ -6,7 +6,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Vehiculo;
 use App\Models\User;
+use App\Models\Conductor;
+
 use App\Models\Direccion;
+use App\Models\VehiculoConductores;
+
 
 
 use Illuminate\Support\Facades\Validator;
@@ -35,8 +39,15 @@ class VehiculosController extends Controller
      public function edit($id)
     {   
         $vehiculo=Vehiculo::find($id);
-       
-        return view('vehiculos.edit')->with(['vehiculo'=>$vehiculo]);
+        $rowsconductores=VehiculoConductores::where('vehiculo_id','=',$id)->get();
+        $arr_conductores=array();
+        if($rowsconductores){
+            foreach($rowsconductores as $row){
+                $conductor=Conductor::find($row->conductor_id);
+                $arr_conductores[]=array('id'=>$row->id,'nombre'=>$conductor->nombres.' '.$conductor->apellidos);
+            }
+        }
+        return view('vehiculos.edit')->with(['vehiculo'=>$vehiculo,'conductores'=>$arr_conductores]);
 
     }
     public function save(Request $request)
@@ -134,6 +145,38 @@ class VehiculosController extends Controller
     public function update()
     { 
        
+    }
+
+    public function saveConductores(Request $request){
+
+        $conveh=new VehiculoConductores();
+        $conveh->vehiculo_id=$request->get('id');
+        $vehiculo=Vehiculo::find($conveh->vehiculo_id);
+
+        if($request->has('propietario_id')){
+            $vehiculo->propietario_id=$request->get('propietario_id');
+            $vehiculo->save();
+        }
+        if($request->has('conductor_id')){
+            $conveh->conductor_id=$request->get('conductor_id');
+        }
+
+        $conveh->save();
+        \Session::flash('flash_message','Conductores agregados exitosamente!.');
+        
+        return redirect()->back();
+
+           
+    }
+
+    public function deleteConductor($id){
+       $conveh=VehiculoConductores::find($id);
+       $conveh->delete();
+       \Session::flash('flash_message','Conductor eliminado exitosamente!.');
+        
+        return redirect()->back();
+
+
     }
     private function getRepository(){
         return Vehiculo::paginate(25);

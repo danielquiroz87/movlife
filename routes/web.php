@@ -66,7 +66,9 @@ Route::get('/vehiculos/new', 'VehiculosController@new')->name('vehiculos.new');
 Route::get('/vehiculos/edit/{id}', 'VehiculosController@edit')->name('vehiculos.edit');
 Route::post('/vehiculos/save', 'VehiculosController@save')->name('vehiculos.save');
 Route::post('/vehiculos/delete', 'VehiculosController@delete')->name('vehiculos.delete');
+Route::post('/vehiculos/save/conductores', 'VehiculosController@saveConductores')->name('vehiculos.save.conductores');
 
+Route::get('/vehiculos/delete/conductor/{id}', 'VehiculosController@deleteConductor')->name('vehiculos.delete.conductor');
 
 Route::get('/servicios', 'ServiciosController@index')->name('servicios');
 Route::get('/servicios/new', 'ServiciosController@new')->name('servicios.new');

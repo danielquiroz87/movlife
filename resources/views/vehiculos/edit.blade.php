@@ -193,23 +193,46 @@
               </div>
 
 
-              <form action="{{route('vehiculos.save')}}" method="POST" id="user-new-form" enctype="multipart/form-data" >
+              <form action="{{route('vehiculos.save.conductores')}}" method="POST" id="user-new-form" enctype="multipart/form-data" >
                 {{ csrf_field() }}
                 <input type="hidden" name="id" value="{{$vehiculo->id}}">
                 <input type="hidden" name="is_new" value="false">
 
                 <div class="row">
-                  
+                  <table class="display table table-striped table-bordered dataTable dtr-inline">
+                    <tbody>
+                      <thead>
+                        <th>Conductor</th>
+                        <th>Acciones</th>
+                      </thead>
+                      <tbody>
+                        @foreach ($conductores as $conductor)
+                          <tr>
+                            <td>{{$conductor['nombre']}}</td>
+                            <td><a href="{{route('vehiculos.delete.conductor', $conductor['id'])}}">Eliminar</td>
+                          </tr>
+                        @endforeach
+                      </tbody>
+                    </tbody>
+
+                    
+                  </table>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12 form-group mb-3">
+                  <h4>Asignar Conductores</h4>
+                  </div>
                   <div class="col-md-6 form-group mb-3">
                     <label><strong>Propietario:</strong></label>
-                      <select name="id_propietario" class="form-control">
-                        <?php echo Helper::selectPropietarios() ?>
+                      <select name="propietario_id" class="form-control">
+                        <?php echo Helper::selectPropietarios($vehiculo->propietario_id) ?>
                       </select>
                   </div>
 
                   <div class="col-md-6 form-group mb-3">
                     <label><strong>Conductores:</strong></label>
-                      <select name="id_conductor" class="form-control">
+                      <select name="conductor_id" class="form-control">
                         <?php echo Helper::selectConductores() ?>
                       </select>
                   </div>
