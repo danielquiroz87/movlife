@@ -100,11 +100,22 @@
                       @endif
                     </select>
             </div>
-           
-           <div class="col-md-6 form-group mb-3">
-              <label><strong>Conductor:</strong></label>
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Placa (Vehículo):</strong></label>
+              <input type="text" name="placa" class="form-control" maxlength="6" />
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Conductor (Pago):</strong></label>
                   <select name="id_conductor" class="form-control">
-                    <?php echo Helper::selectConductores($servicio->id_conductor) ?>
+                      <?php echo Helper::selectConductores($servicio->id_conductor) ?>
+                  </select>
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Conductor Prestador Servicio:</strong></label>
+                  <select name="id_conductor" class="form-control">
+                      <?php echo Helper::selectConductores() ?>
                   </select>
             </div>
 
@@ -275,6 +286,12 @@
                       <option>Programado no Cancelado</option>
 
                    </select>
+            </div>
+
+             <div class="col-md-6 form-group mb-3 ">
+              <label class="checkbox checkbox-outline-primary">
+                    <input type="checkbox" name="aplicar_anticipo" id="aplicar_anticipo"><span>Abonar Anticipo</span><span class="checkmark"></span>
+                </label>
             </div>
 
              <div class="col-md-12 form-group mb-3">

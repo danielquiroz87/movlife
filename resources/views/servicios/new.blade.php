@@ -101,9 +101,21 @@
                       @endif
                     </select>
             </div>
-           
+          
            <div class="col-md-6 form-group mb-3">
-              <label><strong>Conductor:</strong></label>
+              <label><strong>Placa (Vehículo):</strong></label>
+              <input type="text" name="placa" class="form-control" maxlength="6" />
+            </div>
+
+           <div class="col-md-6 form-group mb-3">
+              <label><strong>Conductor (Pago):</strong></label>
+                  <select name="id_conductor" class="form-control">
+                      <?php echo Helper::selectConductores() ?>
+                  </select>
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Conductor Prestador Servicio:</strong></label>
                   <select name="id_conductor" class="form-control">
                       <?php echo Helper::selectConductores() ?>
                   </select>
