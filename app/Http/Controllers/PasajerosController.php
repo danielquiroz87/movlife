@@ -102,6 +102,7 @@ class PasajerosController extends Controller
             return redirect()->back()->withErrors($v->errors());
         }
 
+            /*
             if($request->get('email')!=""){
 
                 $user->name=$request->get('nombres');
@@ -117,6 +118,7 @@ class PasajerosController extends Controller
 
                 
             }
+            */
             //Si el password es diferente de vacio lo cambiamos
            
 

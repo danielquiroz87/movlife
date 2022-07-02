@@ -72,8 +72,8 @@ class VehiculosController extends Controller
                 'color' => 'required|max:20|min:3',
                 'cilindraje' => 'required|max:10|min:1',
                 'pasajeros' => 'required|max:10|min:1',
-                'departamento_id' => 'required|max:2|min:1',
-                'ciudad_id' => 'required|max:2|min:1',
+                //'departamento_id' => 'required|max:2|min:1',
+                //'ciudad_id' => 'required|max:2|min:1',
             ]);   
 
           
@@ -86,8 +86,8 @@ class VehiculosController extends Controller
                 'color' => 'required|max:20|min:3',
                 'cilindraje' => 'required|max:10|min:1',
                 'pasajeros' => 'required|max:10|min:1',
-                'departamento_id' => 'required|max:2|min:1',
-                'ciudad_id' => 'required|max:2|min:1',
+                //'departamento_id' => 'required|max:2|min:1',
+                //'ciudad_id' => 'required|max:2|min:1',
             ]);   
           
 

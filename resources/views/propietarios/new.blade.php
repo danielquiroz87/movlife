@@ -75,14 +75,14 @@
             </div>
            <div class="col-md-6 form-group mb-3">
               <label><strong>Departamento:</strong></label>
-                    <select name="departamento_id" class="form-control">
+                    <select name="departamento_id" class="form-control departamentos">
                       <?php echo Helper::selectDepartamentos() ?>
                     </select>
             </div>
            
            <div class="col-md-6 form-group mb-3">
               <label><strong>Ciudad:</strong></label>
-                  <select name="ciudad_id" class="form-control">
+                  <select name="ciudad_id" class="form-control municipios">
                    <?php echo Helper::selectMunicipios() ?>
                   </select>
             </div>

@@ -70,12 +70,22 @@ public static function getDepartamentos(){
          -> get();
 }
 
-public static function selectDepartamentos(){
+public static function selectDepartamentos($id=0){
 	$departamentos=self::getDepartamentos();
 	$option_departamentos="";
 	foreach ($departamentos as $departamento) { 
 		$nombres=$departamento->nombre;
-		$option_departamentos.='<option value="'.$departamento->id.'">'.$nombres.'</option>';
+		if($id>0){
+			if($departamento->id==$id){
+				$option_departamentos.='<option value="'.$departamento->id.'" selected="selected">'.$nombres.'</option>';
+			}else{
+				$option_departamentos.='<option value="'.$departamento->id.'">'.$nombres.'</option>';
+			}
+		
+		}else{
+			$option_departamentos.='<option value="'.$departamento->id.'">'.$nombres.'</option>';
+		}
+		
 	}
 	return $option_departamentos;
 }
@@ -88,12 +98,23 @@ public static function getMunicipios($departamentoId){
 }
 
 
-public static function selectMunicipios($id_departamento=1){
+public static function selectMunicipios($id_departamento=1,$id=0){
 	$municipios=self::getMunicipios($id_departamento);
 	$option_municipios="<option value=''>Seleccione un municipio</option>";
 	foreach ($municipios as $municipio) { 
 		$nombres=$municipio->nombre;
-		$option_municipios.='<option value="'.$municipio->id.'">'.$nombres.'</option>';
+		if($id>0){
+			if($municipio->id==$id){
+				$option_municipios.='<option value="'.$municipio->id.'" selected="selected">'.$nombres. '</option>';
+			}else{
+				$option_municipios.='<option value="'.$municipio->id.'">'.$nombres.'</option>';
+			}
+		}
+		else{
+			$option_municipios.='<option value="'.$municipio->id.'">'.$nombres.'</option>';
+		}			
+
+		
 	}
 	return $option_municipios;
 }

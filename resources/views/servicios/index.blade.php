@@ -61,11 +61,11 @@
                         <a class="text-success mr-2" href="{{route('servicios.edit',['id'=>$servicio->id])}}" title="Editar">
                           <i class="nav-icon i-Pen-2 font-weight-bold"></i>
                         </a>
+                        <a class="text-default mr-2 duplicar" href="{{route('servicios.edit', $servicio->id)}}" title="Duplicar Servicio" >
+                        <i class="nav-icon i-Data-Copy font-weight-bold"></i></i></a>
                         <a class="text-danger mr-2 eliminar" href="{{route('servicios.delete', $servicio->id)}}" title="Eliminar" >
                         <i class="nav-icon i-Close-Window font-weight-bold"></i></i></a>
-
-                        / <a class="text-success mr-2 duplicar" href="{{route('servicios.edit', $servicio->id)}}" title="Duplicar" >
-                        <i class="nav-icon i-copyfont-weight-bold"></i>Duplicar Servicio</i></a>
+                        
 
                      </td>
                     </tr>

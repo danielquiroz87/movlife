@@ -72,7 +72,7 @@ class PropietariosVehiculosController extends Controller
             ]);   
 
             $direccion=new Direccion();
-            $direccion->departamento_id=$request->get('departamento');
+            $direccion->departamento_id=$request->get('departamento_id');
             $direccion->ciudad_id=$request->get('ciudad_id');
             $direccion->direccion1=$request->get('direccion');
             //$direccion->direccion2=$request->get('direccion_detalle');
