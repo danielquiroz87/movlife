@@ -68,7 +68,7 @@
                   </div>
                   <div class="col-md-6 form-group mb-3">
                         <label><strong>Modelo</strong></label>
-                        <input type="number" name="modelo" class="form-control" id="modelo" min="1900" max="<?php echo date('Y') ?>" placeholder="" value="{{$vehiculo->modelo}}" required>
+                        <input type="number" name="modelo" class="form-control" id="modelo" min="1980"  placeholder="" value="{{$vehiculo->modelo}}" required>
                   </div>
                   
                    <div class="col-md-6 form-group mb-3">
@@ -622,13 +622,56 @@
              </div>
 
 
+          <div class="card ul-card__border-radius">
+            <div class="card-header">
+              <h6 class="card-title mb-0"><a class="collapsed text-default" data-toggle="collapse" href="#accordion-item-licencia">Tarjeta de operación </a></h6>
+            </div>
+            <div class="collapse" id="accordion-item-licencia" data-parent="#accordionExample">
+               
+              <div class="card-body">
+                <div class="row"> 
+                  
+                  <div class="col-md-3 form-group ">
+                        <label> <strong>Fecha Expedición:</strong></label>
+                        <input type="date" class="form-control" placeholder="dd/mm/yyyy"
+                        name="documentos[fecha_inicial]" id="documentos_fecha_inicial" 
+                        >
+                  </div>
+
+                   <div class="col-md-3 form-group ">
+                        <label> <strong>Fecha Vencimiento:</strong></label>
+                        <input type="date" name="documentos[fecha_final]" class="form-control" placeholder="dd/mm/yyyy">
+                  </div>
+
+                  <div class="col-md-6 form-group ">
+                        <label> <strong>Número Documento:</strong></label>
+                        <input type="number" name="documentos[numero]" class="form-control" min="0" max="10">
+                  </div>
+
+                  <div class="col-md-6 form-group ">
+                    <label> <strong>Foto Frontal:</strong></label>
+                    <input type="file" class="form-control" name="documentos[cara][1]">
+
+                  </div>
+                
+                </div>
+              </div>
+            </div>
+        </div>
+
+
             <div class="card ul-card__border-radius">
                 <div class="card-header">
                   <h6 class="card-title mb-0"><a class="collapsed text-default" data-toggle="collapse" href="#accordion-item-soat">SOAT</a></h6>
                 </div>
                 <div class="collapse" id="accordion-item-soat" data-parent="#accordionExample">
                   <div class="card-body">
+
                     <div class="row">
+                        <div class="col-md-3 form-group ">
+                          <label> <strong>Fecha Vencimiento:</strong></label>
+                          <input type="date" name="documentos[fecha_final]" class="form-control" placeholder="dd/mm/yyyy">
+                        </div>
                       <div class="col-md-6 form-group ">
                        <label> <strong>Foto Frontal:</strong></label>
                        <input type="file" class="form-control"  >
@@ -643,12 +686,23 @@
                 <div class="card-header">
                   <h6 class="card-title mb-0"><a class="collapsed text-default" data-toggle="collapse" href="#accordion-item-revision_tecnicomecanica">Revisión Técnico Mecanica</a></h6>
                 </div>
-                <div class="collapse" id="accordion-item-tarjeta_operacion" data-parent="#accordionExample">
+                <div class="collapse" id="accordion-item-revision_tecnicomecanica" data-parent="#accordionExample">
                   <div class="card-body">
                     <div class="row">
+                        <div class="col-md-3 form-group ">
+                          <label> <strong>Fecha Expedición:</strong></label>
+                          <input type="date" class="form-control" placeholder="dd/mm/yyyy"
+                        name="documentos[fecha_inicial]" id="documentos_fecha_inicial" 
+                        >
+                        </div>
+
+                      <div class="col-md-3 form-group ">
+                          <label> <strong>Fecha Vencimiento:</strong></label>
+                          <input type="date" name="documentos[fecha_final]" class="form-control" placeholder="dd/mm/yyyy">
+                      </div>
                       <div class="col-md-6 form-group ">
                        <label> <strong>Foto Frontal:</strong></label>
-                       <input type="file" class="form-control"  >
+                       <input type="file" class="form-control" name="documentos[cara][1]"  >
                      </div>
                      
                    </div>
@@ -677,7 +731,7 @@
                 <div class="card-header">
                   <h6 class="card-title mb-0"><a class="collapsed text-default" data-toggle="collapse" href="#accordion-item-poliza_rce">Polisa RCE</a></h6>
                 </div>
-                <div class="collapse" id="accordion-item-poliza_rcc" data-parent="#accordionExample">
+                <div class="collapse" id="accordion-item-poliza_rce" data-parent="#accordionExample">
                   <div class="card-body">
                     <div class="row">
                       <div class="col-md-6 form-group ">
@@ -692,9 +746,9 @@
 
              <div class="card ul-card__border-radius">
                 <div class="card-header">
-                  <h6 class="card-title mb-0"><a class="collapsed text-default" data-toggle="collapse" href="#accordion-item-poliza_rce">Revisión Preventiva</a></h6>
+                  <h6 class="card-title mb-0"><a class="collapsed text-default" data-toggle="collapse" href="#accordion-item-revision_preventiva">Revisión Preventiva</a></h6>
                 </div>
-                <div class="collapse" id="accordion-item-poliza_rcc" data-parent="#accordionExample">
+                <div class="collapse" id="accordion-item-revision_preventiva" data-parent="#accordionExample">
                   <div class="card-body">
                     <div class="row">
                       <div class="col-md-6 form-group ">

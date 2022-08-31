@@ -54,8 +54,8 @@
                       <td>{{$user->whatsapp}}</td>
                       <td>{{$user->activo}}</td>
                       <td>
-                      	<a href="{{route('pasajeros.edit', $user->id)}}" title="Editar"><i class="fa fa-fw fa-edit"></i>Editar</a>
-                      	<a href="{{route('pasajeros.delete', $user->id)}}" title="Eliminar" class="eliminar"><i class="fa fa-fw fa-trash"></i>Eliminar</a>
+                      	<a class="text-success mr-2" href="{{route('pasajeros.edit', $user->id)}}" title="Editar"><i class="nav-icon i-Pen-2 font-weight-bold"></i></a>
+                      	<a class="text-danger mr-2" href="{{route('pasajeros.delete', $user->id)}}" title="Eliminar" class="eliminar"><i class="nav-icon i-Close-Window"></i></a>
                       </td>
                     </tr>
                   	@endforeach

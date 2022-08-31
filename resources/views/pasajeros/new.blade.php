@@ -42,7 +42,6 @@
               <label><strong>Clientes:</strong></label>
                     
                     <select name="cliente_id" class="form-control">
-                      <option value="">Sin Cliente</option>
                       <?php echo Helper::selectClientes() ?>
                     </select>
             </div> 
@@ -53,14 +52,17 @@
             </div>
 
             <div class="col-md-6 form-group mb-3">
-                  <label><strong>Nombres Contacto</strong></label>
+                  <label><strong>Nombres</strong></label>
                   <input type="text" name="nombres" class="form-control" id="nombres" placeholder="Nombres" required>
             </div>
             <div class="col-md-6 form-group mb-3">
-                  <label><strong>Apellidos Contacto</strong></label>
+                  <label><strong>Apellidos</strong></label>
                   <input type="text" name="apellidos" class="form-control" id="apellidos" placeholder="Apellidos" required>
             </div>
-
+             <div class="col-md-6 form-group mb-3">
+                  <label><strong>Código</strong></label>
+                  <input type="text" name="codigo" class="form-control" id="codigo" placeholder="000">
+            </div>
            
            <div class="col-md-6 form-group mb-3">
               <label><strong>Teléfono:</strong></label>

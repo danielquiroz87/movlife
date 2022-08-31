@@ -52,8 +52,9 @@
                       <td>{{$user->whatsapp}}</td>
                       <td>{{$user->activo}}</td>
                       <td>
-                      	<a href="{{route('conductores.edit', $user->id)}}" title="Editar"> <i class="nav-icon i-Pen-2 font-weight-bold"></i></a>
-                      	<a href="{{route('conductores.delete', $user->id)}}" title="Eliminar" class="eliminar"><i class="nav-icon i-Close-Window font-weight-bold"></i></a>
+                      	<a class="text-success mr-2" href="{{route('conductores.edit', $user->id)}}" title="Editar"> 
+                        <i class="nav-icon i-Pen-2 font-weight-bold"></i></a>
+                      	<a class="text-danger mr-2" href="{{route('conductores.delete', $user->id)}}" title="Eliminar" class="eliminar"><i class="nav-icon i-Close-Window font-weight-bold"></i></a>
                       </td>
                     </tr>
                   	@endforeach

@@ -25,7 +25,12 @@ class Cotizacion extends  Model
 
     public function direcciones()
 	{
-	    return hasMany('App/Models/CotizacionDetalle','cotizacion_id');
+	    return hasMany('App\Models\CotizacionDetalle','cotizacion_id');
 	}
+
+    public function detalle()
+    {
+        return $this->hasMany('App\Models\CotizacionDetalle','cotizacion_id');
+    }
 
 }

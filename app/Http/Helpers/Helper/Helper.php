@@ -5,7 +5,7 @@ namespace App\Http\Helpers\Helper;
 use App\Models\Cliente;
 use App\Models\Conductor;
 use App\Models\Pasajero;
-
+use App\Http\Helpers\Helper\NumeroALetras;
 
 use Illuminate\Support\Facades\DB;
 
@@ -54,7 +54,7 @@ public static function selectPasajeros($id=0){
 	$pasajeros=self::getPasajeros();
 	$option_pasajeros="";
 	foreach ($pasajeros as $pasajero) { 
-		$nombres=$pasajero->documento.','.$pasajero->nombres.' '.$pasajero->apellidos;
+		$nombres=$pasajero->nombres.' '.$pasajero->apellidos;
 		if($id>0){
 			$option_pasajeros.='<option value="'.$pasajero->id.'" selected="selected" >'.$nombres.'</option>';
 		}else{
@@ -158,6 +158,24 @@ public static function selectPropietarios($id=0){
 		}
 	}
 	return $option_clase;
+}
+
+
+public static function convertiraLetras($number, $decimals = 2){
+       	$numero=new NumeroALetras();
+        return $numero->toWords($number, $decimals);
+}
+
+public function totalClientes(){
+	return 0;
+}
+
+public function totalVentas(){
+	return 0;
+}
+
+public function totalOrdenes(){
+	return 0;
 }
 
 

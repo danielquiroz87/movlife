@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+
 use App\Http\Controllers\Controller;
 use App\Models\Vehiculo;
 use App\Models\User;
@@ -175,8 +177,37 @@ class VehiculosController extends Controller
        \Session::flash('flash_message','Conductor eliminado exitosamente!.');
         
         return redirect()->back();
+    }
+    public function getConductoresPlaca($placa){
+
+        $vehiculo=Vehiculo::where('placa','=',$placa)->get()->first();
+        $response="";
+
+        if($vehiculo){
+
+            $id=$vehiculo->id;
+            $rowsconductores=VehiculoConductores::where('vehiculo_id','=',$id)->get();
+            $arr_conductores=array();
+            if($rowsconductores){
+                foreach($rowsconductores as $row){
+                    $conductor=Conductor::find($row->conductor_id);
+                    $arr_conductores[]=array('id'=>$conductor->id,'nombres'=>$conductor->nombres.' '.$conductor->apellidos,'documento'=>$row->documento);
+                }
+
+                foreach ($arr_conductores as $conductor) { 
+                    $nombres=$conductor['documento'].','.$conductor['nombres'];
+                    $response.='<option value="'.$conductor['id'].'">'.$nombres.'</option>';
+                }
+            }
 
 
+        }else{
+            $response='<option>No hay conductores</option>';
+        }
+
+        return new Response($response);
+       
+       
     }
     private function getRepository(){
         return Vehiculo::paginate(25);

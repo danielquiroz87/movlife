@@ -71,7 +71,7 @@ class ClientesController extends Controller
                 'email'=>'required|email|max:255',
                 'celular'=>'required',
                 'password'=>'required|max:20',
-                'documento'=>'required|max:20',
+                'documento'=>'required|unique:clientes,documento|max:20',
                 'departamento_id'=>'required',
                 'ciudad_id'=>'required',
                 'direccion'=>'required'
@@ -90,7 +90,7 @@ class ClientesController extends Controller
             $v = Validator::make($request->all(), [
                 'nombres' => 'required|max:255',
                 'apellidos' => 'required|max:255',
-                'documento'=>'required|max:20',
+                'documento'=>'required|unique:clientes,documento,'.$id.'|max:20',
                 'direccion'=>'required'
             ]);
 
@@ -136,6 +136,7 @@ class ClientesController extends Controller
             if($request->has('whatsapp')){
                 $cliente->whatsapp=$request->get('whatsapp');
             }
+          
             $cliente->save();
            
            

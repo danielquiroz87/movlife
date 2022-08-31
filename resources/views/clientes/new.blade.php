@@ -57,6 +57,10 @@
                   <input type="text" name="apellidos" class="form-control" id="apellidos" placeholder="Apellidos" required="">
             </div>
 
+            <div class="col-md-6 form-group mb-3">
+                  <label><strong>Código Cliente</strong></label>
+                  <input type="text" name="codigo" class="form-control" id="apellidos" placeholder="Codigo" >
+            </div>
            
            <div class="col-md-6 form-group mb-3">
               <label><strong>Teléfono:</strong></label>

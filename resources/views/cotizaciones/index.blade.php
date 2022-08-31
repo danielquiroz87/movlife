@@ -43,6 +43,7 @@
                       <th>Valor</th>
                       <th>Cantidad</th>
                       <th>Total</th>
+                      <th>Descargar Ficha</th>
                       <th colspan="3">Acciones</th>
                     </tr>
                   </thead>
@@ -61,15 +62,17 @@
                      <td>{{$cotizacion->valor}}</td>
                      <td>{{$cotizacion->cantidad}}</td>
                      <td>{{$cotizacion->total}}</td>
-
+                     <td> <a class="text-success mr-2 pdf" href="{{route('cotizaciones.descargar',['id'=>$cotizacion->id])}}" target="_blank" title="Descargar Ficha"><i class="nav-icon i-pdf font-weight-bold"></i>Descargar
+                      </a>
+                     </td>
                      <td>
                       <a class="text-success mr-2" href="{{route('cotizaciones.edit',['id'=>$cotizacion->id])}}" title="Editar">
                           <i class="nav-icon i-Pen-2 font-weight-bold"></i>
-                        </a>
-                      <a class="text-danger mr-2 eliminar" href="{{route('cotizaciones.delete', $cotizacion->id)}}" title="Eliminar"><i class="nav-icon i-Close-Window font-weight-bold"></i></a>
+                      </a>
+                      <a class="text-danger mr-2 eliminar" href="{{route('cotizaciones.delete', $cotizacion->id)}}" title="Eliminar"><i class="nav-icon i-Close-Window font-weight-bold"></i>
+                      </a>
                       
-                      <a class="text-danger mr-2 pdf" href="#" title="Descargar Ficha"><i class="nav-icon i-pdf font-weight-bold"></i>Ficha</a>
-                    
+                     
 
                      </td>
                      

@@ -228,6 +228,13 @@ class CotizacionesController extends Controller
 
 
     }
+
+    public function descargar($id){
+        $cotizacion=Cotizacion::find($id);
+        $detalle=$cotizacion->detalle();
+        return view('cotizaciones.descargar')->with(['cotizacion'=>$cotizacion]);
+    }
+
     private function getRepository(){
         return Cotizacion::paginate(25);
     }

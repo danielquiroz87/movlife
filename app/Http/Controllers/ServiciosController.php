@@ -39,11 +39,7 @@ class ServiciosController extends Controller
         return view('servicios.importar');
  
     }
-    public function delete(){
-
-        return view('servicios.importar');
  
-    }
     public function new()
     { 
         $dt=new CotizacionDetalle();
@@ -88,7 +84,8 @@ class ServiciosController extends Controller
             $v = Validator::make($request->all(), [
                 'id_cliente' => 'required',
                 'id_pasajero' => 'required',
-                'id_conductor' => 'required',
+                'id_conductor_pago' => 'required',
+                'id_conductor_servicio' => 'required',
                 'fecha_servicio' => 'required',
                 'hora_recogida' => 'required',
                 'origen' => 'required|max:600|min:3',
@@ -106,7 +103,8 @@ class ServiciosController extends Controller
             $v = Validator::make($request->all(), [
                 'id_cliente' => 'required',
                 'id_pasajero' => 'required',
-                'id_conductor' => 'required',
+                'id_conductor_pago' => 'required',
+                'id_conductor_servicio' => 'required',
                 'fecha_servicio' => 'required',
                 'hora_recogida' => 'required',
                 'origen' => 'required|max:600|min:3',
@@ -134,7 +132,7 @@ class ServiciosController extends Controller
              return redirect()->route('servicios');
 
          }else{
-
+            $servicio=Servicio::find($request->get('id'));
             $servicio->update($request->all());
 
             \Session::flash('flash_message','Servicio actualizado exitosamente!.');
@@ -150,6 +148,26 @@ class ServiciosController extends Controller
     { 
        
     }
+
+    public function delete(Request $request){
+        
+        $servicio=Servicio::find($request->get('id'));
+
+        $servicio->delete();
+
+        \Session::flash('flash_message','Servicio eliminado exitosamente!.');
+
+        return redirect()->back();
+
+
+    }
+
+
+    public function descargar(){
+        $servicios=$this->getRepository();
+        return view('servicios.descargar')->with(['servicios'=>$servicios]);
+    }
+
     private function getRepository(){
         return Servicio::paginate(25);
     }

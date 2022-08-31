@@ -43,14 +43,17 @@
             </div>
 
             <div class="col-md-6 form-group mb-3">
-                  <label><strong>Nombres Contacto</strong></label>
+                  <label><strong>Nombres</strong></label>
                   <input type="text" name="nombres" class="form-control" id="nombres" placeholder="Nombres" required value="{{$pasajero->nombres}}">
             </div>
             <div class="col-md-6 form-group mb-3">
-                  <label><strong>Apellidos Contacto</strong></label>
+                  <label><strong>Apellidos</strong></label>
                   <input type="text" name="apellidos" class="form-control" id="apellidos" placeholder="Apellidos" required value="{{$pasajero->apellidos}}">
             </div>
-
+              <div class="col-md-6 form-group mb-3">
+                  <label><strong>Código</strong></label>
+                  <input type="text" value="{{$pasajero->codigo}}" name="codigo" class="form-control" id="codigo" placeholder="000">
+            </div>
            <div class="col-md-6 form-group mb-3">
               <label><strong>Teléfono:</strong></label>
               <input type="number" name="telefono" class="form-control" placeholder="000000"
@@ -104,13 +107,13 @@
             <div class="col-md-6 form-group mb-3">
                    <label> <strong>Nombre Contacto:</strong></label>
                     <input type="text" name="nombre_contacto" class="form-control" placeholder=""
-                        value="" maxlength="20" required>
+                        value="{{$pasajero->nombre_contacto}}" maxlength="20" required>
             </div>
             
              <div class="col-md-6 form-group mb-3">
                    <label> <strong>Teléfono Contacto:</strong></label>
                     <input type="number" name="telefono_contacto" class="form-control" placeholder=""
-                        value="" maxlength="20" required>
+                        value="{{$pasajero->telefono_contacto}}" maxlength="20" required>
             </div>
          
 
@@ -158,7 +161,7 @@ $('#user-new-form').validate({
         documento:{ required:true },
         departamento_id:{ required:true },
         ciudad_id: { required:true },
-        password:{ required:true },
+        
         
     },messages: {
                 

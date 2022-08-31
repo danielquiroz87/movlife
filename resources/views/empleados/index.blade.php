@@ -54,10 +54,10 @@
                       <td>{{$user->cargo}}</td>
                       <td>{{$user->activo}}</td>
                       <td>
-                      <a class="btn btn-success" href="{{route('employes.edit', $user->id)}}" title="Editar">
+                      <a class="text-success mr-2" href="{{route('employes.edit', $user->id)}}" title="Editar">
                         <i class="nav-icon i-Pen-2 font-weight-bold"></i>
                       </a>
-                      <a class="btn btn-danger eliminar" href="{{route('employes.delete', $user->id)}}" title="Eliminar"><i class="nav-icon i-Close-Window"></i>
+                      <a class="text-danger mr-2 eliminar" href="{{route('employes.delete', $user->id)}}" title="Eliminar"><i class="nav-icon i-Close-Window"></i>
                       </a>
                       </td>
                     </tr>

@@ -39,12 +39,12 @@
         <div class="row">
             <div class="col-md-6 form-group mb-3">
               <label><strong>Documento / Nit:</strong></label>
-                   <input type="text" name="documento"  class="form-control" placeholder="000000" maxlength="20" required value="{{$propietario->documento}}">
+                   <input type="text" name="documento"  class="form-control" placeholder="000000" maxlength="200" required value="{{$propietario->documento}}">
             </div>
 
              <div class="col-md-6 form-group mb-3">
               <label><strong>Nombre propietario / Razón Social:</strong></label>
-                   <input type="text" name="razon_social"  class="form-control" placeholder="000000" maxlength="20" required value="{{$propietario->razon_social}}">
+                   <input type="text" name="razon_social"  class="form-control" placeholder="000000" maxlength="200" required value="{{$propietario->razon_social}}">
             </div>
             <div class="col-md-6 form-group mb-3">
                   <label><strong>Nombres Contacto</strong></label>

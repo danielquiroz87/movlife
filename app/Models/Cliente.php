@@ -13,4 +13,22 @@ class Cliente extends  Model
     protected $table = 'clientes';
 
     protected $fillable = ['user_id','documento','nombres','apellidos','razon_social','email_contacto','telefono','celular','direccion_id','whatsapp','activo'];
+
+
+
+    public function direccion()
+	{
+	    return $this->hasOne('App\Models\Direccion','id','direccion_id');
+	}
+
+	public function usuario(){
+
+		return $this->hasOne('App\Models\User','id','user_id');
+
+	}
+
+
 }
+
+
+

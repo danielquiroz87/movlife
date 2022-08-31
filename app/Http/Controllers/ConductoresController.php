@@ -63,7 +63,7 @@ class ConductoresController extends Controller
                 'email'=>'required|email|max:255',
                 'celular'=>'required',
                 'password'=>'required|max:20',
-                'documento'=>'required|max:20',
+                'documento'=>'required|unique:conductores,documento|max:20',
                 'departamento_id'=>'required',
                 'ciudad_id'=>'required',
                 'direccion'=>'required'
@@ -75,6 +75,9 @@ class ConductoresController extends Controller
             $direccion->ciudad_id=$request->get('ciudad_id');
             $direccion->direccion1=$request->get('direccion');
             $direccion->direccion2=$request->get('direccion_detalle');
+            if($request->has('barrio')){
+                $direccion->barrio=$request->get('barrio');
+            }
             $direccion->tipo_usuario=5;
             $direccion->save();
         }else{
@@ -91,6 +94,9 @@ class ConductoresController extends Controller
             $direccion->ciudad_id=$request->get('ciudad_id');
             $direccion->direccion1=$request->get('direccion');
             $direccion->direccion2=$request->get('direccion_detalle');
+            if($request->has('barrio')){
+                $direccion->barrio=$request->get('barrio');
+            }
             $direccion->save();
             $user=User::where('email',$conductor->email_contacto)->get()->first();
 
@@ -130,6 +136,17 @@ class ConductoresController extends Controller
             }
             if($request->has('whatsapp')){
                 $conductor->whatsapp=$request->get('whatsapp');
+            }
+
+            if($request->has('estado_civil')){
+                $conductor->estado_civil=$request->get('estado_civil');
+            }
+            if($request->has('grupo_sanguineo')){
+                $conductor->grupo_sanguineo=$request->get('grupo_sanguineo');
+            }
+           
+            if($request->has('estrato')){
+                $conductor->estrato=$request->get('estrato');
             }
             $conductor->save();
            

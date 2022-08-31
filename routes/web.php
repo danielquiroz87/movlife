@@ -76,8 +76,10 @@ Route::get('/servicios/new/fromaddress/{id}', 'ServiciosController@fromAddress')
 
 Route::get('/servicios/edit/{id}', 'ServiciosController@edit')->name('servicios.edit');
 Route::post('/servicios/save', 'ServiciosController@save')->name('servicios.save');
-Route::post('/servicios/delete', 'ServiciosController@delete')->name('servicios.delete');
-Route::get('/servicios/importar', 'ServiciosController@delete')->name('servicios.importar');
+Route::get('/servicios/delete/{id}', 'ServiciosController@delete')->name('servicios.delete');
+Route::post('/servicios/delete/{id}', 'ServiciosController@delete')->name('servicios.delete');
+
+Route::get('/servicios/descargar', 'ServiciosController@descargar')->name('servicios.descargar');
 
 
 Route::get('/cotizaciones', 'CotizacionesController@index')->name('cotizaciones');
@@ -88,6 +90,9 @@ Route::post('/cotizaciones/delete', 'CotizacionesController@delete')->name('coti
 Route::post('/cotizaciones/save/item', 'CotizacionesController@saveItem')->name('cotizaciones.save.item');
 Route::post('/cotizaciones/delete/item', 'CotizacionesController@delete')->name('cotizaciones.delete.item');
 
+Route::get('/cotizaciones/descargar/{id}', 'CotizacionesController@descargar')->name('cotizaciones.descargar');
+
+
 
 Route::get('/anticipos', 'AnticiposController@index')->name('anticipos');
 Route::get('/anticipos/new', 'AnticiposController@new')->name('anticipos.new');
@@ -97,4 +102,5 @@ Route::post('/anticipos/delete', 'AnticiposController@delete')->name('anticipos.
 
 
 Route::get('/municipios', 'UtilsController@municipios')->name('utils.municipios');
+Route::get('/conductores/placa/{placa}', 'VehiculosController@getConductoresPlaca')->name('vehiculos.conductores.placa');
 

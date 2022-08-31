@@ -12,14 +12,18 @@ class Servicio extends  Model
 
     protected $table = 'ordenes_servicio';
 
-    protected $fillable = ['id_cliente','id_conductor','id_pasajero','fecha_servicio','origen','hora_recogida','destino','hora_estimada_salida','semana','valor_conductor','valor_cliente','tipo_viaje','observaciones','comentarios','tipo_servicio','barrio'];
+    protected $fillable = ['id_cliente','placa','id_conductor_pago','id_conductor_servicio','id_pasajero','fecha_servicio','origen','hora_recogida','destino','hora_estimada_salida','semana','valor_conductor','valor_cliente','tipo_viaje','observaciones','comentarios','tipo_servicio','barrio','estado','motivo_cancelacion'];
 
     public function cliente(){
     	return $this->hasOne('App\Models\Cliente','id','id_cliente');
     }
 
     public function conductor(){
-    	return $this->hasOne('App\Models\Conductor','id','id_conductor');
+    	return $this->hasOne('App\Models\Conductor','id','id_conductor_pago');
+    }
+
+    public function conductorServicio(){
+        return $this->hasOne('App\Models\Conductor','id','id_conductor_servicio');
     }
 
     public function pasajero(){

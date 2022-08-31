@@ -157,7 +157,7 @@
                <div class="col-md-6 form-group mb-3">
                  <label> <strong>Nombre Contacto:</strong></label>
                  <input type="text" name="nombre_contacto" class="form-control" placeholder=""
-                 value="" maxlength="20" required>
+                 value="" maxlength="200" required>
                </div>
 
                <div class="col-md-6 form-group mb-3">

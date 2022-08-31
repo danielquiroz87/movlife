@@ -17,7 +17,7 @@
             <div class="d-sm-flex mb-3" data-view="print">
                   <span class="m-auto"></span>
                     <a class="btn btn-primary" href="{{route('servicios.new')}}">Nuevo</a>&nbsp;&nbsp;
-                    <a class="btn btn-success" href="{{route('servicios.importar')}}">Importar</a>
+                    <a class="btn btn-success" href="{{route('servicios.descargar')}}">Descargar</a>
             </div>
             
           </div>
@@ -34,6 +34,7 @@
                   <thead>
                     <tr>
                       <th>Cliente</th>
+                      <th>Placa</th>
                       <th>Conductor</th>
                       <th>Pasajero</th>
                       <th>Fecha</th>
@@ -49,9 +50,10 @@
                   	@foreach ($servicios as $servicio)
                     <tr>
                      <td>{{$servicio->cliente->nombres}}</td>
+                     <td>{{$servicio->placa}}</td>
                      <td>{{$servicio->conductor->nombres}}</td>
                      <td>{{$servicio->pasajero->nombres}}</td>
-                    <td>{{$servicio->fecha_servicio}}</td>
+                     <td>{{$servicio->fecha_servicio}}</td>
                      <td>{{$servicio->origen}}</td>
                      <td>{{$servicio->destino}}</td>
                      <td>{{$servicio->hora_recogida}}</td>
@@ -63,8 +65,10 @@
                         </a>
                         <a class="text-default mr-2 duplicar" href="{{route('servicios.edit', $servicio->id)}}" title="Duplicar Servicio" >
                         <i class="nav-icon i-Data-Copy font-weight-bold"></i></i></a>
+
                         <a class="text-danger mr-2 eliminar" href="{{route('servicios.delete', $servicio->id)}}" title="Eliminar" >
-                        <i class="nav-icon i-Close-Window font-weight-bold"></i></i></a>
+                        <i class="nav-icon i-Close-Window font-weight-bold"></i></i>
+                        </a>
                         
 
                      </td>
@@ -113,7 +117,7 @@
  		Swal
 	    .fire({
 	        title: "Eliminar",
-	        text: "Está seguro de eliminar este usuario?",
+	        text: "Está seguro de eliminar este registro?",
 	        icon: 'warning',
 	        showCancelButton: true,
 	        confirmButtonText: "Sí, eliminar",

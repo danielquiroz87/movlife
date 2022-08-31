@@ -72,16 +72,16 @@
             </div>
            <div class="col-md-6 form-group mb-3">
               <label><strong>Departamento:</strong></label>
-                    <select class="form-control" name="departamento">
-                      <option value="{{$direccion->departamento_id}}">Antioquia</option>
+                    <select class="form-control departamentos" name="departamento_id">
+                      <?php echo Helper::selectDepartamentos($direccion->departamento_id) ?>
                     </select>
                    
             </div>
            
            <div class="col-md-6 form-group mb-3">
               <label><strong>Ciudad:</strong></label>
-                  <select class="form-control" name="ciudad">
-                    <option value="{{$direccion->ciudad_id}}">Medellín</option>
+                  <select class="form-control municipios" name="ciudad_id">
+                     <?php echo Helper::selectMunicipios($direccion->departamento_id,$direccion->ciudad_id) ?>
                   </select>
             </div>
 
@@ -102,7 +102,7 @@
             <div class="col-md-6 form-group mb-3">
                    <label> <strong>Nuevo Password:</strong></label>
                     <input type="password" name="password" class="form-control" placeholder=""
-                        value="" autocomplete="off" maxlength="20" required>
+                        value="" autocomplete="off" maxlength="20">
             </div>
 
             <div class="col-xs-12 col-sm-12 col-md-12 ">
@@ -150,7 +150,6 @@ $('#user-new-form').validate({
         documento:{ required:true },
         departamento_id:{ required:true },
         ciudad_id: { required:true },
-        password:{ required:true },
         file: { 
               required:true ,
               extension:"jpg,jpeg,png",

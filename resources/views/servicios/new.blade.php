@@ -104,19 +104,19 @@
           
            <div class="col-md-6 form-group mb-3">
               <label><strong>Placa (Vehículo):</strong></label>
-              <input type="text" name="placa" class="form-control" maxlength="6" />
+              <input type="text" name="placa" id="placa" class="form-control" maxlength="6" />
             </div>
 
            <div class="col-md-6 form-group mb-3">
               <label><strong>Conductor (Pago):</strong></label>
-                  <select name="id_conductor" class="form-control">
+                  <select name="id_conductor_pago" id="conductor_pago" class="form-control">
                       <?php echo Helper::selectConductores() ?>
                   </select>
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Conductor Prestador Servicio:</strong></label>
-                  <select name="id_conductor" class="form-control">
+                  <select name="id_conductor_servicio" id="conductor_servicio" class="form-control">
                       <?php echo Helper::selectConductores() ?>
                   </select>
             </div>
@@ -404,6 +404,14 @@ class AutocompleteDirectionsHandler {
 
 
 <script>
+
+  $("#placa").blur(function(){
+    var placa=$(this).val();
+    $.get('/conductores/placa/'+placa,function(html){
+      $("#conductor_pago").html(html);
+      $("#conductor_servicio").html(html);
+    })
+  })
 
 $('#tiempo_adicional').change(function(){
   if( $(this).prop('checked')){

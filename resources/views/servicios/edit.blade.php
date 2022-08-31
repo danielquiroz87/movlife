@@ -82,7 +82,8 @@
     <form action="{{route('servicios.save')}}" method="POST" id="nuevo-servicio" enctype="multipart/form-data" >
     {{ csrf_field() }}
       <input type="hidden" name="id" value="0">
-      <input type="hidden" name="is_new" value="true">
+      <input type="hidden" name="is_new" value="false">
+      <input type="hidden" name="id" value="{{$servicio->id}}">
       @if($cotizacion) 
         <input type="hidden" name="cotizacion_id" value="{{$cotizacion->id}}">
       @else 
@@ -102,20 +103,20 @@
             </div>
             <div class="col-md-6 form-group mb-3">
               <label><strong>Placa (Vehículo):</strong></label>
-              <input type="text" name="placa" class="form-control" maxlength="6" />
+              <input type="text" name="placa" id="placa" value="{{$servicio->placa}}" class="form-control" maxlength="6" />
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Conductor (Pago):</strong></label>
-                  <select name="id_conductor" class="form-control">
-                      <?php echo Helper::selectConductores($servicio->id_conductor) ?>
+                  <select name="id_conductor_pago" class="form-control">
+                      <?php echo Helper::selectConductores($servicio->id_conductor_pago) ?>
                   </select>
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Conductor Prestador Servicio:</strong></label>
-                  <select name="id_conductor" class="form-control">
-                      <?php echo Helper::selectConductores() ?>
+                  <select name="id_conductor_servicio" class="form-control">
+                      <?php echo Helper::selectConductores($servicio->id_conductor_servicio) ?>
                   </select>
             </div>
 
@@ -155,7 +156,7 @@
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Semana:</strong></label>
-                   <input type="number" name="valor_cliente" value="{{$servicio->semana}}" class="form-control" min="1" max="5">
+                   <input type="number" name="semana" value="{{$servicio->semana}}" class="form-control" min="1" max="5">
             </div>
 
             <div class="col-md-6 form-group mb-3">
@@ -196,7 +197,7 @@
 
              <div class="col-md-12 form-group mb-3">
               <label><strong>Turno:</strong></label>
-                   <select class="form-control">
+                   <select class="form-control" name="turno">
                       <option>1</option>
                       <option>2</option>
                        <option>3</option>
@@ -242,14 +243,14 @@
             
             <div class="col-md-12 form-group mb-3">
               <label><strong>Educador / Coordinador:</strong></label>
-                   <select class="form-control">
+                   <select class="form-control" name="educador_coordinador">
                       <option>Lizeth G</option>
                    </select>
             </div>
 
             <div class="col-md-12 form-group mb-3">
               <label><strong>URI SEDE:</strong></label>
-                   <select class="form-control">
+                   <select name="uri_sede" class="form-control">
                       <option>Riomar</option>
                       <option>Otra Sede</option>
                    </select>
@@ -259,7 +260,7 @@
 
             <div class="col-md-12 form-group mb-3">
               <label><strong>Alimentación:</strong></label>
-                   <select class="form-control">
+                   <select name="alimentacion" class="form-control">
                       <option>Si</option>
                       <option>No</option>
                    </select>
@@ -267,30 +268,30 @@
             
             <div class="col-md-12 form-group mb-3">
               <label><strong>Estado Servicio:</strong></label>
-                   <select class="form-control">
-                      <option>Iniciado</option>
-                      <option>En Proceso</option>
-                      <option>Cumplido</option>
-                      <option>Cancelado</option>
+                   <select name="estado" class="form-control">
+                      <option value="1" @if ($servicio->estado==1) selected="true" @endif >Iniciado</option>
+                      <option value="2" @if ($servicio->estado==2) selected="true" @endif>En Proceso</option>
+                      <option value="3" @if ($servicio->estado==3) selected="true" @endif>Cumplido</option>
+                      <option value="4"  @if ($servicio->estado==4) selected="true" @endif >Cancelado</option>
 
                    </select>
             </div>
 
              <div class="col-md-12 form-group mb-3">
               <label><strong>Motivo Cancelación:</strong></label>
-                   <select class="form-control">
-                      <option >No Cancelado</option>
-                      <option>Pasajero no Requiere</option>
-                      <option>Pasajero Cancelo</option>
-                      <option>Conductor no Cumplio</option>
-                      <option>Programado no Cancelado</option>
+                   <select class="form-control" name="motivo_cancelacion">
+                      <option value="1" @if ($servicio->estado==1) selected="true" @endif >No Cancelado</option>
+                      <option value="2" @if ($servicio->estado==2) selected="true" @endif>Pasajero no Requiere</option>
+                      <option value="3" @if ($servicio->estado==3) selected="true" @endif>Pasajero Cancelo</option>
+                      <option value="4" @if ($servicio->estado==4) selected="true" @endif>Conductor no Cumplio</option>
+                      <option value="5" @if ($servicio->estado==5) selected="true" @endif>Programado no Cancelado</option>
 
                    </select>
             </div>
 
              <div class="col-md-6 form-group mb-3 ">
               <label class="checkbox checkbox-outline-primary">
-                    <input type="checkbox" name="aplicar_anticipo" id="aplicar_anticipo"><span>Abonar Anticipo</span><span class="checkmark"></span>
+                    <input type="checkbox" name="aplicar_anticipo" id="aplicar_anticipo"><span>Aplicar Anticipo</span><span class="checkmark"></span>
                 </label>
             </div>
 
@@ -470,6 +471,14 @@ class AutocompleteDirectionsHandler {
 
 
 <script>
+  
+  $("#placa").blur(function(){
+    var placa=$(this).val();
+    $.get('/conductores/placa/'+placa,function(html){
+      $("#conductor_pago").html(html);
+      $("#conductor_servicio").html(html);
+    })
+  })
 
 $('#tiempo_adicional').change(function(){
   if( $(this).prop('checked')){

@@ -120,14 +120,7 @@
                     <span class="item-name">Vehiculos</span>
                 </a>
             </li>
-            <li class="nav-item ">
-                <a class="{{ Route::currentRouteName()=='conductores' ? 'open' : '' }}"
-                    href="{{route('conductores')}}">
-                    <i class="nav-icon i-Add-User"></i>
-                    <span class="item-name">Conductores</span>
-                </a>
-            </li>
-
+           
             <li class="nav-item ">
                 <a class="{{ Route::currentRouteName()=='servicios' ? 'open' : '' }}"
                     href="{{route('servicios')}}">

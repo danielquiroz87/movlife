@@ -63,7 +63,7 @@ class PasajerosController extends Controller
                 //'email'=>'required|email|max:255',
                 //'password'=>'required|max:20',
                 'celular'=>'required',
-                'documento'=>'required|max:20',
+                'documento'=>'required|unique:pasajeros,documento|max:20',
                 'departamento_id'=>'required',
                 'ciudad_id'=>'required',
                 'direccion'=>'required'
@@ -74,7 +74,7 @@ class PasajerosController extends Controller
             $direccion->departamento_id=$request->get('departamento');
             $direccion->ciudad_id=$request->get('ciudad_id');
             $direccion->direccion1=$request->get('direccion');
-            //$direccion->direccion2=$request->get('direccion_detalle');
+            $direccion->barrio=$request->get('barrio');
             $direccion->tipo_usuario=3;
             $direccion->save();
         }else{
@@ -82,7 +82,7 @@ class PasajerosController extends Controller
             $v = Validator::make($request->all(), [
                 'nombres' => 'required|max:255',
                 'apellidos' => 'required|max:255',
-                'documento'=>'required|max:20',
+                'documento'=>'required|unique:pasajeros,documento,'.$id.'|max:20',
                 'direccion'=>'required'
             ]);
 
@@ -91,6 +91,8 @@ class PasajerosController extends Controller
             $direccion->ciudad_id=$request->get('ciudad_id');
             $direccion->direccion1=$request->get('direccion');
             $direccion->direccion2=$request->get('direccion_detalle');
+            $direccion->barrio=$request->get('barrio');
+
             $direccion->save();
             $user=User::where('email',$pasajero->email_contacto)->get()->first();
 
@@ -138,6 +140,10 @@ class PasajerosController extends Controller
             if($request->has('whatsapp')){
                 $pasajero->whatsapp=$request->get('whatsapp');
             }
+            if($request->has('codigo')){
+                $pasajero->codigo=$request->get('codigo');
+            }
+
             $pasajero->save();
            
            
