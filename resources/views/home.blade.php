@@ -96,73 +96,10 @@
                                 </div>
 
                                 <div class="">
-                                    <div class="table-responsive">
-                                        <table id="user_table" class="table  text-center">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">#</th>
-                                                    <th scope="col">Nombres</th>
-                                                    <th scope="col">Email</th>
-                                                    <th scope="col">Celular</th>
-                                                    <th scope="col">Dirección</th>
-                                                    <th scope="col">Acciones</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <th scope="row">1</th>
-                                                    <td>Daniel Quiroz</td>
-                                                    <td>danykyroz@gmail.com</td>
-                                                    <td>3127633220</td>
-                                                    <td>Calle 12, 4-45,Barrio Manila,Poblado
-                                                    <td>
-                                                        <a href="#" class="text-success mr-2">
-                                                            <i class="nav-icon i-Pen-2 font-weight-bold"></i>
-                                                        </a>
-                                                        <a href="#" class="text-danger mr-2">
-                                                            <i class="nav-icon i-Close-Window font-weight-bold"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
+                                    <livewire:clientes>
 
-                                                        <tr>
-                                                    <th scope="row">2</th>
-                                                    <td>Daniel Quiroz</td>
-                                                    <td>danykyroz@gmail.com</td>
-                                                    <td>3127633220</td>
-                                                    <td>Calle 12, 4-45,Barrio Manila,Poblado
-                                                    <td>
-                                                        <a href="#" class="text-success mr-2">
-                                                            <i class="nav-icon i-Pen-2 font-weight-bold"></i>
-                                                        </a>
-                                                        <a href="#" class="text-danger mr-2">
-                                                            <i class="nav-icon i-Close-Window font-weight-bold"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
 
-                                                        <tr>
-                                                    <th scope="row">3</th>
-                                                    <td>Daniel Quiroz</td>
-                                                    <td>danykyroz@gmail.com</td>
-                                                    <td>3127633220</td>
-                                                    <td>Calle 12, 4-45,Barrio Manila,Poblado
-                                                    <td>
-                                                        <a href="#" class="text-success mr-2">
-                                                            <i class="nav-icon i-Pen-2 font-weight-bold"></i>
-                                                        </a>
-                                                        <a href="#" class="text-danger mr-2">
-                                                            <i class="nav-icon i-Close-Window font-weight-bold"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                         
-                                       
-
-                                           
-                                            </tbody>
-                                        </table>
-                                    </div>
+                              
                                 </div>
                             </div>
 

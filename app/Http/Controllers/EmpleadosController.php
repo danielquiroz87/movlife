@@ -119,6 +119,7 @@ class EmpleadosController extends Controller
             $empleado->email_contacto=$request->get('email');
             $empleado->celular=$request->get('celular');
             $empleado->cargo=$request->get('cargo');
+            $empleado->area_empresa=$request->get('area_empresa');
             $empleado->user_id=$user->id;
             $empleado->direccion_id=$direccion->id;
             $empleado->activo=1;

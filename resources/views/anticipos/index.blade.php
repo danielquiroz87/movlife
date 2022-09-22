@@ -58,7 +58,7 @@
                           Abonar 
                         </a>
 
-                         <a class="text mr-2" href="#">
+                         <a class="text mr-2" href="{{route('anticipos.abonos',['id'=>$anticipo->id])}}">
                           Listar Abonos 
                         </a>
 

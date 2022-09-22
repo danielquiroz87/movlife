@@ -20,6 +20,13 @@ x\:* {behavior:url(#default#VML);}
 </style>
 <![endif]-->
 <style id="pdfservicio.html_19210_Styles">
+
+.tdbreak {
+  word-break: break-all;
+  word-wrap: break-word;
+
+}
+
 <!--table
 	{mso-displayed-decimal-separator:"\,";
 	mso-displayed-thousand-separator:"\.";}
@@ -453,8 +460,9 @@ EXCEL -->
 
 <div id="pdfservicio.html_19210" align=center x:publishsource="Excel">
 
-<table border=0 cellpadding=0 cellspacing=0 width=1015 style='border-collapse:
- collapse;table-layout:fixed;width:761pt'>
+<table border=0 cellpadding=0 cellspacing=0 width=100% style='border-collapse:
+ collapse;table-layout:fixed;'>
+ 
  <col width=92 style='width:69pt'>
  <col width=144 style='mso-width-source:userset;mso-width-alt:4608;width:108pt'>
  <col width=92 style='width:69pt'>
@@ -468,7 +476,7 @@ EXCEL -->
   position:absolute;z-index:1;margin-left:16px;margin-top:12px;width:186px;
   height:63px'>
   <img width=140 height=47
-  src="pdfservicio.html.fld/pdfservicio.html_19210_image001.png" v:shapes="Imagen_x0020_2"></span>
+  src="{{asset('images/movlife.png')}}"></span>
   
   <span
   style='mso-ignore:vglayout2'>
@@ -514,7 +522,7 @@ EXCEL -->
  <tr height=20 style='height:15.0pt'>
   <td colspan=2 height=20 class=xl96 style='height:15.0pt'>NIT.<span
   style='mso-spacerun:yes'> </span></td>
-  <td colspan=2 class=xl80 style='border-right:.5pt solid black;border-left:
+  <td colspan=2 width="371" class=xl80 style='border-right:.5pt solid black;border-left:
   none'>CLIENTE<span style='mso-spacerun:yes'> </span></td>
   <td colspan=2 class=xl80 style='border-right:.5pt solid black;border-left:
   none'>CONTACTO<span style='mso-spacerun:yes'> </span></td>
@@ -525,8 +533,8 @@ EXCEL -->
  </tr>
  <tr height=20 style='height:15.0pt'>
   <td colspan=2 height=20 class=xl89 style='height:15.0pt'>{{$cotizacion->cliente->documento}}</td>
-  <td colspan=2 class=xl91 style='border-right:.5pt solid black;border-left:
-  none'>{{$cotizacion->cliente->razon_social}} {{$cotizacion->cliente->apellidos}}</td>
+  <td colspan=2 class="tdbreak" width=371 style='border-right:.5pt solid black;border-left:
+  none;text-align: center;'>{{$cotizacion->cliente->razon_social}} </td>
   <td colspan=2 class=xl91 style='border-right:.5pt solid black;border-left:
   none'>{{$cotizacion->cliente->nombres}} {{$cotizacion->cliente->apellidos}}</td>
   <td colspan=2 class=xl91 style='border-right:.5pt solid black;border-left:

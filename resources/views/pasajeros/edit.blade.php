@@ -39,7 +39,7 @@
         <div class="row">
             <div class="col-md-6 form-group mb-3">
               <label><strong>Documento / Nit:</strong></label>
-                   <input type="text" name="documento"  class="form-control" placeholder="000000" maxlength="20" required value="{{$pasajero->documento}}">
+                   <input type="text" name="documento"  class="form-control" placeholder="000000" maxlength="20"  value="{{$pasajero->documento}}">
             </div>
 
             <div class="col-md-6 form-group mb-3">
@@ -72,7 +72,7 @@
            <div class="col-md-6 form-group mb-3">
               <label><strong>Departamento:</strong></label>
                     <select class="form-control" name="departamento">
-                      <option value="{{$direccion->departamento_id}}">Antioquia</option>
+                      <?php echo Helper::selectDepartamentos($direccion->departamento_id) ?>
                     </select>
                    
             </div>
@@ -80,7 +80,7 @@
            <div class="col-md-6 form-group mb-3">
               <label><strong>Ciudad:</strong></label>
                   <select class="form-control" name="ciudad">
-                    <option value="{{$direccion->ciudad_id}}">Medellín</option>
+                      <?php echo Helper::selectMunicipios($direccion->departamento_id, $direccion->ciudad_id) ?>
                   </select>
             </div>
 
@@ -96,7 +96,7 @@
             <div class="col-md-6 form-group mb-3">
                     <label><strong>Email:</strong></label>
                     <input type="email" name="email" class="form-control" placeholder="example@email.com"
-                         maxlength="255" required value="{{$pasajero->email_contacto}}">
+                         maxlength="255"  value="{{$pasajero->email_contacto}}">
             </div>
             <div class="col-md-6 form-group mb-3">
                    <label> <strong>Nuevo Password:</strong></label>
@@ -107,13 +107,13 @@
             <div class="col-md-6 form-group mb-3">
                    <label> <strong>Nombre Contacto:</strong></label>
                     <input type="text" name="nombre_contacto" class="form-control" placeholder=""
-                        value="{{$pasajero->nombre_contacto}}" maxlength="20" required>
+                        value="{{$pasajero->nombre_contacto}}" maxlength="20" >
             </div>
             
              <div class="col-md-6 form-group mb-3">
                    <label> <strong>Teléfono Contacto:</strong></label>
                     <input type="number" name="telefono_contacto" class="form-control" placeholder=""
-                        value="{{$pasajero->telefono_contacto}}" maxlength="20" required>
+                        value="{{$pasajero->telefono_contacto}}" maxlength="20" >
             </div>
          
 
@@ -157,8 +157,6 @@ $('#user-new-form').validate({
   rules: {
         nombres: { required:true },
         apellidos: { required:true },
-        email:{ required:true },
-        documento:{ required:true },
         departamento_id:{ required:true },
         ciudad_id: { required:true },
         

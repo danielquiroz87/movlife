@@ -40,7 +40,7 @@
 
            <div class="col-md-6 form-group mb-3">
               <label><strong>Documento / Nit:</strong></label>
-                   <input type="text" name="documento" value="" class="form-control" placeholder="000000" maxlength="11" required>
+                   <input type="text" name="documento" value="" class="form-control" placeholder="000000" maxlength="50" required>
             </div>
 
              <div class="col-md-6 form-group mb-3">
@@ -61,17 +61,17 @@
            <div class="col-md-6 form-group mb-3">
               <label><strong>Teléfono:</strong></label>
               <input type="number" name="telefono" class="form-control" placeholder="000000"
-                        value="" maxlength="10" required>
+                        value="" maxlength="10" >
             </div>
              <div class="col-md-6 form-group mb-3">
                    <label> <strong>Celular:</strong></label>
                     <input type="number" name="celular" class="form-control" placeholder="0000000000"
-                        value="" maxlength="255" required>
+                        value="" maxlength="255" >
             </div>
             <div class="col-md-6 form-group mb-3">
                    <label> <strong>Whatsapp:</strong></label>
                     <input type="number" name="whatsapp" class="form-control" placeholder="0000000000"
-                        value="" maxlength="255" required>
+                        value="" maxlength="255" >
             </div>
            <div class="col-md-6 form-group mb-3">
               <label><strong>Departamento:</strong></label>
@@ -89,25 +89,25 @@
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Dirección:</strong></label>
-                   <input type="text" name="direccion" value="" class="form-control" placeholder="" maxlength="20" required>
+                   <input type="text" name="direccion" value="" class="form-control" placeholder="" maxlength="255" >
             </div>
 
              <div class="col-md-6 form-group mb-3">
               <label><strong>Detalle Dirección:</strong></label>
-                   <input type="text" name="direccion_detalle" value="" class="form-control" placeholder="" maxlength="20" required>
+                   <input type="text" name="direccion_detalle" value="" class="form-control" placeholder="" maxlength="255" >
             </div>
            
             
             <div class="col-md-6 form-group mb-3">
                     <label><strong>Email:</strong></label>
                     <input type="email" name="email" class="form-control" placeholder="example@email.com"
-                        value="" maxlength="255" required>
+                        value="" maxlength="255" >
             </div>
             <div class="col-md-6 form-group mb-3">
         
                    <label> <strong>Password:</strong></label>
                     <input type="password" name="password" class="form-control" placeholder=""
-                        value="" maxlength="20" required>
+                        value="" maxlength="20" >
                
             </div>
 
@@ -151,14 +151,10 @@ $.validator.messages.email = 'Email invalido';
 
 $('#user-new-form').validate({
   rules: {
+        documento:{ required:true },
         nombres: { required:true },
         apellidos: { required:true },
-        razon_social: { required:true },
-        email:{ required:true },
-        documento:{ required:true },
-        departamento_id:{ required:true },
-        ciudad_id: { required:true },
-        password:{ required:true },
+        razon_social: { required:true }
         
     },messages: {
                

@@ -1,5 +1,7 @@
 @extends('layouts.master')
 
+
+
 @section('main-content')
   <div class="breadcrumb">
       <ul>
@@ -9,8 +11,16 @@
       </ul>
   </div>
   <div class="separator-breadcrumb border-top"></div>
-
+  @if ($message = Session::get('flash_message'))
+    <div class="alert alert-success alert-block">
+        <button type="button" class="close" data-dismiss="alert">×</button> 
+            <strong>{{ $message }}</strong>
+    </div>
+  @endif
 <div class="row">
+
+
+
 
     @if ($errors->any())
         <div class="alert alert-danger">
@@ -58,17 +68,17 @@
            <div class="col-md-6 form-group mb-3">
               <label><strong>Teléfono:</strong></label>
               <input type="number" name="telefono" class="form-control" placeholder="000000"
-                         maxlength="10" required value="{{$propietario->telefono}}">
+                         maxlength="10"  value="{{$propietario->telefono}}">
             </div>
              <div class="col-md-6 form-group mb-3">
                    <label> <strong>Celular:</strong></label>
                     <input type="number" name="celular" class="form-control" placeholder="0000000000"
-                        maxlength="255" required value="{{$propietario->celular}}">
+                        maxlength="255"  value="{{$propietario->celular}}">
             </div>
             <div class="col-md-6 form-group mb-3">
                    <label> <strong>Whatsapp:</strong></label>
                     <input type="number" name="whatsapp" class="form-control" placeholder="0000000000"
-                         maxlength="255" required value="{{$propietario->whatsapp}}">
+                         maxlength="255"  value="{{$propietario->whatsapp}}">
             </div>
            <div class="col-md-6 form-group mb-3">
               <label><strong>Departamento:</strong></label>
@@ -87,17 +97,17 @@
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Dirección:</strong></label>
-                   <input type="text" name="direccion" class="form-control" placeholder="" maxlength="20" required value="{{$direccion->direccion1}}">
+                   <input type="text" name="direccion" class="form-control" placeholder="" maxlength="255"  value="{{$direccion->direccion1}}">
             </div>
            
             <div class="col-md-6 form-group mb-3">
               <label><strong>Detalle Dirección:</strong></label>
-                   <input type="text" name="direccion_detalle" class="form-control" placeholder="" maxlength="20"  value="{{$direccion->direccion2}}">
+                   <input type="text" name="direccion_detalle" class="form-control" placeholder="" maxlength="255"  value="{{$direccion->direccion2}}">
             </div>
             <div class="col-md-6 form-group mb-3">
                     <label><strong>Email:</strong></label>
                     <input type="email" name="email" class="form-control" placeholder="example@email.com"
-                         maxlength="255" required value="{{$propietario->email_contacto}}">
+                         maxlength="255"  value="{{$propietario->email_contacto}}">
             </div>
             <div class="col-md-6 form-group mb-3">
                    <label> <strong>Nuevo Password:</strong></label>
@@ -143,17 +153,13 @@ $.validator.messages.email = 'Email invalido';
 
 $('#user-new-form').validate({
   rules: {
+        documento:{ required:true },
         nombres: { required:true },
         apellidos: { required:true },
-        razon_social: { required:true },
-        email:{ required:true },
-        documento:{ required:true },
-        departamento_id:{ required:true },
-        ciudad_id: { required:true },
-        
+        razon_social: { required:true }
         
     },messages: {
-                
+               
             },
     
 })

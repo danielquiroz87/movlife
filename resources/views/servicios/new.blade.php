@@ -76,7 +76,7 @@
 <div class="col-md-8">
       <div class="card text-left">
           <div class="card-body">
-                <h3 class="card-title mb3">Nuevo Servicio / Coordinador: xxxxx</h3>
+                <h3 class="card-title mb3">Nuevo Servicio / Usuario: {{auth()->user()->name}} </h3>
   
  <div class="box box-info">
     <form action="{{route('servicios.save')}}" method="POST" id="nuevo-servicio" enctype="multipart/form-data" >

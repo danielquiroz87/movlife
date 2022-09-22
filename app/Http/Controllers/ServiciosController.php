@@ -9,6 +9,9 @@ use App\Models\OrdenServicioDetalle;
 
 use App\Models\Cotizacion;
 use App\Models\CotizacionDetalle;
+use App\Models\TipoServicios;
+use App\Models\Sedes;
+use App\Models\Empleado;
 
 
 use App\Models\User;
@@ -17,6 +20,9 @@ use App\Models\Direccion;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+
+use App\Http\Helpers\Helper\Helper;
+
 
 class ServiciosController extends Controller
 {
@@ -29,9 +35,28 @@ class ServiciosController extends Controller
     {
         $this->middleware('auth');
     }
-    public function index()
+    public function index(Request $request)
     {   
-        $servicios=$this->getRepository();
+        $servicios=Servicio::whereIn('estado',array(1,2,3));
+        
+        if($request->has('estado')){
+            $estado=(int) $request->get('estado');
+            if($estado!="" || $estado>0){
+                $servicios->where('estado','=',$estado);
+            }
+            
+        }
+        if($request->has('fecha_inicial')){
+            $fecha_inicial=(int) $request->get('fecha_inicial');
+            $servicios->where('created_at','>=',$fecha_inicial);
+        }
+        if($request->has('fecha_final')){
+            $fecha_final=(int) $request->get('fecha_final');
+            $servicios->where('created_at','<=',$fecha_final);
+        }
+
+
+        $servicios=$servicios->paginate(25);
         return view('servicios.index')->with(['servicios'=>$servicios]);
     }
     public function importar(){
@@ -63,7 +88,18 @@ class ServiciosController extends Controller
         $servicio=Servicio::find($id);
         $cotizacion=Cotizacion::find($servicio->cotizacion_id);
         $detalle=OrdenServicioDetalle::where('orden_servicio_id',$servicio->id)->first();
-        return view('servicios.edit')->with(['servicio'=>$servicio,'cotizacion'=>$cotizacion,'detalle'=>$detalle]);
+        $tipo_servicios=TipoServicios::all();
+        $sedes=Sedes::all();
+        $empleados=Empleado::where('area_empresa','5')->get();
+
+
+        return view('servicios.edit')->with(['servicio'=>$servicio,
+                                             'cotizacion'=>$cotizacion,
+                                             'detalle'=>$detalle,
+                                             'tipo_servicios'=>$tipo_servicios,
+                                             'sedes'=>$sedes,
+                                             'empleados'=>$empleados
+                                         ]);
 
     }
     public function save(Request $request)
@@ -165,7 +201,9 @@ class ServiciosController extends Controller
 
     public function descargar(){
         $servicios=$this->getRepository();
-        return view('servicios.descargar')->with(['servicios'=>$servicios]);
+        $tipo_servicios=TipoServicios::all();
+       
+        return view('servicios.descargar')->with(['servicios'=>$servicios,'tipo_servicios'=>$tipo_servicios]);
     }
 
     private function getRepository(){

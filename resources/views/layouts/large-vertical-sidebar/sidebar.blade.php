@@ -8,6 +8,9 @@
                 </a>
                 <div class="triangle"></div>
             </li>
+
+            @if(auth()->user()->superadmin==1)
+
             <li class="nav-item {{ request()->is('customers/*') ? 'active' : '' }}" data-item="users">
                 <a class="nav-item-hold" href="#">
                     <i class="nav-icon i-Add-User"></i>
@@ -15,7 +18,7 @@
                 </a>
                 <div class="triangle"></div>
             </li>
-
+            @endif
             <li class="nav-item {{ request()->is('customers/*') ? 'active' : '' }}" data-item="operaciones">
                 <a class="nav-item-hold" href="#">
                     <i class="nav-icon i-Split-Horizontal-2-Window"></i>
@@ -32,6 +35,8 @@
                 <div class="triangle"></div>
             </li>
 
+            @if(auth()->user()->superadmin==1)
+
              <li class="nav-item {{ request()->is('customers/*') ? 'active' : '' }}" data-item="formularios">
                 <a class="nav-item-hold" href="#">
                     <i class="nav-icon i-File-Clipboard-File--Text"></i>
@@ -39,7 +44,7 @@
                 </a>
                 <div class="triangle"></div>
             </li>
-
+            @endif
             <li class="nav-item {{ request()->is('customers/*') ? 'active' : '' }}" data-item="informes">
                 <a class="nav-item-hold" href="#">
                     <i class="nav-icon i-File-Clipboard-Text--Image"></i>
@@ -72,7 +77,7 @@
             </li>
             
         </ul>
-
+        @if(auth()->user()->superadmin==1)
         <ul class="childNav" data-parent="users">
             <li class="nav-item ">
                 <a class="{{ Route::currentRouteName()=='customers' ? 'open' : '' }}"
@@ -111,7 +116,7 @@
             </li>
             
         </ul>
-
+        @endif
        <ul class="childNav" data-parent="operaciones">
             <li class="nav-item ">
                 <a class="{{ Route::currentRouteName()=='vehiculos' ? 'open' : '' }}"
@@ -151,7 +156,7 @@
 
              <li class="nav-item ">
                 <a class="{{ Route::currentRouteName()=='dashboard_version_1' ? 'open' : '' }}"
-                    href="{{route('anticipos')}}">
+                    href="{{route('facturas')}}">
                     <i class="nav-icon i-Clock-3"></i>
                     <span class="item-name">Facturas</span>
                 </a>
@@ -282,7 +287,7 @@
             </li>
             <li class="nav-item ">
                 <a class="{{ Route::currentRouteName()=='contabilidad' ? 'open' : '' }}"
-                    href="{{route('anticipos')}}">
+                    href="{{route('facturas')}}">
                     <i class="nav-icon i-Car-Wheel"></i>
                     <span class="item-name">Facturas</span>
                 </a>

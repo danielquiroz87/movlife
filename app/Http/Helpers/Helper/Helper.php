@@ -4,10 +4,16 @@ namespace App\Http\Helpers\Helper;
 
 use App\Models\Cliente;
 use App\Models\Conductor;
+use App\Models\TipoDocumentos;
+use App\Models\Documentos;
+use App\Models\Vehiculo;
+use App\Models\Servicio;
+
+
 use App\Models\Pasajero;
 use App\Http\Helpers\Helper\NumeroALetras;
-
 use Illuminate\Support\Facades\DB;
+
 
 class Helper{
 
@@ -126,7 +132,7 @@ public static function getClaseVehiculos(){
 }
 public static function selectClaseVehiculos($id=0){
 	$clase=self::getClaseVehiculos();
-	$option_clase="<option value=''>Sin Cliente</option>";
+	$option_clase="<option value=''>Seleccione</option>";
 	foreach ($clase as $clase) { 
 		if($id>0){
 			$option_clase.='<option value="'.$clase->id.'" selected="selected">'.$clase->nombre.'</option>';
@@ -161,21 +167,119 @@ public static function selectPropietarios($id=0){
 }
 
 
+public static function getVehiculosMarcas(){
+	return DB::table('vehiculos_marcas')
+         -> orderBy('nombre', 'asc')
+         -> get();
+}
+
+public static function selectVehiculoMarca($id=0){
+	$clase=self::getVehiculosMarcas();
+	$option_clase="<option value=''>Seleccione</option>";
+	foreach ($clase as $clase) { 
+		if($id>0){
+			$option_clase.='<option value="'.$clase->id.'" selected="selected">'.$clase->nombre.'</option>';
+		}
+		else{
+			$option_clase.='<option value="'.$clase->id.'">'.$clase->nombre.'</option>';
+		}
+	}
+	return $option_clase;
+}
+
+
 public static function convertiraLetras($number, $decimals = 2){
        	$numero=new NumeroALetras();
         return $numero->toWords($number, $decimals);
 }
 
 public function totalClientes(){
-	return 0;
+	
+	$clientes=Cliente::all()->count();
+	return $clientes;
 }
 
 public function totalVentas(){
+	
 	return 0;
 }
 
 public function totalOrdenes(){
-	return 0;
+	$ordenes=Servicio::all()->count();
+	return $ordenes;
+}
+
+public static function getDocumentosConductor($id_conductor){
+
+	$tipo_documentos=TipoDocumentos::where('tipo_usuario',5)->get();
+	$arr_documentos=array();
+	foreach ($tipo_documentos as $tipo) {
+		
+		$existe=Documentos::where('id_registro',$id_conductor)
+							->where('id_tipo_documento',$tipo->id)->get()->first();
+
+		if($existe){
+			if($existe->cara_frontal!="" || $existe->cara_trasera!="" ){
+				$cargado='SI';
+			}else{
+				$cargado='NO';
+			}
+			$arr_documentos[$id_conductor][$tipo->id]=array('cargado'=>$cargado,
+															'fecha_vencimiento'=>$existe->fecha_final);
+		}else{
+			$arr_documentos[$id_conductor][$tipo->id]=array('cargado'=>'NO',
+															'fecha_vencimiento'=>'NA');
+		}
+	}
+
+	return ($arr_documentos);
+
+}
+
+public static function getDocumentosVehiculo($placa){
+	
+	$vehiculo=Vehiculo::where('placa',$placa)->get()->first();
+
+	$tipo_documentos=TipoDocumentos::where('tipo_usuario',6)->get();
+	$arr_documentos=array();
+
+	foreach ($tipo_documentos as $tipo) {
+		
+		$existe=Documentos::where('id_registro',$vehiculo->id)
+							->where('id_tipo_documento',$tipo->id)->get()->first();
+
+		if($existe){
+			if($existe->cara_frontal!="" || $existe->cara_trasera!="" ){
+				$cargado='SI';
+			}else{
+				$cargado='NO';
+			}
+			$arr_documentos[$vehiculo->placa][$tipo->id]=array('cargado'=>$cargado,
+															'fecha_vencimiento'=>$existe->fecha_final);
+		}else{
+			$arr_documentos[$vehiculo->placa][$tipo->id]=array('cargado'=>'NO',
+															'fecha_vencimiento'=>'NA');
+		}
+	}
+
+	return ($arr_documentos);
+
+}
+
+
+public static function getFechasDias($fecha2){
+	
+	
+	if($fecha2!="" && $fecha2!='NA'){
+		$f1=new \DateTime(date('Y-m-d'));
+		$f2=new \DateTime($fecha2);
+		$diff=$f1->diff($f2);
+		return $diff->days;
+	}else{
+		return 'NA';
+	}
+	
+
 }
 
 

@@ -7,7 +7,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Conductor;
 use App\Models\User;
 use App\Models\Direccion;
+use App\Models\Documentos;
+use App\Models\TipoDocumentos;
 
+use Illuminate\Http\UploadedFile;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
@@ -37,9 +40,127 @@ class ConductoresController extends Controller
         $conductor=Conductor::find($id);
         $direccion=Direccion::where('tipo_usuario',5)->where('parent_id',$conductor->id)->get()->first();
         $user=User::where('email',$conductor->email_contacto)->get()->first();
-       
-        return view('conductores.edit')->with(['conductor'=>$conductor,'direccion'=>$direccion]);
+        $documentos=Documentos::whereIn('id_tipo_documento',[1,2,3,4,5,6,7,16,17,18,19,20])
+                                ->where('id_registro',$id)->get();
 
+        $tipo_documentos=TipoDocumentos::where('tipo_usuario',5)->get();
+        $arr_documentos=array();
+
+        foreach ($tipo_documentos as $key => $row) {
+            
+            $arr_documentos[$row->id]=$row->nombre;    
+        }
+        return view('conductores.edit')->with(['conductor'=>$conductor,
+                                                'direccion'=>$direccion,
+                                                'documentos'=>$documentos,
+                                                'tipo_documentos'=>$arr_documentos]);
+
+    }
+    public function documentossave(Request $request){
+        $id=(int) $request->input('id');
+        if($id>0){
+            $conductor=Conductor::find($id);
+        }
+
+         if($request->has('documentos')){
+                $documentos=$request->get('documentos');
+                $uploadedFiles = $request->file('documentos');
+                //Actualizamos fechas sin subir el documento
+
+                foreach($documentos as $key=>$arrdocumento){
+                    $existeDoc=Documentos::where('id_tipo_documento',$key)->where('id_registro',$id)->get()->first();
+                    $infodocumento=(object) $arrdocumento;
+
+                    if($existeDoc){
+                        $docbd=Documentos::find($existeDoc->id);
+                             if($infodocumento){
+                                
+                                if(isset($infodocumento->fecha_inicial)){
+                                    $docbd->fecha_inicial=$infodocumento->fecha_inicial;
+                                }
+                                if(isset($infodocumento->fecha_final)){
+                                    $docbd->fecha_final=$infodocumento->fecha_final;
+                                }
+                                if(isset($infodocumento->numero)){
+                                    $docbd->numero_documento=$infodocumento->numero;
+                                }
+                                if(isset($infodocumento->nombre)){
+                                    $docbd->nombre_entidad=$infodocumento->nombre;
+                                }
+                                if(isset($infodocumento->extra1)){
+                                    $docbd->extra1=$infodocumento->extra1;
+                                }
+                                $docbd->save();
+                            }
+
+
+                    }
+                }
+                
+                if($uploadedFiles){
+
+                    foreach( $uploadedFiles as $key=>$file){
+
+                            if(isset($documentos[$key])){
+                                $infodocumento=(object)$documentos[$key];
+                            }else{
+                                $infodocumento=false;
+                            }
+                            $existeDoc=Documentos::where('id_tipo_documento',$key)->where('id_registro',$id)->get()->first();
+                            if($existeDoc){
+                                $docbd=Documentos::find($existeDoc->id);
+                            }else{
+                                $docbd=new Documentos();
+                            }
+                            $docbd->id_tipo_documento=$key;
+                            if($infodocumento){
+                                if(isset($infodocumento->fecha_inicial)){
+                                    $docbd->fecha_inicial=$infodocumento->fecha_inicial;
+                                }
+                                if(isset($infodocumento->fecha_final)){
+                                    $docbd->fecha_final=$infodocumento->fecha_final;
+                                }
+                                if(isset($infodocumento->numero)){
+                                    $docbd->numero_documento=$infodocumento->numero;
+                                }
+                                if(isset($infodocumento->nombre)){
+                                    $docbd->nombre_entidad=$infodocumento->nombre;
+                                }
+                                if(isset($infodocumento->extra1)){
+                                    $docbd->extra1=$infodocumento->extra1;
+                                }
+                                $docbd->save();
+                            }
+
+                            if(isset($file['cara'][1])){
+                                $filecara1=($file['cara'][1]);
+                                $fileName=$filecara1->getFileName().'.'.$filecara1->getClientOriginalExtension();
+                                $filecara1->move(public_path('uploads'), $fileName);
+                                $docbd->cara_frontal='uploads/'.$fileName;
+
+                            }
+                            if(isset($file['cara'][2])){
+                                $filecara2=($file['cara'][2]);
+                                $fileName=$filecara2->getFileName().'.'.$filecara2->getClientOriginalExtension();
+                                $filecara2->move(public_path('uploads'), $fileName);
+                                $docbd->cara_trasera='uploads/'.$fileName;
+
+                            }
+                            $docbd->id_registro=$id;
+                            $docbd->save();
+                            //$file->move(public_path('file'), $fileName);
+
+                    }
+
+                }
+         
+               
+            }
+
+             \Session::flash('flash_message','Conductor actualizado exitosamente!.');
+
+            return redirect()->back();
+           
     }
     public function save(Request $request)
     { 
@@ -149,6 +270,10 @@ class ConductoresController extends Controller
                 $conductor->estrato=$request->get('estrato');
             }
             $conductor->save();
+
+
+            //Documentos
+
            
            
          if($is_new){

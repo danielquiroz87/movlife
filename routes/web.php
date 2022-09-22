@@ -59,6 +59,8 @@ Route::get('/conductores', 'ConductoresController@index')->name('conductores');
 Route::get('/conductores/new', 'ConductoresController@new')->name('conductores.new');
 Route::get('/conductores/edit/{id}', 'ConductoresController@edit')->name('conductores.edit');
 Route::post('/conductores/save', 'ConductoresController@save')->name('conductores.save');
+Route::post('/conductores/documentos/save', 'ConductoresController@documentossave')->name('conductores.documentos.save');
+
 Route::post('/conductores/delete', 'ConductoresController@delete')->name('conductores.delete');
 
 Route::get('/vehiculos', 'VehiculosController@index')->name('vehiculos');
@@ -66,7 +68,8 @@ Route::get('/vehiculos/new', 'VehiculosController@new')->name('vehiculos.new');
 Route::get('/vehiculos/edit/{id}', 'VehiculosController@edit')->name('vehiculos.edit');
 Route::post('/vehiculos/save', 'VehiculosController@save')->name('vehiculos.save');
 Route::post('/vehiculos/delete', 'VehiculosController@delete')->name('vehiculos.delete');
-Route::post('/vehiculos/save/conductores', 'VehiculosController@saveConductores')->name('vehiculos.save.conductores');
+Route::post('/vehiculos/conductores/save', 'VehiculosController@saveConductores')->name('vehiculos.save.conductores');
+Route::post('/vehiculos/documentos/save', 'VehiculosController@documentossave')->name('vehiculos.documentos.save');
 
 Route::get('/vehiculos/delete/conductor/{id}', 'VehiculosController@deleteConductor')->name('vehiculos.delete.conductor');
 
@@ -80,6 +83,7 @@ Route::get('/servicios/delete/{id}', 'ServiciosController@delete')->name('servic
 Route::post('/servicios/delete/{id}', 'ServiciosController@delete')->name('servicios.delete');
 
 Route::get('/servicios/descargar', 'ServiciosController@descargar')->name('servicios.descargar');
+Route::get('/facturas', 'FacturasController@index')->name('facturas');
 
 
 Route::get('/cotizaciones', 'CotizacionesController@index')->name('cotizaciones');
@@ -99,6 +103,7 @@ Route::get('/anticipos/new', 'AnticiposController@new')->name('anticipos.new');
 Route::get('/anticipos/edit/{id}', 'AnticiposController@edit')->name('anticipos.edit');
 Route::post('/anticipos/save', 'AnticiposController@save')->name('anticipos.save');
 Route::post('/anticipos/delete', 'AnticiposController@delete')->name('anticipos.delete');
+Route::get('/anticipos/abonos/{id}', 'AbonosController@index')->name('anticipos.abonos');
 
 
 Route::get('/municipios', 'UtilsController@municipios')->name('utils.municipios');

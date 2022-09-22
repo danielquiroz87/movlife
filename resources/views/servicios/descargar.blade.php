@@ -1,12 +1,11 @@
 <?php
-$tipo_servicios=array(1=>'Visitas Domiciliarias',2=>'Traslado Pacientes');
-$tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso');
+$tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 
 ?>
 <table  border="1" style="border-collapse: collapse" >
 <thead>
 <tr>
-<th colspan="17">LOGO</th>
+<th colspan="17"><img src="{{asset('images/movlife.png')}}"></th>
 <th colspan="16">CUADRO CIERRE SEMANAL</th>
 <th colspan="16">FR-05-021-00<br>
 				Página 1 de 1<br> 
@@ -65,34 +64,96 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso');
 <th>OBSERVACIONES </th>
 <th>COORDINADOR	</th>
 <th>OBSERVACIONES CONTABILIDAD</th>
+<th>PLACA</th>
+<th>CEDULA PLACA</th>
+<th>ESPECIAL</th>
+<th>INTERMUNICIPAL</th>
+<th>TAXI</th>
+<th>PARTICULAR</th>
+<th>CEDULA</th>
+<th>LICENCIA DE CONDUCIR</th>
+<th>PLANILLA DE SS</th>
+<th>RUT</th>
+<th>SIMIT</th>
+<th>RUNT</th>
+<th>CERT-ANTECEDENTES</th>
+<th>CURSOS ADICIONALES</th>
+<th>FOTO VEHICULO</th>
+<th>LICENCIA DE TRANS</th>
+<th>SOAT</th>
+<th>REVISIÓN TEC</th>
+<th>TARJETA OPERACIÓN</th>
+<th>POLIZA</th>
+<th>REVISION PREVENTIVA</th>
+<th>EMPRESA AFILIADORA</th>
+<th>FECHA VENCIMIENTO LICENCIA DE CONDUCCION</th>
+<th>DIAS PARA VENCIMIENTO </th>
+<th>FECHA DOCUMENTOS SEGURO OBLIGATORIO</th>
+<th>DIAS PARA VENCIMIENTO</th>
+<th>FECHA DOCUMENTOS POLIZA CONTRA</th>
+<th>DIAS PARA VENCIMIENTO</th>
+<th>FECHA DOCUMENTOS POLIZA EXTRA</th>
+<th>DIAS PARA VENCIMIENTO</th>
+<th>FECHA DOCUMENTOS TARJETA OPERACION</th>
+<th>DIAS PARA VENCIMIENTO</th>
+<th>FECHA DOCUMENTOS TECNOMECANICA</th>
+<th>DIAS PARA VENCIMIENTO</th>
+<th>FECHA DOCUMENTOS TECNOMECANICA</th>
+<th>DIAS PARA VENCIMIENTO</th>
+
+
 </tr>
 </thead>
 <tbody>
 	@foreach ($servicios as $servicio)
 	<tr>
+	<?php 
+	$documentos_conductor=Helper::getDocumentosConductor($servicio->id_conductor_servicio);
+	$documentos_vehiculo=Helper::getDocumentosVehiculo($servicio->placa);
+	?>
+
 	<td>{{$servicio->id}}</td>
 	<td>{{$servicio->fecha_servicio}}</td>
 	<td>{{$servicio->fecha_servicio}}</td>
-	<td><?php echo $tipo_servicios[$servicio->tipo_servicio];?></td>
-	<td>NA</td>
+	<td><?php echo $tipo_servicios[$servicio->tipo_servicio]->nombre;?></td>
+	<td>
+		@if($servicio->educador_coordinador>0)
+			{{$servicio->coordinador->nombres}} {{$servicio->coordinador->apellidos}}
+		@else
+			NA
+		@endif
+	</td>
 	<td>{{$servicio->semana}}</td>
 	<td>{{$servicio->pasajero->nombres}} {{$servicio->pasajero->apellidos}}</td>
 	<td>{{$servicio->pasajero->documento}}
 	<td>{{$servicio->pasajero->telefono}}</td>
 	<td>{{$servicio->cliente->documento}},{{$servicio->cliente->nombres}} {{$servicio->cliente->apellidos}}</td>
-	<td>{{$servicio->uri_sede}}</td>
-	<td>Ciudad Sede</td>
+	<td>
+		@if($servicio->uri_sede>0)
+			{{$servicio->sede->nombre}}
+		@else
+		NA
+		@endif
+	</td>
+	<td>		
+		@if($servicio->uri_sede>0)
+			{{$servicio->sede->ciudad->nombre}}
+
+		@else
+			NA
+		@endif
+	</td>
 	<td>{{$servicio->pasajero->id}}</td>
 	<td>{{$servicio->origen}}</td>
 	<td>{{$servicio->barrio}}</td>
 	<td>{{$servicio->origen}}</td>
 	<td>{{$servicio->destino}}</td>
-	<td>{{$servicio->kilometraje}}</td>
+	<td>{{$servicio->kilometros}}</td>
 	<td>{{$servicio->tiempo}}</td>
 	<td>{{$servicio->hora_recogida}}</td>
 	<td>{{$tipo_viaje[$servicio->tipo_viaje]}}</td>
 	<td>{{$servicio->turno}}</td>
-	<td>{{$servicio->educador_coordinador}}</td>
+	<td>NA</td>
 	<td>{{$servicio->hora_cita}}</td>
 	<td>{{$servicio->hora_terminacion_cita}}</td>
 	<td>{{$servicio->terapia}}</td>
@@ -121,6 +182,43 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso');
 	<td></td>
 	<td>{{$servicio->user}}</td>
 	<td>{{$servicio->observaciones}}</td>
+	<td>{{$servicio->placa}}</td>
+	<td>{{$servicio->conductor->documento}}</td>
+	<td>SI</td>
+	<td>0</td>
+	<td>0</td>
+	<td>0</td>
+	<td>{{$documentos_conductor[$servicio->id_conductor_servicio][5]['cargado']}}</td><!--doc cedula!-->
+	<td>{{$documentos_conductor[$servicio->id_conductor_servicio][1]['cargado']}}</td><!--doc licencia!-->
+	<td>{{$documentos_conductor[$servicio->id_conductor_servicio][4]['cargado']}}</td> <!--doc PLANILLA DE SS!-->
+	<td>{{$documentos_conductor[$servicio->id_conductor_servicio][7]['cargado']}}</td> <!--doc rut!-->
+	<td>{{$documentos_conductor[$servicio->id_conductor_servicio][16]['cargado']}}</td> <!--doc simit!-->
+	<td>{{$documentos_conductor[$servicio->id_conductor_servicio][17]['cargado']}}</td> <!--doc runt!-->
+	<td>{{$documentos_conductor[$servicio->id_conductor_servicio][18]['cargado']}}</td> <!--doc antecedentes!-->
+	<td>{{$documentos_conductor[$servicio->id_conductor_servicio][19]['cargado']}}</td> <!--doc estudios adicionales!-->
+	<td>{{$documentos_vehiculo[$servicio->placa][15]['cargado']}}</td> <!--doc fotos vehiculo!-->
+	<td>{{$documentos_vehiculo[$servicio->placa][8]['cargado']}}</td> <!--doc licencia de transito!-->
+	<td>{{$documentos_vehiculo[$servicio->placa][9]['cargado']}}</td> <!--doc soat!-->
+	<td>{{$documentos_vehiculo[$servicio->placa][10]['cargado']}}</td> <!--doc revision tecnicomecanica!-->
+	<td>{{$documentos_vehiculo[$servicio->placa][13]['cargado']}}</td> <!--doc tarjeta operacion!-->
+	<td>{{$documentos_vehiculo[$servicio->placa][11]['cargado']}}</td> <!--doc poliza!-->
+	<td>{{$documentos_vehiculo[$servicio->placa][14]['cargado']}}</td> <!--doc revision preventiva!-->
+	<td>NA</td><!--doc empresa afiliadora!-->
+	<td>{{$documentos_conductor[$servicio->id_conductor_servicio][1]['fecha_vencimiento']}}</td> <!--fecha licencia cond!-->
+	<td>{{Helper::getFechasDias($documentos_conductor[$servicio->id_conductor_servicio][1]['fecha_vencimiento'])}}</td><!--dias vencimiento licencia cond!-->
+	<td>{{$documentos_vehiculo[$servicio->placa][9]['fecha_vencimiento']}}</td>  <!--fecha seguro obl!-->
+	<td>{{Helper::getFechasDias($documentos_vehiculo[$servicio->placa][9]['fecha_vencimiento'])}}</td><!--dias vencimiento fecha seguro obl!-->
+	<td>{{$documentos_vehiculo[$servicio->placa][11]['fecha_vencimiento']}}</td> <!--fecha poliza!-->
+	<td>{{Helper::getFechasDias($documentos_vehiculo[$servicio->placa][11]['fecha_vencimiento'])}}</td> <!--dias vencimiento poliza!-->
+	<td>{{$documentos_vehiculo[$servicio->placa][12]['fecha_vencimiento']}}</td> <!--fecha poliza extra!-->
+	<td>{{Helper::getFechasDias($documentos_vehiculo[$servicio->placa][12]['fecha_vencimiento'])}}</td><!--dias vencimiento poliza cond!-->
+	<td>{{$documentos_vehiculo[$servicio->placa][13]['fecha_vencimiento']}}</td> <!--fecha tarjeta operacion!-->
+	<td>{{Helper::getFechasDias($documentos_vehiculo[$servicio->placa][13]['fecha_vencimiento'])}}</td><!--dias vencimiento tarjeta op!-->
+	<td>{{$documentos_vehiculo[$servicio->placa][10]['fecha_vencimiento']}}</td> <!--fecha tecnicomecanica!-->
+	<td>{{Helper::getFechasDias($documentos_vehiculo[$servicio->placa][10]['fecha_vencimiento'])}}</td><!--dias vencimiento tecnicomecanica!-->
+	<td>{{$documentos_vehiculo[$servicio->placa][14]['fecha_vencimiento']}}</td> <!--fecha preventiva!-->
+	<td>{{Helper::getFechasDias($documentos_vehiculo[$servicio->placa][14]['fecha_vencimiento'])}}</td><!--dias vencimientos preventiva!-->
+
 	<tr>
 	@endforeach
 </tbody>

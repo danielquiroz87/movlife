@@ -145,8 +145,9 @@ class PropietariosVehiculosController extends Controller
          }else{
             \Session::flash('flash_message','Propietario actualizado exitosamente!.');
 
-            return redirect()->back();
+            return redirect()->route('propietarios');
 
+            
          }
 
 

@@ -165,7 +165,7 @@
 
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
                     <div class="dropdown-header">
-                        <i class="i-Lock-User mr-1"></i> Administrador
+                        <i class="i-Lock-User mr-1"></i>Hola {{auth()->user()->name}}
                     </div>
                     <a href="#" class="dropdown-item">Perfil</a>
                     <a class="dropdown-item" href="{{route('user.logout')}}">Cerrar Sesión</a>

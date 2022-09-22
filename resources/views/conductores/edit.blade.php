@@ -25,7 +25,7 @@
 </div>
 <div class="row">
 
-  <div class="col-md-8 mb-4">
+  <div class="col-md-12">
     <div class="card text-left">
       <div class="card-body">
         <h3 class="card-title mb3">Editar Conductor</h3>
@@ -40,10 +40,11 @@
           <li class="nav-item">
             <a class="nav-link" id="documentos-icon-tab" data-toggle="tab" href="#documentos" role="tab" aria-controls="documentos" aria-selected="false"><i class="nav-icon i-Home1 mr-1"></i> Documentos</a>
           </li>
-          <li class="nav-item"><a class="nav-link" id="historial-documentos-icon-tab" data-toggle="tab" href="#historial-documentos" role="tab" aria-controls="historial" aria-selected="false"><i class="nav-icon i-Home1 mr-1"></i> Historial Documentos</a>
-          </li>
+            </li>
           <li class="nav-item"><a class="nav-link" id="historial-documentos-icon-tab" data-toggle="tab" href="#cuentas_bancarias" role="tab" aria-controls="cuentas_bancarias" aria-selected="false"><i class="nav-icon i-Home1 mr-1"></i> Cuentas Bancarias</a>
           </li>
+          <li class="nav-item"><a class="nav-link" id="historial-documentos-icon-tab" data-toggle="tab" href="#historial-documentos" role="tab" aria-controls="historial" aria-selected="false"><i class="nav-icon i-Home1 mr-1"></i> Historial Documentos</a>
+        
         </ul>
 
         <div class="tab-content">
@@ -343,7 +344,7 @@
 
 <div class="tab-pane" id="documentos" role="tabpanel" aria-labelledby="documentos-icon-tab">
   <div class="box box-info">
-    <form action="{{route('conductores.save')}}" method="POST" id="user-new-form" enctype="multipart/form-data" >
+    <form action="{{route('conductores.documentos.save')}}" method="POST" id="user-new-form" enctype="multipart/form-data" >
       {{ csrf_field() }}
       <input type="hidden" name="id" value="{{$conductor->id}}">
 
@@ -363,14 +364,15 @@
                 <div class="row"> 
                   <div class="col-md-6 form-group ">
                     <label> <strong>Foto Cédula Frontal:</strong></label>
-                    <input type="file" class="form-control" name="cedula_frontal">
+                    <input type="file" class="form-control" name="documentos[5][cara][1]">
 
                   </div>
                   <div class="col-md-6 form-group ">
                     <label> <strong>Foto Cédula Reverso:</strong></label>
-                    <input type="file" class="form-control" name="cedula_frontal">
+                    <input type="file" class="form-control" name="documentos[5][cara][2]">
 
                   </div>
+                  
                 </div>
               </div>
             </div>
@@ -382,40 +384,37 @@
             <div class="collapse" id="accordion-item-licencia" data-parent="#accordionExample">
               <div class="card-body">
                 <div class="row"> 
-                <form type="multipart/form-data" name="documentos-licencia" id="documentos-licencia"  >
-                  <input type="hidden" name="documento[tipo][1]">
-                  <input type="hidden" name="documento[tipo][1]">
                   
                   <div class="col-md-3 form-group ">
                         <label> <strong>Fecha Inicial:</strong></label>
                         <input type="date" name="licencia_fecha_inicial" class="form-control" placeholder="dd/mm/yyyy"
-                        name="documentos[fecha_inicial]" id="documentos_fecha_inicial" 
+                        name="documentos[1][fecha_inicial]" id="documentos_fecha_inicial" 
                         >
                   </div>
 
                    <div class="col-md-3 form-group ">
                         <label> <strong>Fecha Final:</strong></label>
-                        <input type="date" name="documentos[fecha_final]" class="form-control" placeholder="dd/mm/yyyy">
+                        <input type="date" name="documentos[1][fecha_final]" class="form-control" placeholder="dd/mm/yyyy">
                   </div>
 
                   <div class="col-md-6 form-group ">
                         <label> <strong>Categoria:</strong></label>
-                        <input type="text" name="documentos[extra1]" class="form-control" >
+                        <input type="text" name="documentos[1][extra1]" class="form-control" >
                   </div>
 
                   <div class="col-md-6 form-group ">
                         <label> <strong>Número Documento:</strong></label>
-                        <input type="number" name="documentos[numero]" class="form-control" min="0" max="10">
+                        <input type="text" name="documentos[1][numero]" class="form-control" >
                   </div>
 
                   <div class="col-md-6 form-group ">
                     <label> <strong>Foto Licencia Frontal:</strong></label>
-                    <input type="file" class="form-control" name="documentos[cara][1]">
+                    <input type="file" class="form-control" name="documentos[1][cara][1]">
 
                   </div>
                   <div class="col-md-6 form-group ">
                     <label> <strong>Foto Licencia Reverso:</strong></label>
-                    <input type="file" class="form-control" name="cedula_frontal" name="documentos[cara][2]">
+                    <input type="file" class="form-control" name="cedula_frontal" name="documentos[1][cara][2]">
 
                   </div>
                 </div>
@@ -430,7 +429,7 @@
                 <div class="card-body">
                   <div class="col-md-6 form-group ">
                       <label> <strong>Archivo Planilla Seguridad Social:</strong></label>
-                      <input type="file" class="form-control" name="seguridad_social">
+                      <input type="file" class="form-control" name="documentos[4][cara][1]">
                     </div>
                 </div>
               </div>
@@ -446,17 +445,17 @@
 
                   <div class="col-md-3 form-group ">
                         <label> <strong>Fecha Inicial:</strong></label>
-                        <input type="date" name="licencia_fecha_inicial" class="form-control" placeholder="dd/mm/yyyy">
+                        <input type="date" name="documentos[7][fecha_inicial]" class="form-control" placeholder="dd/mm/yyyy">
                   </div>
 
                    <div class="col-md-3 form-group ">
                         <label> <strong>Fecha Final:</strong></label>
-                        <input type="date" name="licencia_fecha_final" class="form-control" placeholder="dd/mm/yyyy">
+                        <input type="date" name="documentos[7][fecha_final]" class="form-control" placeholder="dd/mm/yyyy">
                   </div>
 
                   <div class="col-md-6 form-group ">
                       <label> <strong>Archivo Rut:</strong></label>
-                      <input type="file" class="form-control" name="rut">
+                      <input type="file" class="form-control" name="documentos[7][cara][1]">
                   </div>
                 </div>
               </div>
@@ -473,17 +472,17 @@
 
                   <div class="col-md-3 form-group ">
                         <label> <strong>Fecha Inicial:</strong></label>
-                        <input type="date" name="licencia_fecha_inicial" class="form-control" placeholder="dd/mm/yyyy">
+                        <input type="date" name="documentos[16][fecha_inicial]" class="form-control" placeholder="dd/mm/yyyy">
                   </div>
 
                    <div class="col-md-3 form-group ">
                         <label> <strong>Fecha Final:</strong></label>
-                        <input type="date" name="licencia_fecha_final" class="form-control" placeholder="dd/mm/yyyy">
+                        <input type="date" name="documentos[16][fecha_final]" class="form-control" placeholder="dd/mm/yyyy">
                   </div>
 
                   <div class="col-md-6 form-group ">
                       <label> <strong>Archivo SIMIT:</strong></label>
-                      <input type="file" class="form-control" name="rut">
+                      <input type="file" class="form-control" name="documentos[16][cara][1]">
                   </div>
                 </div>
                 </div>
@@ -501,17 +500,17 @@
 
                   <div class="col-md-3 form-group ">
                         <label> <strong>Fecha Inicial:</strong></label>
-                        <input type="date" name="licencia_fecha_inicial" class="form-control" placeholder="dd/mm/yyyy">
+                        <input type="date" name="documentos[17][fecha_inicial]" class="form-control" placeholder="dd/mm/yyyy">
                   </div>
 
                    <div class="col-md-3 form-group ">
                         <label> <strong>Fecha Final:</strong></label>
-                        <input type="date" name="licencia_fecha_final" class="form-control" placeholder="dd/mm/yyyy">
+                        <input type="date" name="documentos[17][fecha_final]" class="form-control" placeholder="dd/mm/yyyy">
                   </div>
 
                   <div class="col-md-6 form-group ">
                       <label> <strong>Archivo RUNT:</strong></label>
-                      <input type="file" class="form-control" name="rut">
+                      <input type="file" class="form-control" name="documentos[17][cara][1]">
                   </div>
                 </div>
                 </div>
@@ -526,7 +525,7 @@
                 <div class="card-body">
                   <div class="col-md-6 form-group ">
                       <label> <strong>Archivo Antecedentes Penales:</strong></label>
-                      <input type="file" class="form-control" name="seguridad_social">
+                      <input type="file" class="form-control" name="documentos[18][cara][1]">
                     </div>
                 </div>
               </div>
@@ -540,7 +539,7 @@
                 <div class="card-body">
                   <div class="col-md-6 form-group ">
                       <label> <strong>Archivo Cursos Adicionales:</strong></label>
-                      <input type="file" class="form-control" name="seguridad_social">
+                      <input type="file" class="form-control" name="documentos[19][cara][1]">
                     </div>
                 </div>
               </div>
@@ -557,6 +556,41 @@
 </div>   
 </div>
 
+<div class="tab-pane" id="cuentas_bancarias" role="tabpanel" aria-labelledby="historial-documentos-icon-tab">
+  <div class="box box-info">
+    <form action="{{route('conductores.documentos.save')}}" method="POST" id="user-new-form" enctype="multipart/form-data" >
+      {{ csrf_field() }}
+      <input type="hidden" name="id" value="{{$conductor->id}}">
+
+        <div class="card-body">
+                   <div class="row"> 
+
+                  <div class="col-md-3 form-group ">
+                        <label> <strong>Numero Cuenta:</strong></label>
+                        <input type="number" name="documentos[20][numero]" class="form-control" placeholder="">
+                  </div>
+                   <div class="col-md-3 form-group ">
+                        <label> <strong>Banco:</strong></label>
+                        <input type="text" name="documentos[20][nombre]" class="form-control" placeholder="">
+                  </div>
+                  <div class="col-md-6 form-group ">
+                      <label> <strong>Archivo:</strong></label>
+                      <input type="file" class="form-control" name="documentos[20][cara][1]">
+                  </div>
+
+                  <div class="col-xs-12 col-sm-12 col-md-12 ">
+        <button id="submit" type="submit" class="btn btn-primary">Enviar</button>
+        <a href="{{ route('conductores') }}" class="btn btn-danger">Cancelar</a>
+      </div>
+                </div>
+        </div>
+     
+    </form>
+
+  </div>                      
+
+</div>
+
 <div class="tab-pane" id="historial-documentos" role="tabpanel" aria-labelledby="historial-documentos-icon-tab">
   <div class="box box-info">
     <form action="{{route('conductores.save')}}" method="POST" id="user-new-form" enctype="multipart/form-data" >
@@ -564,9 +598,35 @@
       <input type="hidden" name="id" value="{{$conductor->id}}">
 
       <div class="row">
-        <div class="col-md-6 form-group mb-3">
+        <div class="col-md-12 form-group mb-3">
           <label><strong>Historial Documentos:</strong></label>
+          <table id="hidden_column_table" class="display table table-striped table-bordered dataTable dtr-inline" style="width: 100%;" role="grid" aria-describedby="hidden_column_table_info">
+            <tr>
+              <thead>
+                <th>Tipo Documento</th>
+                <th>Fecha Inicial</th>
+                <th>Fecha Final</th>
+                <th>Número</th>
+                <th>Entidad</th>
+                <th>Cara Frontal</th>
+                <th>Cara Trasera</th>
+              </thead>
+            </tr>
+            <tbody>
+              @foreach($documentos as $documento)
+              <tr>
+                <td>{{$tipo_documentos[$documento->id_tipo_documento]}}</td>
+                <td>{{$documento->fecha_inicial}}</td>
+                <td>{{$documento->fecha_final}}</td>
+                <td>{{$documento->numero_documento}}</td>
+                <td>{{$documento->nombre_entidad}}</td>
+                <td><a href="{{asset($documento->cara_frontal)}}" target="_blank">{{$documento->cara_frontal}}</a></td>
+                <td><a href="{{asset($documento->cara_trasera)}}" target="_blank">{{$documento->cara_trasera}}</a></td>
 
+              </tr>
+              @endforeach
+            </tbody>
+          </table>
         </div>
       
       </div>
@@ -577,35 +637,7 @@
 
 </div>
 
-<div class="tab-pane" id="cuentas_bancarias" role="tabpanel" aria-labelledby="historial-documentos-icon-tab">
-  <div class="box box-info">
-    <form action="{{route('conductores.save')}}" method="POST" id="user-new-form" enctype="multipart/form-data" >
-      {{ csrf_field() }}
-      <input type="hidden" name="id" value="{{$conductor->id}}">
 
-        <div class="card-body">
-                   <div class="row"> 
-
-                  <div class="col-md-3 form-group ">
-                        <label> <strong>Numero Cuenta:</strong></label>
-                        <input type="number" name="cuenta_bancaria_numero" class="form-control" placeholder="">
-                  </div>
-                   <div class="col-md-3 form-group ">
-                        <label> <strong>Banco:</strong></label>
-                        <input type="text" name="cuentas_bancaria_banco" class="form-control" placeholder="">
-                  </div>
-                  <div class="col-md-6 form-group ">
-                      <label> <strong>Archivo:</strong></label>
-                      <input type="file" class="form-control" name="rut">
-                  </div>
-                </div>
-        </div>
-     
-    </form>
-
-  </div>                      
-
-</div>
 
 </div>
 

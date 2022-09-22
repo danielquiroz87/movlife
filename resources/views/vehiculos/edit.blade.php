@@ -10,6 +10,13 @@
 </div>
 <div class="separator-breadcrumb border-top"></div>
 
+ @if ($message = Session::get('flash_message'))
+    <div class="alert alert-success alert-block">
+        <button type="button" class="close" data-dismiss="alert">×</button> 
+            <strong>{{ $message }}</strong>
+    </div>
+  @endif
+
 <div class="row">
 
   @if ($errors->any())
@@ -25,7 +32,7 @@
 </div>
 <div class="row">
 
-  <div class="col-md-8 mb-4">
+  <div class="col-md-12">
     <div class="card text-left">
       <div class="card-body">
         <h3 class="card-title mb3">Editar Vehículo / Placa: {{$vehiculo->placa}},({{$vehiculo->marca->nombre}}-{{$vehiculo->color}})</h3>
@@ -71,10 +78,18 @@
                         <input type="number" name="modelo" class="form-control" id="modelo" min="1980"  placeholder="" value="{{$vehiculo->modelo}}" required>
                   </div>
                   
+                  <div class="col-md-6 form-group mb-3">
+                    <label><strong>Marca:</strong></label>
+                    <select name="id_vehiculo_marca" class="form-control select-busqueda">
+                        <?php echo Helper::selectVehiculoMarca($vehiculo->id_vehiculo_marca) ?>
+                    </select>
+                  </div>
+
                    <div class="col-md-6 form-group mb-3">
-                        <label><strong>Marca</strong></label>
-                        <input type="hidden" name="marca" value="{{$vehiculo->marca->id}}">
-                        <input type="text" name="marca_nombre" class="form-control" value="{{$vehiculo->marca->nombre}}" required>
+                    <label><strong>Clase:</strong></label>
+                    <select name="id_vehiculo_clase" class="form-control select-busqueda">
+                        <?php echo Helper::selectClaseVehiculos($vehiculo->id_vehiculo_clase) ?>
+                    </select>
                   </div>
 
                   <div class="col-md-6 form-group mb-3">
@@ -82,90 +97,85 @@
                     <input type="text" name="linea" class="form-control" id="linea"  placeholder="Logan" value="{{$vehiculo->linea}}" required>
                   </div>
 
-                  <div class="col-md-6 form-group mb-3">
-                    <label><strong>Clase:</strong></label>
-                    <select name="id_vehiculo_clase" class="form-control select-busqueda">
-                        <?php echo Helper::selectClaseVehiculos($vehiculo->id_vehiculo_clase) ?>
-                    </select>
-                  </div>
-
 
                 <div class="col-md-6 form-group mb-3">
                 <label><strong>Clasificación Vehículo:</strong></label>
-                <select name="id_vehiculo_clase" class="form-control select-busqueda">
-                    <option value="" selected="selected">Seleccione</option>
-                    <option value="1">Publico</option>
-                    <option value="2">Especial</option>
-                    <option value="3">Particular</option>
-                    <option value="4">Taxi</option>
-                    <option value="5">Otro</option>
+                <select name="id_vehiculo_uso" class="form-control select-busqueda">
+                    <option value="" >Seleccione</option>
+                    <option value="1" @if($vehiculo->id_vehiculo_uso==1) selected=true @endif>Publico</option>
+                    <option value="2" @if($vehiculo->id_vehiculo_uso==2) selected=true @endif>Especial</option>
+                    <option value="3" @if($vehiculo->id_vehiculo_uso==3) selected=true @endif>Particular</option>
+                    <option value="4" @if($vehiculo->id_vehiculo_uso==4) selected=true @endif>Taxi</option>
+                    <option value="5" @if($vehiculo->id_vehiculo_uso==5) selected=true @endif>Otro</option>
                   </select>
                 </div>
                 <div class="col-md-6 form-group mb-3">
                 <label><strong>Tipo Combustible:</strong></label>
                 <select name="id_vehiculo_tipo_combustible" class="form-control select-busqueda">
                     <option value="" selected="selected">Seleccione</option>
-                    <option value="1">Acpm</option>
-                    <option value="2">Diesel</option>
-                    <option value="3">Gas-Gasolina</option>
-                    <option value="4">Gasolina</option>
-                    <option value="5">Gnb</option>
+                    <option value="1" @if($vehiculo->id_vehiculo_tipo_combustible==1) selected=true @endif>Acpm</option>
+                    <option value="2" @if($vehiculo->id_vehiculo_tipo_combustible==2) selected=true @endif>Diesel</option>
+                    <option value="3" @if($vehiculo->id_vehiculo_tipo_combustible==3) selected=true @endif>Gas-Gasolina</option>
+                    <option value="4" @if($vehiculo->id_vehiculo_tipo_combustible==4) selected=true @endif>Gasolina</option>
+                    <option value="5" @if($vehiculo->id_vehiculo_tipo_combustible==5) selected=true @endif>Gnb</option>
                  
                   </select>
                 </div>
                 <div class="col-md-6 form-group mb-3">
                   <label><strong>Pasajeros</strong></label>
-                  <input type="number" name="pasajeros" class="form-control" id="pasajeros" min="0" max="100" placeholder="" required>
+                  <input type="number" name="pasajeros" class="form-control" id="pasajeros" min="0" max="100" placeholder="" value="{{$vehiculo->capacidad_pasajeros}}" required>
                 </div>
 
                 <div class="col-md-6 form-group mb-3">
                       <label><strong>Color</strong></label>
-                      <input type="text" name="color" class="form-control" id="color"  placeholder="Color" required>
+                      <input type="text" name="color" class="form-control" id="color"  placeholder="Color" value="{{$vehiculo->color}}" required>
                 </div>
 
                 <div class="col-md-6 form-group mb-3">
                       <label><strong>Nro Chasis</strong></label>
-                      <input type="text" name="numero_chasis" class="form-control" id="chasis"  placeholder="# Chasis" required>
+                      <input type="text" name="numero_chasis" class="form-control" id="chasis"  placeholder="# Chasis" value="{{$vehiculo->numero_chasis}}" >
                 </div>
 
                 <div class="col-md-6 form-group mb-3">
                       <label><strong>Nro Motor</strong></label>
-                      <input type="text" name="numero_motor" class="form-control" id="motor"  placeholder="# Motor" required>
+                      <input type="text" name="numero_motor" class="form-control" id="motor"  placeholder="# Motor" value="{{$vehiculo->numero_motor}}">
                 </div>
 
                 <div class="col-md-6 form-group mb-3">
                       <label><strong>Cilindraje</strong></label>
-                      <input type="text" name="cilindraje" class="form-control" id="cilindraje"  placeholder="Cilindraje" required>
+                      <input type="text" name="cilindraje" class="form-control" id="cilindraje"  placeholder="Cilindraje" value="{{$vehiculo->cilindraje}}">
                 </div>
                 <div class="col-md-6 form-group mb-3">
                   <label><strong>Departamento:</strong></label>
                         <select name="departamento_id" id="departamento"  class="form-control departamentos">
-                            <?php echo Helper::selectDepartamentos() ?>
+                            <?php echo Helper::selectDepartamentos($vehiculo->departamento_id) ?>
                         </select>
                 </div>
                
                <div class="col-md-6 form-group mb-3">
                   <label><strong>Ciudad:</strong></label>
                       <select name="ciudad_id" id="ciudad_id"  class="form-control municipios">
-                            <?php echo Helper::selectMunicipios() ?>
+                            <?php echo Helper::selectMunicipios($vehiculo->departamento_id,$vehiculo->ciudad_id) ?>
                       </select>
-                </div>
+              </div>
 
-                <div class="col-md-6 form-group mb-3">
-              <label><strong>Propietario:</strong></label>
-                  <select name="id_propietario" class="form-control">
-                    <option value="1">Propietario Pruebas</option>
-                  </select>
-            </div>
+              <div class="col-md-6 form-group mb-3">
+                  <label><strong>Propietario:</strong></label>
+                      <select name="propietario_id" id="propietario_id"  class="form-control municipios">
+                            <?php echo Helper::selectPropietarios($vehiculo->propietario_id) ?>
+                      </select>
+              </div>
+
+
             
             <div class="col-md-6 form-group mb-3">
               <label class="switch pr-5 switch-success mr-3"><span>Vinculado</span>
-                  <input type="checkbox" name="Vinculado" ><span class="slider"></span>
+                  <input type="checkbox" name="vinculado" @if($vehiculo->vinculado==1) checked=true @endif  ><span class="slider"></span>
               </label>
             </div>
              <div class="col-md-6 form-group mb-3">
                <label class="switch pr-5 switch-success mr-3"><span>Convenio Firmado</span>
-                  <input type="checkbox" name="convenio" ><span class="slider"></span>
+                  <input type="checkbox" name="convenio" @if($vehiculo->convenio_firmado==1) checked=true @endif ><span class="slider"></span>
               </label>
             </div>
 
@@ -238,7 +248,7 @@
                   </div>
                   <div class="col-xs-12 col-sm-12 col-md-12 ">
                     <button id="submit" type="submit" class="btn btn-primary">Enviar</button>
-                    <a href="{{ route('vehiculos') }}" class="btn btn-danger">Cancelar</a>
+                   
                   </div>
 
                 </div>
@@ -564,15 +574,19 @@
 
                <div class="col-xs-12 col-sm-12 col-md-12 ">
                 <button id="submit" type="submit" class="btn btn-primary">Enviar</button>
-                <a href="{{ route('vehiculos') }}" class="btn btn-danger">Cancelar</a>
+    
               </div>
         </div>
 
         </div> 
 
         <div class="tab-pane" id="documentos" role="tabpanel" aria-labelledby="documentos-icon-tab">
+           
             <div class="box box-info">
-               
+                <form action="{{route('vehiculos.documentos.save')}}" method="POST" id="user-new-form" enctype="multipart/form-data" >
+            {{ csrf_field() }}
+            <input type="hidden" name="id" value="{{$vehiculo->id}}">
+
               <div class="card ul-card__border-radius">
                 <div class="card-header">
                   <h6 class="card-title mb-0"><a class="collapsed text-default" data-toggle="collapse" href="#accordion-item-fotos_vehiculo">Fotos Vehiculo</a></h6>
@@ -582,9 +596,13 @@
                     <div class="row">
                       <div class="col-md-6 form-group ">
                        <label> <strong>Foto Frontal:</strong></label>
-                       <input type="file" class="form-control"  >
+                       <input type="file" class="form-control" name="documentos[15][cara][1]"  >
                      </div>
                      <div class="col-md-6 form-group ">
+                       <label> <strong>Foto Trasera:</strong></label>
+                       <input type="file" class="form-control" name="documentos[15][cara][2]"  >
+                     </div>
+                      <div class="col-md-6 form-group ">
                        <label> <strong>Foto Lateral Derecha:</strong></label>
                        <input type="file" class="form-control"  >
                      </div>
@@ -592,10 +610,8 @@
                        <label> <strong>Foto Lateral Izquierda:</strong></label>
                        <input type="file" class="form-control"  >
                      </div>
-                     <div class="col-md-6 form-group ">
-                       <label> <strong>Foto Trasera:</strong></label>
-                       <input type="file" class="form-control"  >
-                     </div>
+                     
+
                    </div>
                  </div>
                </div>
@@ -610,11 +626,11 @@
                     <div class="row">
                       <div class="col-md-6 form-group ">
                        <label> <strong>Foto Frontal:</strong></label>
-                       <input type="file" class="form-control"  >
+                       <input type="file" class="form-control" name="documentos[8][cara][1]"  >
                      </div>
                      <div class="col-md-6 form-group ">
                        <label> <strong>Foto Reverso:</strong></label>
-                       <input type="file" class="form-control"  >
+                       <input type="file" class="form-control" name="documentos[8][cara][2]"  >
                      </div>
                    </div>
                  </div>
@@ -634,23 +650,23 @@
                   <div class="col-md-3 form-group ">
                         <label> <strong>Fecha Expedición:</strong></label>
                         <input type="date" class="form-control" placeholder="dd/mm/yyyy"
-                        name="documentos[fecha_inicial]" id="documentos_fecha_inicial" 
+                        name="documentos[13][fecha_inicial]" id="" 
                         >
                   </div>
 
                    <div class="col-md-3 form-group ">
                         <label> <strong>Fecha Vencimiento:</strong></label>
-                        <input type="date" name="documentos[fecha_final]" class="form-control" placeholder="dd/mm/yyyy">
+                        <input type="date" name="documentos[13][fecha_final]" class="form-control" placeholder="dd/mm/yyyy">
                   </div>
 
                   <div class="col-md-6 form-group ">
                         <label> <strong>Número Documento:</strong></label>
-                        <input type="number" name="documentos[numero]" class="form-control" min="0" max="10">
+                        <input type="text" name="documentos[13][numero]" class="form-control" >
                   </div>
 
                   <div class="col-md-6 form-group ">
                     <label> <strong>Foto Frontal:</strong></label>
-                    <input type="file" class="form-control" name="documentos[cara][1]">
+                    <input type="file" class="form-control" name="documentos[13][cara][1]">
 
                   </div>
                 
@@ -670,11 +686,11 @@
                     <div class="row">
                         <div class="col-md-3 form-group ">
                           <label> <strong>Fecha Vencimiento:</strong></label>
-                          <input type="date" name="documentos[fecha_final]" class="form-control" placeholder="dd/mm/yyyy">
+                          <input type="date" name="documentos[9][fecha_final]" class="form-control" placeholder="dd/mm/yyyy">
                         </div>
                       <div class="col-md-6 form-group ">
                        <label> <strong>Foto Frontal:</strong></label>
-                       <input type="file" class="form-control"  >
+                       <input type="file" class="form-control" name="documentos[13][cara][1]"  >
                      </div>
                      
                    </div>
@@ -692,17 +708,17 @@
                         <div class="col-md-3 form-group ">
                           <label> <strong>Fecha Expedición:</strong></label>
                           <input type="date" class="form-control" placeholder="dd/mm/yyyy"
-                        name="documentos[fecha_inicial]" id="documentos_fecha_inicial" 
+                        name="documentos[10][fecha_inicial]" id="documentos_fecha_inicial" 
                         >
                         </div>
 
                       <div class="col-md-3 form-group ">
                           <label> <strong>Fecha Vencimiento:</strong></label>
-                          <input type="date" name="documentos[fecha_final]" class="form-control" placeholder="dd/mm/yyyy">
+                          <input type="date" name="documentos[10][fecha_final]" class="form-control" placeholder="dd/mm/yyyy">
                       </div>
                       <div class="col-md-6 form-group ">
                        <label> <strong>Foto Frontal:</strong></label>
-                       <input type="file" class="form-control" name="documentos[cara][1]"  >
+                       <input type="file" class="form-control" name="documentos[10][cara][1]"  >
                      </div>
                      
                    </div>
@@ -719,7 +735,7 @@
                     <div class="row">
                       <div class="col-md-6 form-group ">
                        <label> <strong>Foto Frontal:</strong></label>
-                       <input type="file" class="form-control"  >
+                       <input type="file" class="form-control" name="documentos[11][cara][1]"  >
                      </div>
                      
                    </div>
@@ -736,7 +752,7 @@
                     <div class="row">
                       <div class="col-md-6 form-group ">
                        <label> <strong>Foto Frontal:</strong></label>
-                       <input type="file" class="form-control"  >
+                       <input type="file" class="form-control" name="documentos[12][cara][1]"  >
                      </div>
                      
                    </div>
@@ -753,7 +769,7 @@
                     <div class="row">
                       <div class="col-md-6 form-group ">
                        <label> <strong>Foto Frontal:</strong></label>
-                       <input type="file" class="form-control"  >
+                       <input type="file" class="form-control" name="documentos[14][cara][1]" >
                      </div>
                      
                    </div>
@@ -761,12 +777,13 @@
                </div>
              </div>
 
-
+             <br/>
                <div class="col-xs-12 col-sm-12 col-md-12 ">
                 <button id="submit" type="submit" class="btn btn-primary">Enviar</button>
-                <a href="{{ route('vehiculos') }}" class="btn btn-danger">Cancelar</a>
+                
               </div>
-            </div>
+            </form>
+          </div>
 
         </div>                      
 
@@ -775,9 +792,35 @@
          <div class="tab-pane" id="historial-documentos" role="tabpanel" aria-labelledby="general-icon-tab">
             <div class="box box-info">
                 <div class="row">
-                  <div class="col-md-6 form-group mb-3">
+                  <div class="col-md-12">
                     <label><strong>Historial Documentos:</strong></label>
-                   
+                     <table id="hidden_column_table" class="display table table-striped table-bordered dataTable dtr-inline" style="width: 100%;" role="grid" aria-describedby="hidden_column_table_info">
+            <tr>
+              <thead>
+                <th>Tipo Documento</th>
+                <th>Fecha Expedición</th>
+                <th>Fecha Vencimiento</th>
+                <th>Número</th>
+                <th>Entidad</th>
+                <th>Cara Frontal</th>
+                <th>Cara Trasera</th>
+              </thead>
+            </tr>
+            <tbody>
+              @foreach($documentos as $documento)
+              <tr>
+                <td>{{$tipo_documentos[$documento->id_tipo_documento]}}</td>
+                <td>{{$documento->fecha_inicial}}</td>
+                <td>{{$documento->fecha_final}}</td>
+                <td>{{$documento->numero_documento}}</td>
+                <td>{{$documento->nombre_entidad}}</td>
+                <td><a href="{{asset($documento->cara_frontal)}}" target="_blank">{{$documento->cara_frontal}}</a></td>
+                <td><a href="{{asset($documento->cara_trasera)}}" target="_blank">{{$documento->cara_trasera}}</a></td>
+
+              </tr>
+              @endforeach
+            </tbody>
+          </table>
                   </div>
                    <div class="col-xs-12 col-sm-12 col-md-12 ">
                       <a href="{{ route('vehiculos') }}" class="btn btn-danger">Regresar a lista de Vehiculos</a>

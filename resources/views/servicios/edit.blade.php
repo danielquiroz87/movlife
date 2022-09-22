@@ -148,10 +148,10 @@
             <div class="col-md-6 form-group mb-3">
               <label><strong>Tipo Servicio:</strong></label>
                    <select name="tipo_servicio" class="form-control">
-                     <option value="1">Visitas Domiciliarias</option>
-                     <option value="2">Traslado Pacientes</option>
-
-                    </select>
+                     @foreach($tipo_servicios as $tiposervicio)
+                     <option value="{{$tiposervicio->id}}">{{$tiposervicio->nombre}}</option>
+                     @endforeach
+                  </select>
             </div>
 
             <div class="col-md-6 form-group mb-3">
@@ -194,6 +194,21 @@
                    <input type="text" name="destino5"  value="" class="form-control" placeholder="" maxlength="600" >
             </div>
 
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Destino6:</strong></label>
+                   <input type="text" name="destino6"  value="" class="form-control" placeholder="" maxlength="600" >
+            </div>
+
+             <div class="col-md-6 form-group mb-3">
+              <label><strong>Kilometros:</strong></label>
+                   <input type="number" name="kilometros"  value="{{$servicio->kilometros}}" class="form-control" placeholder="" maxlength="600" >
+            </div>
+
+              <div class="col-md-6 form-group mb-3">
+              <label><strong>Tiempo:</strong></label>
+                   <input type="number" name="tiempo"  value="{{$servicio->tiempo}}" class="form-control" placeholder="" maxlength="600" >
+            </div>
+
 
              <div class="col-md-12 form-group mb-3">
               <label><strong>Turno:</strong></label>
@@ -216,7 +231,15 @@
               <label class="radio radio-outline-danger">
                   <input type="radio" name="tipo_viaje" value="3" @if($servicio->tipo_viaje==3 ) checked="checked" @endif><span>Regreso</span><span class="checkmark"></span>
               </label>
+              
+              <label class="radio radio-outline-danger">
+                  <input type="radio" name="tipo_viaje" value="4" @if($servicio->tipo_viaje==4 ) checked="checked" @endif><span>Multidestino</span><span class="checkmark"></span>
+              </label>
+
             </div>
+
+
+
 
             <div class="opciones_disponibilidad col-md-6 form-group mb-3 ">
               <label class="checkbox checkbox-outline-primary">
@@ -242,17 +265,23 @@
             </div>
             
             <div class="col-md-12 form-group mb-3">
-              <label><strong>Educador / Coordinador:</strong></label>
+              <label><strong>Educador / Coordinador Movlife:</strong></label>
                    <select class="form-control" name="educador_coordinador">
-                      <option>Lizeth G</option>
+                      <option value="">Seleccione</option>
+                      @foreach ($empleados as $empleado)
+                      <option value="{{$empleado->id}}" @if($servicio->educador_coordinador==$empleado->id) selected=true @endif>{{$empleado->nombres}} {{$empleado->apellidos}}</option>
+
+                      @endforeach
                    </select>
             </div>
 
             <div class="col-md-12 form-group mb-3">
-              <label><strong>URI SEDE:</strong></label>
+              <label><strong>URI SEDE: </strong></label>
                    <select name="uri_sede" class="form-control">
-                      <option>Riomar</option>
-                      <option>Otra Sede</option>
+
+                    @foreach($sedes as $sede)
+                      <option value="{{$sede->id}}" @if($servicio->uri_sede==$sede->id) selected="selected" @else @endif>{{$sede->nombre}}</option>
+                    @endforeach
                    </select>
             </div>
 
@@ -272,7 +301,7 @@
                       <option value="1" @if ($servicio->estado==1) selected="true" @endif >Iniciado</option>
                       <option value="2" @if ($servicio->estado==2) selected="true" @endif>En Proceso</option>
                       <option value="3" @if ($servicio->estado==3) selected="true" @endif>Cumplido</option>
-                      <option value="4"  @if ($servicio->estado==4) selected="true" @endif >Cancelado</option>
+                      <option value="4" @if ($servicio->estado==4) selected="true" @endif >Cancelado</option>
 
                    </select>
             </div>
@@ -289,10 +318,16 @@
                    </select>
             </div>
 
-             <div class="col-md-6 form-group mb-3 ">
-              <label class="checkbox checkbox-outline-primary">
-                    <input type="checkbox" name="aplicar_anticipo" id="aplicar_anticipo"><span>Aplicar Anticipo</span><span class="checkmark"></span>
-                </label>
+               <div class="col-md-12 form-group mb-3">
+              <label><strong>Tipo Anticipo:</strong></label>
+                   <select class="form-control" name="tipo_anticipo">
+                      <option value="1" @if ($servicio->tipo_anticipo==1) selected="true" @endif >Aplicar Anticipo</option>
+                      <option value="2" @if ($servicio->tipo_anticipo==2) selected="true" @endif>Empleado </option>
+                      <option value="3" @if ($servicio->tipo_anticipo==3) selected="true" @endif>Genera Factura</option>
+                      <option value="4" @if ($servicio->tipo_anticipo==4) selected="true" @endif>Nequi</option>
+                      <option value="5" @if ($servicio->tipo_anticipo==5) selected="true" @endif>Daviplata</option>
+
+                   </select>
             </div>
 
              <div class="col-md-12 form-group mb-3">

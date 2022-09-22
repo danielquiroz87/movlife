@@ -12,5 +12,5 @@ class Empleado extends  Model
 
     protected $table = 'empleados';
 
-    protected $fillable = ['user_id','documento','nombres','apellidos','email_contacto','telefono','celular','direccion_id','whatsapp','cargo','activo'];
+    protected $fillable = ['user_id','documento','nombres','apellidos','email_contacto','telefono','celular','direccion_id','whatsapp','cargo','activo','area_empresa'];
 }

@@ -35,7 +35,7 @@ class PasajerosController extends Controller
      public function edit($id)
     {   
         $pasajero=Pasajero::find($id);
-        $direccion=Direccion::where('tipo_usuario',3)->where('parent_id',$pasajero->id)->get()->first();
+        $direccion=Direccion::find($pasajero->direccion_id);
         $user=User::where('email',$pasajero->email_contacto)->get()->first();
        
         return view('pasajeros.edit')->with(['pasajero'=>$pasajero,'direccion'=>$direccion]);
@@ -63,7 +63,7 @@ class PasajerosController extends Controller
                 //'email'=>'required|email|max:255',
                 //'password'=>'required|max:20',
                 'celular'=>'required',
-                'documento'=>'required|unique:pasajeros,documento|max:20',
+                //'documento'=>'required|unique:pasajeros,documento|max:20',
                 'departamento_id'=>'required',
                 'ciudad_id'=>'required',
                 'direccion'=>'required'
@@ -72,9 +72,10 @@ class PasajerosController extends Controller
 
             $direccion=new Direccion();
             $direccion->departamento_id=$request->get('departamento');
-            $direccion->ciudad_id=$request->get('ciudad_id');
+            $direccion->ciudad_id=$request->get('ciudad');
             $direccion->direccion1=$request->get('direccion');
             $direccion->barrio=$request->get('barrio');
+            $direccion->direccion2=$request->get('direccion_detalle');
             $direccion->tipo_usuario=3;
             $direccion->save();
         }else{
@@ -82,13 +83,13 @@ class PasajerosController extends Controller
             $v = Validator::make($request->all(), [
                 'nombres' => 'required|max:255',
                 'apellidos' => 'required|max:255',
-                'documento'=>'required|unique:pasajeros,documento,'.$id.'|max:20',
+                'documento'=>'unique:pasajeros,documento,'.$id.'|max:20',
                 'direccion'=>'required'
             ]);
 
-            $direccion=Direccion::where('tipo_usuario',3)->where('parent_id',$pasajero->id)->get()->first();
+            $direccion=Direccion::find($pasajero->direccion_id);
             $direccion->departamento_id=$request->get('departamento');
-            $direccion->ciudad_id=$request->get('ciudad_id');
+            $direccion->ciudad_id=$request->get('ciudad');
             $direccion->direccion1=$request->get('direccion');
             $direccion->direccion2=$request->get('direccion_detalle');
             $direccion->barrio=$request->get('barrio');
@@ -123,8 +124,9 @@ class PasajerosController extends Controller
             */
             //Si el password es diferente de vacio lo cambiamos
            
-
-            $pasajero->documento=$request->get('documento');
+            if($request->has('documento')){
+                $pasajero->documento=$request->get('documento');
+            }
             $pasajero->nombres=$request->get('nombres');
             $pasajero->apellidos=$request->get('apellidos');
             $pasajero->email_contacto=$request->get('email');

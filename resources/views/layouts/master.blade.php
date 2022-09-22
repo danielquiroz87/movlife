@@ -25,6 +25,15 @@
         <link rel="stylesheet" href="{{ asset('assets/styles/vendor/perfect-scrollbar.css') }}">
         {{-- page specific css --}}
         @yield('page-css')
+
+         <style type="text/css">
+        .error{
+            color: crimson !important;
+            font-size: 1.1em !important;
+            }
+        
+    </style>
+
     </head>
 
 

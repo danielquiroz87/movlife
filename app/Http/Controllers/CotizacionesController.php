@@ -27,9 +27,11 @@ class CotizacionesController extends Controller
     {
         $this->middleware('auth');
     }
-    public function index()
+    public function index(Request $request)
     {   
-        $cotizaciones=$this->getRepository();
+        $cotizaciones=Cotizacion::paginate(25);
+    
+
         return view('cotizaciones.index')->with(['cotizaciones'=>$cotizaciones]);
     }
     public function new()

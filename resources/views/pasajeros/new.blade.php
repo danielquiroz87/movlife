@@ -48,7 +48,7 @@
 
            <div class="col-md-6 form-group mb-3">
               <label><strong>Documento / Nit:</strong></label>
-                   <input type="text" name="documento" value="" class="form-control" placeholder="000000" maxlength="20" required>
+                   <input type="text" name="documento" value="" class="form-control" placeholder="000000" maxlength="20" >
             </div>
 
             <div class="col-md-6 form-group mb-3">
@@ -118,13 +118,13 @@
              <div class="col-md-6 form-group mb-3">
                    <label> <strong>Nombre Contacto:</strong></label>
                     <input type="text" name="nombre_contacto" class="form-control" placeholder=""
-                        value="" maxlength="20" required>
+                        value="" maxlength="20" >
             </div>
             
              <div class="col-md-6 form-group mb-3">
                    <label> <strong>Teléfono Contacto:</strong></label>
                     <input type="number" name="telefono_contacto" class="form-control" placeholder=""
-                        value="" maxlength="20" required>
+                        value="" maxlength="20" >
             </div>
          
         
@@ -170,7 +170,7 @@ $('#user-new-form').validate({
         apellidos: { required:true },
         //email:{ required:true },
         //password:{ required:true },
-        documento:{ required:true },
+        //documento:{ required:true },
         departamento_id:{ required:true },
         ciudad_id: { required:true },
        
