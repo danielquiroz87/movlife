@@ -19,10 +19,12 @@
   <div class="row">
           <div class="col-md-12">
             <h1>Propietarios Vehiculo</h1>
-            <div class="d-sm-flex mb-3" data-view="print">
-                  <span class="m-auto"></span>
+
+                  <div class="d-sm-flex mb-3" data-view="print">
+                    <span class="m-auto"></span>
                     <a class="btn btn-primary" href="{{route('propietarios.new')}}">Nuevo</a>
-            </div>
+                  </div>
+                
           </div>
   </div>
 
@@ -33,6 +35,20 @@
           <div class="card-body">
                 <h3 class="card-title mb3">Lista Propietarios Vehiculos</h3>
               <!-- /.card-header -->
+                
+                <form class="form" method="GET" >
+                <div class="col-md-4 form-group mb-4">  
+                  <label>Buscar</label>
+                  <input name="q" class="form-control " value="{{$q}}" ></input>
+                </div>
+                 <div class="col-md-3 form-group mb-3">
+                   
+                    <button class="btn btn-success">Buscar</button>
+                  </div>
+
+                </form>
+
+
              <table id="hidden_column_table" class="display table table-striped table-bordered dataTable dtr-inline" style="width: 100%;" role="grid" aria-describedby="hidden_column_table_info">
                   <thead>
                     <tr>
@@ -58,7 +74,7 @@
                       <td>{{$user->activo}}</td>
                       <td>
                       	<a class="text-success mr-2" href="{{route('propietarios.edit', $user->id)}}" title="Editar"><i class="nav-icon i-Pen-2 font-weight-bold"></i></a>
-                      	<a class="text-danger mr-2" href="{{route('propietarios.delete', $user->id)}}" title="Eliminar" class="eliminar"><i class="nav-icon i-Close-Window"></i></a>
+                      	<a class="text-danger mr-2 eliminar" href="{{route('propietarios.delete.get', $user->id)}}" title="Eliminar" ><i class="nav-icon i-Close-Window"></i></a>
                       </td>
                     </tr>
                   	@endforeach
@@ -73,7 +89,7 @@
 
                 <div class="d-flex justify-content-center">
    				    <div class="">
-   				    	<?php echo $propietarios->links(); ?>
+   				    	<?php echo $propietarios->appends(['q' => $q])->links(); ?>
    				    </div>
 
 				</div>
@@ -114,7 +130,7 @@
 	    .then(resultado => {
 	        if (resultado.value) {
 	            // Hicieron click en "Sí"
- 				$('#user-delete-form').submit();
+ 				   $('#user-delete-form').submit();
 	        } else {
 	            // Dijeron que no
 	            console.log("*NO se elimina la venta*");

@@ -1,0 +1,61 @@
+Buscador por (Documento,Nombres,Email,Teléfono o Celular)
+Eliminar (Si un conductor o pasajero o cliente ya tiene asignado algun servicio no dejar eliminar o eliminarlo virtualemente y sino si borralo del todo de la base de datos).
+Revisar paginación.
+
+Propietarios en el backend revisar los campos requeridos
+
+Documentos 
+
+Vehiculos Documentos
+Agregar Fecha Expiración
+Polizas y Revisión Preventiva
+
+
+Conductores Quitar fechas de 
+Rut
+Runt
+Simit
+
+Propietarios
+
+
+Servicios
+
+Paga seguridad social como independiente (Si/No)
+
+Filtrar
+ 
+Nombre pasajero 
+Conductor 
+Cliente
+Ciudad
+Semana
+Unidad Renal
+
+
+Vehiculos por placa
+
+N/A 
+
+Agregar
+
+
+Excel
+Total Descuento
+
+Tipo Vehiculo
+
+
+Vehiculo 
+Empresa afiliadora
+
+
+Revision Preventiva (2 meses)
+Si
+Fecha
+Calcular dias
+
+
+Intermunicipal
+
+

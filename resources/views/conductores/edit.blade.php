@@ -5,10 +5,18 @@
   <ul>
     <li><a href="/">Inicio</a></li>
     <li><a href="{{route('conductores')}}">conductores</a></li>
-    <li>Nuevo Pasajero</li>
+    <li>Nuevo Conductor</li>
   </ul>
 </div>
 <div class="separator-breadcrumb border-top"></div>
+
+
+ @if ($message = Session::get('flash_message'))
+    <div class="alert alert-success alert-block">
+        <button type="button" class="close" data-dismiss="alert">×</button> 
+            <strong>{{ $message }}</strong>
+    </div>
+  @endif
 
 <div class="row">
 
@@ -64,7 +72,7 @@
 
                   <div class="col-md-6 form-group mb-3">
                     <label><strong>Lugar Expedición Documento:</strong></label>
-                    <input type="text" name="ciudad_documento"  class="form-control" placeholder="" maxlength="20" required value="{{$conductor->ciudad_documento}}">
+                    <input type="text" name="lugar_expedicion_documento"  class="form-control" placeholder="" maxlength="20"  value="{{$conductor->lugar_expedicion_documento}}">
                   </div>
                   <div class="col-md-6 form-group mb-3">
                     <label><strong>Nombres</strong></label>
@@ -77,24 +85,24 @@
 
                   <div class="col-md-6 form-group mb-3">
                     <label><strong>Lugar de Nacimiento:</strong></label>
-                    <input type="text" name="ciudad_nacimiento"  class="form-control" placeholder="" maxlength="20" required value="{{$conductor->ciudad_nacimiento}}">
+                    <input type="text" name="lugar_de_nacimiento"  class="form-control" placeholder="" maxlength="20"  value="{{$conductor->lugar_de_nacimiento}}">
                   </div>
 
 
                   <div class="col-md-6 form-group mb-3">
                     <label><strong>Estado Civil:</strong></label>
-                    <input type="text" name="estado_civil"  class="form-control" placeholder="" maxlength="20" required value="{{$conductor->estado_civil}}">
+                    <input type="text" name="estado_civil"  class="form-control" placeholder="" maxlength="20"  value="{{$conductor->estado_civil}}">
                   </div>
 
                   <div class="col-md-6 form-group mb-3">
                     <label><strong>Grupo Sanguineo:</strong></label>
-                    <input type="text" name="grupo_sanguineo"  class="form-control" placeholder="" maxlength="20" required value="{{$conductor->grupo_sanguineo}}">
+                    <input type="text" name="grupo_sanguineo"  class="form-control" placeholder="" maxlength="20"  value="{{$conductor->grupo_sanguineo}}">
                   </div>
 
                   <div class="col-md-6 form-group mb-3">
                     <label><strong>Teléfono:</strong></label>
                     <input type="number" name="telefono" class="form-control" placeholder="000000"
-                    maxlength="10" required value="{{$conductor->telefono}}">
+                    maxlength="10"  value="{{$conductor->telefono}}">
                   </div>
                   <div class="col-md-6 form-group mb-3">
                    <label> <strong>Celular:</strong></label>
@@ -108,16 +116,16 @@
                  </div>
                  <div class="col-md-6 form-group mb-3">
                   <label><strong>Departamento:</strong></label>
-                  <select class="form-control" name="departamento">
-                    <option value="{{$direccion->departamento_id}}">Antioquia</option>
+                  <select class="form-control departamentos" name="departamento">
+                    <?php echo Helper::selectDepartamentos($direccion->departamento_id) ?>
                   </select>
 
                 </div>
 
                 <div class="col-md-6 form-group mb-3">
                   <label><strong>Ciudad:</strong></label>
-                  <select class="form-control" name="ciudad">
-                    <option value="{{$direccion->ciudad_id}}">Medellín</option>
+                  <select class="form-control municipios" name="ciudad_id">
+                    <?php echo Helper::selectMunicipios($direccion->departamento_id,$direccion->ciudad_id) ?>
                   </select>
                 </div>
 
@@ -133,22 +141,22 @@
 
                 <div class="col-md-6 form-group mb-3">
                   <label><strong>Detalle Dirección:</strong></label>
-                  <input type="text" name="direccion_detalle" class="form-control" placeholder="" maxlength="20"  value="{{$direccion->direccion2}}">
+                  <input type="text" name="direccion_detalle" class="form-control" placeholder="" maxlength="255"  value="{{$direccion->direccion2}}">
                 </div>
                 <div class="col-md-6 form-group mb-3">
                   <label><strong>Estrato:</strong></label>
-                  <input type="number" name="estrato" class="form-control" placeholder="" min="0" max="20" maxlength="20"  value="{{$conductor->estrato}}">
+                  <input type="number" name="estrato" class="form-control" placeholder="" min="0" max="20" maxlength="20"  value="{{$conductor->hojavida->estrato}}">
                 </div>
 
                 <div class="col-md-6 form-group mb-3">
                   <label><strong>Número Hijos:</strong></label>
-                  <input type="number" name="numero_hijos" class="form-control" placeholder="" min="0" max="20" maxlength="20"  value="{{$conductor->numero_hijos}}">
+                  <input type="number" name="numero_hijos" class="form-control" placeholder="" min="0" max="20" maxlength="20"  value="{{$conductor->hojavida->numero_hijos}}">
                 </div>
                 
                 <div class="col-md-6 form-group mb-3">
                   <label><strong>Email:</strong></label>
                   <input type="email" name="email" class="form-control" placeholder="example@email.com"
-                  maxlength="255" required value="{{$conductor->email_contacto}}">
+                  maxlength="255"  value="{{$conductor->email_contacto}}">
                 </div>
                 <div class="col-md-6 form-group mb-3">
                  <label> <strong>Nuevo Password:</strong></label>
@@ -158,13 +166,13 @@
                <div class="col-md-6 form-group mb-3">
                  <label> <strong>Nombre Contacto:</strong></label>
                  <input type="text" name="nombre_contacto" class="form-control" placeholder=""
-                 value="" maxlength="200" required>
+                 value="" maxlength="200" >
                </div>
 
                <div class="col-md-6 form-group mb-3">
                  <label> <strong>Teléfono Contacto:</strong></label>
                  <input type="number" name="telefono_contacto" class="form-control" placeholder=""
-                 value="" maxlength="20" required>
+                 value="" maxlength="20" >
                </div>
 
                <div class="col-xs-12 col-sm-12 col-md-12 ">
@@ -182,9 +190,9 @@
 
       <div class="tab-pane" id="hojavida" role="tabpanel" aria-labelledby="historial-documentos-icon-tab">
         <div class="box box-info">
-          <form action="{{route('conductores.save')}}" method="POST" id="user-new-form" enctype="multipart/form-data" >
+          <form action="{{route('conductores.hojavida.save')}}" method="POST" id="user-new-form" enctype="multipart/form-data" >
             {{ csrf_field() }}
-            <input type="hidden" name="id" value="{{$conductor->id}}">
+            <input type="hidden" name="conductor_id" value="{{$conductor->id}}">
 
               <div class="row">
                 <div class="col-md-12 form-group mb-12">
@@ -203,22 +211,22 @@
                          <div class="col-md-6 form-group">
                           <label> <strong>Eps:</strong></label>
                           <input type="text" name="eps" class="form-control" placeholder=""
-                          value="{{$conductor->hojavida->eps}}" maxlength="20" required>
+                          value="{{$conductor->hojavida->eps}}" maxlength="20" >
                         </div>
                         <div class="col-md-6 form-group ">
                           <label> <strong>Fondo de Pensiones:</strong></label>
                           <input type="text" name="pensiones" class="form-control" placeholder=""
-                          value="{{$conductor->hojavida->pensiones}}" maxlength="20" required>
+                          value="{{$conductor->hojavida->pensiones}}" maxlength="255" >
                         </div>
                         <div class="col-md-6 form-group ">
                           <label> <strong>Arl:</strong></label>
-                          <input type="text" name="pensiones" class="form-control" placeholder=""
-                          value="{{$conductor->hojavida->arl}}" maxlength="20" required>
+                          <input type="text" name="arl" class="form-control" placeholder=""
+                          value="{{$conductor->hojavida->arl}}" maxlength="255" >
                         </div>
                         <div class="col-md-6 form-group ">
                           <label> <strong>Nivel de Riesgo Arl:</strong></label>
-                          <input type="number" name="pensiones" min="0" max="10" class="form-control" placeholder=""
-                          value="{{$conductor->hojavida->nivel_riesgo_arl}}" maxlength="20" required>
+                          <input type="number" name="nivel_riesgo_arl" min="0" max="10" class="form-control" placeholder=""
+                          value="{{$conductor->hojavida->nivel_riesgo_arl}}" maxlength="255" >
                         </div>
                       </div>
                     </div>
@@ -233,23 +241,23 @@
                     <div class="row"> 
                       <div class="col-md-6 form-group">
                         <label> <strong>Instituto:</strong></label>
-                        <input type="text" name="eps" class="form-control" placeholder=""
-                        value="" maxlength="20" required>
+                        <input type="text" name="instituto" class="form-control" placeholder=""
+                        value="" maxlength="20" >
                       </div>
                       <div class="col-md-6 form-group ">
                         <label> <strong>Titulo Obtenido:</strong></label>
-                        <input type="text" name="pensiones" class="form-control" placeholder=""
-                        value="" maxlength="20" required>
+                        <input type="text" name="titulo" class="form-control" placeholder=""
+                        value="" maxlength="255" >
                       </div>
                       <div class="col-md-6 form-group ">
                         <label> <strong>Tipo Educación:</strong></label>
-                        <input type="text" name="pensiones" class="form-control" placeholder=""
-                        value="" maxlength="20" required>
+                        <input type="text" name="educacion" class="form-control" placeholder=""
+                        value="" maxlength="255" >
                       </div>
                       <div class="col-md-6 form-group ">
                         <label> <strong>Año Finalización:</strong></label>
-                        <input type="number" name="pensiones" min="1900" max="<?php date('Y') ?>" class="form-control" placeholder=""
-                        value="" maxlength="20" required>
+                        <input type="number" name="finalizacion" min="1900" max="<?php date('Y') ?>" class="form-control" placeholder=""
+                        value="" maxlength="255">
                       </div>
                     </div>
                   </div>
@@ -264,28 +272,28 @@
                   <div class="row"> 
                       <div class="col-md-6 form-group">
                         <label> <strong>Empresa:</strong></label>
-                        <input type="text" name="eps" class="form-control" placeholder=""
-                        value="" maxlength="20" required>
+                        <input type="text" name="empresa" class="form-control" placeholder=""
+                        value="" maxlength="255" >
                       </div>
                       <div class="col-md-6 form-group ">
                         <label> <strong>Cargo:</strong></label>
-                        <input type="text" name="pensiones" class="form-control" placeholder=""
-                        value="" maxlength="20" required>
+                        <input type="text" name="cargo" class="form-control" placeholder=""
+                        value="" maxlength="255">
                       </div>
                       <div class="col-md-6 form-group ">
                         <label> <strong>Jefe Inmediato:</strong></label>
-                        <input type="text" name="pensiones" class="form-control" placeholder=""
-                        value="" maxlength="20" required>
+                        <input type="text" name="jefe" class="form-control" placeholder=""
+                        value="" maxlength="255" >
                       </div>
                       <div class="col-md-3 form-group ">
                         <label> <strong>Teléfono:</strong></label>
-                        <input type="text" name="pensiones" maxlength="10" class="form-control" placeholder=""
-                        value="" maxlength="20" required>
+                        <input type="text" name="telefono" maxlength="10" class="form-control" placeholder=""
+                        value="" maxlength="20" >
                       </div>
                       <div class="col-md-3 form-group ">
                         <label> <strong>Año:</strong></label>
-                        <input type="number" name="pensiones" min="1900" max="<?php date('Y') ?>" class="form-control" placeholder=""
-                        value="" maxlength="20" required>
+                        <input type="number" name="año" min="1900" max="<?php date('Y') ?>" class="form-control" placeholder=""
+                        value="" maxlength="255" >
                       </div>
 
                     </div>
@@ -303,22 +311,22 @@
                       <div class="col-md-6 form-group">
                         <label> <strong>Nombres:</strong></label>
                         <input type="text" name="referencia_personal_nombres" class="form-control" placeholder=""
-                        value="" maxlength="20" required>
+                        value="" maxlength="255" >
                       </div>
                       <div class="col-md-6 form-group ">
                         <label> <strong>Profesión u Oficio:</strong></label>
                         <input type="text" name="referencia_personal_profesion" class="form-control" placeholder=""
-                        value="" maxlength="20" required>
+                        value="" maxlength="255" >
                       </div>
                       <div class="col-md-6 form-group ">
                         <label> <strong>Teléfono:</strong></label>
                         <input type="text" name="referencia_personal_telefono" class="form-control" placeholder=""
-                        value="" maxlength="20" required>
+                        value="" maxlength="255" >
                       </div>
                       <div class="col-md-6 form-group ">
                         <label> <strong>Celular:</strong></label>
                         <input type="text" name="referencia_personal_celular" min="10" max="10" class="form-control" placeholder=""
-                        value="" maxlength="20" required>
+                        value="" maxlength="255" >
                       </div>
                     </div>
                   </div>

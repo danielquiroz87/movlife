@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cliente;
 use App\Models\User;
 use App\Models\Direccion;
-
+use Config;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
@@ -30,10 +30,30 @@ class ClientesController extends Controller
         return redirect('/login');
     }
     
-    public function index()
+    public function index(Request $request)
     {   
         $clientes=$this->getRepository();
-        return view('clientes.index')->with(['clientes'=>$clientes]);
+        
+        $q="";
+
+        if($request->has('q')){
+            if($request->get('q')!=""){
+                $search=$request->get('q');
+                $q=$search;
+                $clientes=Cliente::where('documento','LIKE', '%'.$search.'%')
+                                          ->orWhere('nombres', 'LIKE', '%'.$search.'%')
+                                          ->orWhere('apellidos', 'LIKE', '%'.$search.'%')
+                                          ->orWhere('email_contacto', 'LIKE', '%'.$search.'%')
+                                          ->orWhere('celular', 'LIKE', '%'.$search.'%')
+                                          ->orWhere('telefono', 'LIKE', '%'.$search.'%')
+                                          ->orWhere('whatsapp', 'LIKE', '%'.$search.'%');
+
+
+               $clientes=$clientes->paginate(config::get('global_settings.paginate'));                           
+            }
+        }
+
+        return view('clientes.index')->with(['clientes'=>$clientes,'q'=>$q]);
     }
     public function new()
     { 

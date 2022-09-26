@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Conductor;
+use App\Models\ConductorHojaDeVida;
+use Config;
 use App\Models\User;
 use App\Models\Direccion;
 use App\Models\Documentos;
@@ -26,10 +28,30 @@ class ConductoresController extends Controller
     {
         $this->middleware('auth');
     }
-    public function index()
+    public function index(Request $request)
     {   
         $conductores=$this->getRepository();
-        return view('conductores.index')->with(['conductores'=>$conductores]);
+        
+        $q="";
+        if($request->has('q')){
+            if($request->get('q')!=""){
+                $search=$request->get('q');
+                $q=$search;
+                $conductores=Conductor::where('documento','LIKE', '%'.$search.'%')
+                                          ->orWhere('nombres', 'LIKE', '%'.$search.'%')
+                                          ->orWhere('apellidos', 'LIKE', '%'.$search.'%')
+                                          ->orWhere('email_contacto', 'LIKE', '%'.$search.'%')
+                                          ->orWhere('celular', 'LIKE', '%'.$search.'%')
+                                          ->orWhere('telefono', 'LIKE', '%'.$search.'%')
+                                          ->orWhere('whatsapp', 'LIKE', '%'.$search.'%');
+
+
+               $conductores=$conductores->paginate(config::get('global_settings.paginate'));                           
+            }
+        }
+
+
+        return view('conductores.index')->with(['conductores'=>$conductores,'q'=>$q]);
     }
     public function new()
     { 
@@ -240,7 +262,6 @@ class ConductoresController extends Controller
             $user->save();
 
             $conductor->documento=$request->get('documento');
-
             $conductor->nombres=$request->get('nombres');
             $conductor->apellidos=$request->get('apellidos');
             $conductor->email_contacto=$request->get('email');
@@ -265,28 +286,47 @@ class ConductoresController extends Controller
             if($request->has('grupo_sanguineo')){
                 $conductor->grupo_sanguineo=$request->get('grupo_sanguineo');
             }
-           
-            if($request->has('estrato')){
-                $conductor->estrato=$request->get('estrato');
+
+            if($request->has('lugar_de_nacimiento')){
+                $conductor->lugar_de_nacimiento=$request->get('lugar_de_nacimiento');
             }
+
+            if($request->has('lugar_expedicion_documento')){
+                $conductor->lugar_expedicion_documento=$request->get('lugar_expedicion_documento');
+            }
+           
+          
             $conductor->save();
 
 
-            //Documentos
-
-           
            
          if($is_new){
 
             $direccion->parent_id=$conductor->id;
             $direccion->save();
 
+            $hoja_vida=new ConductorHojaDeVida();
+            $hoja_vida->conductor_id=$conductor->id;
+            $hoja_vida->save();
             //$user->create($request->all());
             \Session::flash('flash_message','Conductor agregado exitosamente!.');
 
              return redirect()->route('conductores');
 
          }else{
+
+            $existe_hoja_vida=ConductorHojaDeVida::where('conductor_id',$conductor->id)->get()->first();
+            if($existe_hoja_vida){
+                $hoja_vida=$existe_hoja_vida;
+            }else{
+                $hoja_vida=new ConductorHojaDeVida();
+                $hoja_vida->conductor_id=$conductor->id;
+            }
+
+            
+            $hoja_vida->save();
+
+
             \Session::flash('flash_message','Conductor actualizado exitosamente!.');
 
             return redirect()->back();
@@ -295,12 +335,43 @@ class ConductoresController extends Controller
 
 
     }
+
+    public function hojavidasave(Request $request){
+
+            $id=(int) $request->input('conductor_id');
+            if($id>0){
+                $conductor=Conductor::find($id);
+            }
+
+            $existe_hoja_vida=ConductorHojaDeVida::where('conductor_id',$conductor->id)->get()->first();
+            if($existe_hoja_vida){
+                $hoja_vida=$existe_hoja_vida;
+            }else{
+                $hoja_vida=new ConductorHojaDeVida();
+                $hoja_vida->conductor_id=$conductor->id;
+            }
+            $hoja_vida->eps=$request->get('eps')?$request->get('eps'):NULL;
+            $hoja_vida->pensiones=$request->get('pensiones')?$request->get('pensiones'):NULL;
+            $hoja_vida->arl=$request->get('arl')?$request->get('arl'):NULL;
+            $hoja_vida->nivel_riesgo_arl=$request->get('nivel_riesgo_arl')?$request->get('nivel_riesgo_arl'):"";
+            
+            $hoja_vida->estrato=$request->get('estrato')?$request->get('estrato'):NULL;
+            $hoja_vida->numero_hijos=$request->get('numero_hijos')?$request->get('numero_hijos'):NULL;
+
+            $hoja_vida->save();
+
+
+            \Session::flash('flash_message','Hoja de vida conductor actualizada exitosamente!.');
+
+            return redirect()->back();
+
+    }
    
     public function update()
     { 
        
     }
     private function getRepository(){
-        return Conductor::paginate(25);
+        return Conductor::paginate(Config::get('global_settings.paginate'));
     }
 }

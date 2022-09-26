@@ -14,7 +14,7 @@ use App\Models\Direccion;
 use App\Models\VehiculoConductores;
 use App\Models\Documentos;
 use App\Models\TipoDocumentos;
-
+use Config;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
@@ -30,10 +30,21 @@ class VehiculosController extends Controller
     {
         $this->middleware('auth');
     }
-    public function index()
+    public function index(Request $request)
     {   
         $vehiculos=$this->getRepository();
-        return view('vehiculos.index')->with(['vehiculos'=>$vehiculos]);
+
+        $q="";
+        if($request->has('q')){
+            if($request->get('q')!=""){
+                $search=$request->get('q');
+                $q=$search;
+                $vehiculos=Vehiculo::where('placa','LIKE', '%'.$search.'%');
+                $vehiculos=$vehiculos->paginate(Config::get('global_settings.paginate'));                           
+            }
+        }
+
+        return view('vehiculos.index')->with(['vehiculos'=>$vehiculos,'q'=>$q]);
     }
     public function new()
     { 
@@ -336,6 +347,6 @@ class VehiculosController extends Controller
        
     }
     private function getRepository(){
-        return Vehiculo::paginate(25);
+        return Vehiculo::paginate(Config::get('global_settings.paginate'));
     }
 }

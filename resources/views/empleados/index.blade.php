@@ -32,6 +32,9 @@
       <div class="card text-left">
           <div class="card-body">
                 <h3 class="card-title mb3">Lista Empleados</h3>
+              
+                             @include('partials.search_table', ['q' => $q])
+
               <!-- /.card-header -->
              <table id="hidden_column_table" class="display table table-striped table-bordered dataTable dtr-inline" style="width: 100%;" role="grid" aria-describedby="hidden_column_table_info">
                   <thead>
@@ -78,7 +81,7 @@
 
                 <div class="d-flex justify-content-center">
    				    <div class="">
-   				    	<?php echo $empleados->links(); ?>
+   				    	<?php echo $empleados->appends(['q' => $q])->links(); ?>
    				    </div>
 
 				</div>

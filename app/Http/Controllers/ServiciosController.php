@@ -12,11 +12,9 @@ use App\Models\CotizacionDetalle;
 use App\Models\TipoServicios;
 use App\Models\Sedes;
 use App\Models\Empleado;
-
-
 use App\Models\User;
 use App\Models\Direccion;
-
+use Config;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
@@ -56,7 +54,7 @@ class ServiciosController extends Controller
         }
 
 
-        $servicios=$servicios->paginate(25);
+        $servicios=$servicios->paginate(Config::get('global_settings.paginate'));
         return view('servicios.index')->with(['servicios'=>$servicios]);
     }
     public function importar(){
@@ -207,6 +205,6 @@ class ServiciosController extends Controller
     }
 
     private function getRepository(){
-        return Servicio::paginate(25);
+        return Servicio::paginate(Config::get('global_settings.paginate'));
     }
 }

@@ -53,12 +53,17 @@ Route::get('/propietarios', 'PropietariosVehiculosController@index')->name('prop
 Route::get('/propietarios/new', 'PropietariosVehiculosController@new')->name('propietarios.new');
 Route::get('/propietarios/edit/{id}', 'PropietariosVehiculosController@edit')->name('propietarios.edit');
 Route::post('/propietarios/save', 'PropietariosVehiculosController@save')->name('propietarios.save');
-Route::post('/propietarios/delete', 'PropietariosVehiculosController@delete')->name('propietarios.delete');
+Route::post('/propietarios/delete/{id}', 'PropietariosVehiculosController@delete')->name('propietarios.delete');
+
+Route::get('/propietarios/delete/{id}', 'PropietariosVehiculosController@delete')->name('propietarios.delete.get');
+
 
 Route::get('/conductores', 'ConductoresController@index')->name('conductores');
 Route::get('/conductores/new', 'ConductoresController@new')->name('conductores.new');
 Route::get('/conductores/edit/{id}', 'ConductoresController@edit')->name('conductores.edit');
 Route::post('/conductores/save', 'ConductoresController@save')->name('conductores.save');
+Route::post('/conductores/hojavida/save', 'ConductoresController@hojavidasave')->name('conductores.hojavida.save');
+
 Route::post('/conductores/documentos/save', 'ConductoresController@documentossave')->name('conductores.documentos.save');
 
 Route::post('/conductores/delete', 'ConductoresController@delete')->name('conductores.delete');

@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Empleado;
 use App\Models\User;
 use App\Models\Direccion;
-
+use Config;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
@@ -23,10 +23,30 @@ class EmpleadosController extends Controller
     {
         $this->middleware('auth');
     }
-    public function index()
+    public function index(Request $request)
     {   
         $empleados=$this->getRepository();
-        return view('empleados.index')->with(['empleados'=>$empleados]);
+        
+        $q="";
+
+        if($request->has('q')){
+            if($request->get('q')!=""){
+                $search=$request->get('q');
+                $q=$search;
+                $empleados=Empleado::where('documento','LIKE', '%'.$search.'%')
+                                          ->orWhere('nombres', 'LIKE', '%'.$search.'%')
+                                          ->orWhere('apellidos', 'LIKE', '%'.$search.'%')
+                                          ->orWhere('email_contacto', 'LIKE', '%'.$search.'%')
+                                          ->orWhere('celular', 'LIKE', '%'.$search.'%')
+                                          ->orWhere('telefono', 'LIKE', '%'.$search.'%')
+                                          ->orWhere('whatsapp', 'LIKE', '%'.$search.'%');
+
+
+               $empleados=$empleados->paginate(config::get('global_settings.paginate'));                           
+            }
+        }
+
+        return view('empleados.index')->with(['empleados'=>$empleados,'q'=>$q]);
     }
     public function new()
     { 

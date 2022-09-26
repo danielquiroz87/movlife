@@ -7,7 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Pasajero;
 use App\Models\User;
 use App\Models\Direccion;
-
+use App\Models\Cliente;
+use Config;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
@@ -23,10 +24,28 @@ class PasajerosController extends Controller
     {
         $this->middleware('auth');
     }
-    public function index()
+    public function index(Request $request)
     {   
         $pasajeros=$this->getRepository();
-        return view('pasajeros.index')->with(['pasajeros'=>$pasajeros]);
+        $q="";
+        if($request->has('q')){
+            if($request->get('q')!=""){
+                $search=$request->get('q');
+                $q=$search;
+                $pasajeros=Pasajero::where('documento','LIKE', '%'.$search.'%')
+                                          ->orWhere('nombres', 'LIKE', '%'.$search.'%')
+                                          ->orWhere('apellidos', 'LIKE', '%'.$search.'%')
+                                          ->orWhere('email_contacto', 'LIKE', '%'.$search.'%')
+                                          ->orWhere('celular', 'LIKE', '%'.$search.'%')
+                                          ->orWhere('telefono', 'LIKE', '%'.$search.'%')
+                                          ->orWhere('whatsapp', 'LIKE', '%'.$search.'%');
+
+
+               $pasajeros=$pasajeros->paginate(Config::get('global_settings.paginate'));                           
+            }
+        }
+
+        return view('pasajeros.index')->with(['pasajeros'=>$pasajeros,'q'=>$q]);
     }
     public function new()
     { 
@@ -174,6 +193,6 @@ class PasajerosController extends Controller
        
     }
     private function getRepository(){
-        return Pasajero::paginate(25);
+        return Pasajero::paginate(Config::get('global_settings.paginate'));
     }
 }
