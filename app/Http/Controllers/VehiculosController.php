@@ -255,7 +255,7 @@ class VehiculosController extends Controller
         $vehiculo->ciudad_id=$request->get('ciudad_id');
         $vehiculo->vinculado=$request->get('vinculado')?1:0;
         $vehiculo->convenio_firmado=$request->get('convenio')?1:0;
-
+        $vehiculo->empresa_afiliadora=$request->get('empresa_afiliadora',NULL);
            
          if($is_new){
 

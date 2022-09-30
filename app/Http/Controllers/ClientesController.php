@@ -35,7 +35,6 @@ class ClientesController extends Controller
         $clientes=$this->getRepository();
         
         $q="";
-
         if($request->has('q')){
             if($request->get('q')!=""){
                 $search=$request->get('q');
@@ -49,7 +48,7 @@ class ClientesController extends Controller
                                           ->orWhere('whatsapp', 'LIKE', '%'.$search.'%');
 
 
-               $clientes=$clientes->paginate(config::get('global_settings.paginate'));                           
+               $clientes=$clientes->paginate(Config::get('global_settings.paginate'));                           
             }
         }
 
@@ -185,6 +184,6 @@ class ClientesController extends Controller
        
     }
     private function getRepository(){
-        return Cliente::paginate(25);
+        return Cliente::paginate(Config::get('global_settings.paginate'));
     }
 }

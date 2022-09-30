@@ -102,7 +102,7 @@
                 <label><strong>Clasificación Vehículo:</strong></label>
                 <select name="id_vehiculo_uso" class="form-control select-busqueda">
                     <option value="" >Seleccione</option>
-                    <option value="1" @if($vehiculo->id_vehiculo_uso==1) selected=true @endif>Publico</option>
+                    <option value="1" @if($vehiculo->id_vehiculo_uso==1) selected=true @endif>Intermunicipal</option>
                     <option value="2" @if($vehiculo->id_vehiculo_uso==2) selected=true @endif>Especial</option>
                     <option value="3" @if($vehiculo->id_vehiculo_uso==3) selected=true @endif>Particular</option>
                     <option value="4" @if($vehiculo->id_vehiculo_uso==4) selected=true @endif>Taxi</option>
@@ -160,10 +160,10 @@
               </div>
 
               <div class="col-md-6 form-group mb-3">
-                  <label><strong>Propietario:</strong></label>
-                      <select name="propietario_id" id="propietario_id"  class="form-control municipios">
-                            <?php echo Helper::selectPropietarios($vehiculo->propietario_id) ?>
-                      </select>
+                <label><strong>Propietario:</strong></label>
+                  <select name="propietario_id" id="propietario_id"  class="form-control municipios">
+                    <?php echo Helper::selectPropietarios($vehiculo->propietario_id) ?>
+                  </select>
               </div>
 
 
@@ -173,13 +173,16 @@
                   <input type="checkbox" name="vinculado" @if($vehiculo->vinculado==1) checked=true @endif  ><span class="slider"></span>
               </label>
             </div>
-             <div class="col-md-6 form-group mb-3">
+            <div class="col-md-6 form-group mb-3">
                <label class="switch pr-5 switch-success mr-3"><span>Convenio Firmado</span>
                   <input type="checkbox" name="convenio" @if($vehiculo->convenio_firmado==1) checked=true @endif ><span class="slider"></span>
               </label>
             </div>
 
-
+            <div class="col-md-6 form-group mb-3">
+                      <label><strong>Empresa Afiliadora</strong></label>
+                      <input type="text" name="empresa_afiliadora" class="form-control" id="empresa_afiliadora"  placeholder="" value="{{$vehiculo->empresa_afiliadora}}">
+                </div>
                  
 
                <div class="col-xs-12 col-sm-12 col-md-12 ">
@@ -690,7 +693,7 @@
                         </div>
                       <div class="col-md-6 form-group ">
                        <label> <strong>Foto Frontal:</strong></label>
-                       <input type="file" class="form-control" name="documentos[13][cara][1]"  >
+                       <input type="file" class="form-control" name="documentos[9][cara][1]"  >
                      </div>
                      
                    </div>
@@ -733,6 +736,12 @@
                 <div class="collapse" id="accordion-item-poliza_rcc" data-parent="#accordionExample">
                   <div class="card-body">
                     <div class="row">
+
+                      <div class="col-md-3 form-group ">
+                          <label> <strong>Fecha Vencimiento:</strong></label>
+                          <input type="date" name="documentos[11][fecha_final]" class="form-control" placeholder="dd/mm/yyyy">
+                      </div>
+
                       <div class="col-md-6 form-group ">
                        <label> <strong>Foto Frontal:</strong></label>
                        <input type="file" class="form-control" name="documentos[11][cara][1]"  >
@@ -750,6 +759,13 @@
                 <div class="collapse" id="accordion-item-poliza_rce" data-parent="#accordionExample">
                   <div class="card-body">
                     <div class="row">
+
+                      <div class="col-md-3 form-group ">
+                          <label> <strong>Fecha Vencimiento:</strong></label>
+                          <input type="date" name="documentos[12][fecha_final]" class="form-control" placeholder="dd/mm/yyyy">
+                      </div>
+
+
                       <div class="col-md-6 form-group ">
                        <label> <strong>Foto Frontal:</strong></label>
                        <input type="file" class="form-control" name="documentos[12][cara][1]"  >
@@ -767,6 +783,12 @@
                 <div class="collapse" id="accordion-item-revision_preventiva" data-parent="#accordionExample">
                   <div class="card-body">
                     <div class="row">
+
+                       <div class="col-md-3 form-group ">
+                          <label> <strong>Fecha Vencimiento:</strong></label>
+                          <input type="date" name="documentos[14][fecha_final]" class="form-control" placeholder="dd/mm/yyyy">
+                      </div>
+
                       <div class="col-md-6 form-group ">
                        <label> <strong>Foto Frontal:</strong></label>
                        <input type="file" class="form-control" name="documentos[14][cara][1]" >

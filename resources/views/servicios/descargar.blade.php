@@ -66,10 +66,7 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 <th>OBSERVACIONES CONTABILIDAD</th>
 <th>PLACA</th>
 <th>CEDULA PLACA</th>
-<th>ESPECIAL</th>
-<th>INTERMUNICIPAL</th>
-<th>TAXI</th>
-<th>PARTICULAR</th>
+<th>USO VEHICULO</th>
 <th>CEDULA</th>
 <th>LICENCIA DE CONDUCIR</th>
 <th>PLANILLA DE SS</th>
@@ -98,9 +95,8 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 <th>DIAS PARA VENCIMIENTO</th>
 <th>FECHA DOCUMENTOS TECNOMECANICA</th>
 <th>DIAS PARA VENCIMIENTO</th>
-<th>FECHA DOCUMENTOS TECNOMECANICA</th>
+<th>FECHA REVISIÓN PREVENTIVA</th>
 <th>DIAS PARA VENCIMIENTO</th>
-
 
 </tr>
 </thead>
@@ -127,12 +123,12 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 	<td>{{$servicio->pasajero->nombres}} {{$servicio->pasajero->apellidos}}</td>
 	<td>{{$servicio->pasajero->documento}}
 	<td>{{$servicio->pasajero->telefono}}</td>
-	<td>{{$servicio->cliente->documento}},{{$servicio->cliente->nombres}} {{$servicio->cliente->apellidos}}</td>
+	<td>{{$servicio->cliente->documento}},{{$servicio->cliente->razon_social}}</td>
 	<td>
 		@if($servicio->uri_sede>0)
 			{{$servicio->sede->nombre}}
 		@else
-		NA
+		N/A
 		@endif
 	</td>
 	<td>		
@@ -140,7 +136,7 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 			{{$servicio->sede->ciudad->nombre}}
 
 		@else
-			NA
+			N/A
 		@endif
 	</td>
 	<td>{{$servicio->pasajero->id}}</td>
@@ -153,7 +149,7 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 	<td>{{$servicio->hora_recogida}}</td>
 	<td>{{$tipo_viaje[$servicio->tipo_viaje]}}</td>
 	<td>{{$servicio->turno}}</td>
-	<td>NA</td>
+	<td>N/A</td>
 	<td>{{$servicio->hora_cita}}</td>
 	<td>{{$servicio->hora_terminacion_cita}}</td>
 	<td>{{$servicio->terapia}}</td>
@@ -184,10 +180,7 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 	<td>{{$servicio->observaciones}}</td>
 	<td>{{$servicio->placa}}</td>
 	<td>{{$servicio->conductor->documento}}</td>
-	<td>SI</td>
-	<td>0</td>
-	<td>0</td>
-	<td>0</td>
+	<td>{{Helper::getUsoVehiculo($servicio->placa)}}</td>
 	<td>{{$documentos_conductor[$servicio->id_conductor_servicio][5]['cargado']}}</td><!--doc cedula!-->
 	<td>{{$documentos_conductor[$servicio->id_conductor_servicio][1]['cargado']}}</td><!--doc licencia!-->
 	<td>{{$documentos_conductor[$servicio->id_conductor_servicio][4]['cargado']}}</td> <!--doc PLANILLA DE SS!-->
@@ -203,7 +196,7 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 	<td>{{$documentos_vehiculo[$servicio->placa][13]['cargado']}}</td> <!--doc tarjeta operacion!-->
 	<td>{{$documentos_vehiculo[$servicio->placa][11]['cargado']}}</td> <!--doc poliza!-->
 	<td>{{$documentos_vehiculo[$servicio->placa][14]['cargado']}}</td> <!--doc revision preventiva!-->
-	<td>NA</td><!--doc empresa afiliadora!-->
+	<td>{{Helper::getEmpresaAfiliadora($servicio->placa)}}</td><!--doc empresa afiliadora!-->
 	<td>{{$documentos_conductor[$servicio->id_conductor_servicio][1]['fecha_vencimiento']}}</td> <!--fecha licencia cond!-->
 	<td>{{Helper::getFechasDias($documentos_conductor[$servicio->id_conductor_servicio][1]['fecha_vencimiento'])}}</td><!--dias vencimiento licencia cond!-->
 	<td>{{$documentos_vehiculo[$servicio->placa][9]['fecha_vencimiento']}}</td>  <!--fecha seguro obl!-->

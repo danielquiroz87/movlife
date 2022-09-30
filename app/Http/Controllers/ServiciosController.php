@@ -88,7 +88,7 @@ class ServiciosController extends Controller
         $detalle=OrdenServicioDetalle::where('orden_servicio_id',$servicio->id)->first();
         $tipo_servicios=TipoServicios::all();
         $sedes=Sedes::all();
-        $empleados=Empleado::where('area_empresa','5')->get();
+        $empleados=Empleado::where('area_empresa','4')->get();
 
 
         return view('servicios.edit')->with(['servicio'=>$servicio,
@@ -183,9 +183,9 @@ class ServiciosController extends Controller
        
     }
 
-    public function delete(Request $request){
+    public function delete($id){
         
-        $servicio=Servicio::find($request->get('id'));
+        $servicio=Servicio::find($id);
 
         $servicio->delete();
 

@@ -450,17 +450,7 @@
               <div class="collapse" id="accordion-item-rut" data-parent="#accordionExample">
                 <div class="card-body">
                   <div class="row"> 
-
-                  <div class="col-md-3 form-group ">
-                        <label> <strong>Fecha Inicial:</strong></label>
-                        <input type="date" name="documentos[7][fecha_inicial]" class="form-control" placeholder="dd/mm/yyyy">
-                  </div>
-
-                   <div class="col-md-3 form-group ">
-                        <label> <strong>Fecha Final:</strong></label>
-                        <input type="date" name="documentos[7][fecha_final]" class="form-control" placeholder="dd/mm/yyyy">
-                  </div>
-
+                    
                   <div class="col-md-6 form-group ">
                       <label> <strong>Archivo Rut:</strong></label>
                       <input type="file" class="form-control" name="documentos[7][cara][1]">
@@ -478,15 +468,7 @@
                 <div class="card-body">
                   <div class="row"> 
 
-                  <div class="col-md-3 form-group ">
-                        <label> <strong>Fecha Inicial:</strong></label>
-                        <input type="date" name="documentos[16][fecha_inicial]" class="form-control" placeholder="dd/mm/yyyy">
-                  </div>
-
-                   <div class="col-md-3 form-group ">
-                        <label> <strong>Fecha Final:</strong></label>
-                        <input type="date" name="documentos[16][fecha_final]" class="form-control" placeholder="dd/mm/yyyy">
-                  </div>
+                 
 
                   <div class="col-md-6 form-group ">
                       <label> <strong>Archivo SIMIT:</strong></label>
@@ -506,15 +488,7 @@
                 <div class="card-body">
                    <div class="row"> 
 
-                  <div class="col-md-3 form-group ">
-                        <label> <strong>Fecha Inicial:</strong></label>
-                        <input type="date" name="documentos[17][fecha_inicial]" class="form-control" placeholder="dd/mm/yyyy">
-                  </div>
-
-                   <div class="col-md-3 form-group ">
-                        <label> <strong>Fecha Final:</strong></label>
-                        <input type="date" name="documentos[17][fecha_final]" class="form-control" placeholder="dd/mm/yyyy">
-                  </div>
+                 
 
                   <div class="col-md-6 form-group ">
                       <label> <strong>Archivo RUNT:</strong></label>

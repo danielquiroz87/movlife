@@ -88,6 +88,9 @@
       @else 
         <input type="hidden" name="cotizacion_id" value="0">
       @endif 
+
+        <input type="hidden" name="estado" value="1">
+
         <div class="row">
 
          
@@ -150,6 +153,9 @@
                    <select name="tipo_servicio" class="form-control">
                      <option value="1">Visitas Domiciliarias</option>
                      <option value="2">Traslado Pacientes</option>
+                     <option value="3">Entrega FirazyR</option>
+                      <option value="3">Entrega Takhzyro</option>
+
 
                     </select>
             </div>
@@ -209,7 +215,7 @@
 
             <div class="opciones_disponibilidad col-md-6 form-group mb-3 ">
               <label class="checkbox checkbox-outline-primary">
-                    <input type="checkbox" name="tiempo_adicional" id="tiempo_adicional"><span>Disponibilidad de Tiempo Adicional</span><span class="checkmark"></span>
+                    <input type="checkbox" name="tiempo_adicional" id="tiempo_adicional" value="1"><span>Disponibilidad de Tiempo Adicional</span><span class="checkmark"></span>
                 </label>
             </div>
 

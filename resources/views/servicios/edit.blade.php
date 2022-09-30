@@ -238,12 +238,9 @@
 
             </div>
 
-
-
-
             <div class="opciones_disponibilidad col-md-6 form-group mb-3 ">
               <label class="checkbox checkbox-outline-primary">
-                    <input type="checkbox" name="tiempo_adicional" id="tiempo_adicional"><span>Disponibilidad de Tiempo Adicional</span><span class="checkmark"></span>
+                    <input type="checkbox" name="tiempo_adicional" id="tiempo_adicional" value="1"><span>Disponibilidad de Tiempo Adicional</span><span class="checkmark"></span>
                 </label>
             </div>
 

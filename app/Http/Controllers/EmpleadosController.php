@@ -178,6 +178,6 @@ class EmpleadosController extends Controller
        
     }
     private function getRepository(){
-        return Empleado::paginate(25);
+        return Empleado::paginate(Config::get('global_settings.paginate'));
     }
 }

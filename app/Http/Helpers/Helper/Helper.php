@@ -8,7 +8,7 @@ use App\Models\TipoDocumentos;
 use App\Models\Documentos;
 use App\Models\Vehiculo;
 use App\Models\Servicio;
-
+use App\Models\VehiculoUsos;
 
 use App\Models\Pasajero;
 use App\Http\Helpers\Helper\NumeroALetras;
@@ -282,5 +282,26 @@ public static function getFechasDias($fecha2){
 
 }
 
+public function getUsoVehiculo($placa){
+
+	$vehiculo=Vehiculo::where('placa',$placa)->get()->first();
+
+	$nombre_uso="N/A";
+	if($vehiculo->id_vehiculo_uso>0){
+	 $uso=VehiculoUsos::find($vehiculo->id_vehiculo_uso);
+	 $nombre_uso=$uso->nombre;
+	}
+	return $nombre_uso;
+}
+
+public function getEmpresaAfiliadora($placa){
+
+	$vehiculo=Vehiculo::where('placa',$placa)->get()->first();
+	$nombre="N/A";
+	if($vehiculo->empresa_afiliadora!=""){
+	 	$nombre=$vehiculo->empresa_afiliadora;
+	}
+	return $nombre;
+}
 
 }
