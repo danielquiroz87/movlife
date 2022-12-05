@@ -1,4 +1,4 @@
-@extends('layouts.master')
+ @extends('layouts.master')
 
 @section('main-content')
 
@@ -76,7 +76,7 @@
 <div class="col-md-8">
       <div class="card text-left">
           <div class="card-body">
-                <h3 class="card-title mb3">Editar Servicio / Coordinador: xxxxx</h3>
+                <h3 class="card-title mb3">Editar Servicio / Coordinador:  {{auth()->user()->name}} </h3>
   
  <div class="box box-info">
     <form action="{{route('servicios.save')}}" method="POST" id="nuevo-servicio" enctype="multipart/form-data" >
@@ -108,14 +108,14 @@
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Conductor (Pago):</strong></label>
-                  <select name="id_conductor_pago" class="form-control">
+                  <select name="id_conductor_pago" id="conductor_pago" class="form-control">
                       <?php echo Helper::selectConductores($servicio->id_conductor_pago) ?>
                   </select>
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Conductor Prestador Servicio:</strong></label>
-                  <select name="id_conductor_servicio" class="form-control">
+                  <select name="id_conductor_servicio" id="conductor_servicio" class="form-control">
                       <?php echo Helper::selectConductores($servicio->id_conductor_servicio) ?>
                   </select>
             </div>
@@ -148,9 +148,7 @@
             <div class="col-md-6 form-group mb-3">
               <label><strong>Tipo Servicio:</strong></label>
                    <select name="tipo_servicio" class="form-control">
-                     @foreach($tipo_servicios as $tiposervicio)
-                     <option value="{{$tiposervicio->id}}">{{$tiposervicio->nombre}}</option>
-                     @endforeach
+                    <?php echo Helper::selectTipoServicios($servicio->tipo_servicio) ?>
                   </select>
             </div>
 
@@ -249,7 +247,18 @@
                    <input type="number" name="valor" value="0" class="form-control" min="0" max="24" placeholder="0" maxlength="11" required>
             </div>
 
+            
+            <div class="col-md-12 form-group mb-3">
+              <label><strong>Tipo Anticipo:</strong></label>
+                   <select class="form-control" name="tipo_anticipo">
+                      <option value="1" @if ($servicio->tipo_anticipo==1) selected="true" @endif >Aplicar Anticipo</option>
+                      <option value="2" @if ($servicio->tipo_anticipo==2) selected="true" @endif>Empleado </option>
+                      <option value="3" @if ($servicio->tipo_anticipo==3) selected="true" @endif>Genera Factura</option>
+                      <option value="4" @if ($servicio->tipo_anticipo==4) selected="true" @endif>Nequi</option>
+                      <option value="5" @if ($servicio->tipo_anticipo==5) selected="true" @endif>Daviplata</option>
 
+                   </select>
+            </div>
             
             <div class="col-md-12 form-group mb-3">
               <label><strong>Valor Servicio Conductor:</strong></label>
@@ -262,14 +271,28 @@
             </div>
             
             <div class="col-md-12 form-group mb-3">
-              <label><strong>Educador / Coordinador Movlife:</strong></label>
-                   <select class="form-control" name="educador_coordinador">
-                      <option value="">Seleccione</option>
-                      @foreach ($empleados as $empleado)
-                      <option value="{{$empleado->id}}" @if($servicio->educador_coordinador==$empleado->id) selected=true @endif>{{$empleado->nombres}} {{$empleado->apellidos}}</option>
+              <label><strong>Educador / Coordinador:</strong></label>
+                  <input type="text" name="educador_coordinador"  value="{{$servicio->educador_coordinador}}" class="form-control" placeholder="" maxlength="600" >
+            </div>
 
-                      @endforeach
-                   </select>
+            <div class="col-md-12 form-group mb-3">
+              <label><strong>Hora Cita /Examen / Infusión:</strong></label>
+                  <input type="text" name="hora_infusion_inicial"  value="{{$servicio->hora_infusion}}" class="form-control" placeholder="" maxlength="600" >
+            </div>
+
+            <div class="col-md-12 form-group mb-3">
+              <label><strong>Hora Terminación Cita / Examen / Infusión:</strong></label>
+                  <input type="text" name="hora_infusion_final"  value="{{$servicio->hora_infusion}}" class="form-control" placeholder="" maxlength="600" >
+            </div>
+
+            <div class="col-md-12 form-group mb-3">
+              <label><strong>Terapia:</strong></label>
+                  <input type="text" name="terapia"  value="{{$servicio->terapia}}" class="form-control" placeholder="" maxlength="600" >
+            </div>
+
+            <div class="col-md-12 form-group mb-3">
+              <label><strong>Programa:</strong></label>
+                  <input type="text" name="programa"  value="{{$servicio->programa}}" class="form-control" placeholder="" maxlength="600" >
             </div>
 
             <div class="col-md-12 form-group mb-3">
@@ -315,23 +338,60 @@
                    </select>
             </div>
 
-               <div class="col-md-12 form-group mb-3">
-              <label><strong>Tipo Anticipo:</strong></label>
-                   <select class="form-control" name="tipo_anticipo">
-                      <option value="1" @if ($servicio->tipo_anticipo==1) selected="true" @endif >Aplicar Anticipo</option>
-                      <option value="2" @if ($servicio->tipo_anticipo==2) selected="true" @endif>Empleado </option>
-                      <option value="3" @if ($servicio->tipo_anticipo==3) selected="true" @endif>Genera Factura</option>
-                      <option value="4" @if ($servicio->tipo_anticipo==4) selected="true" @endif>Nequi</option>
-                      <option value="5" @if ($servicio->tipo_anticipo==5) selected="true" @endif>Daviplata</option>
-
-                   </select>
+            <div class="col-md-12 form-group mb-3">
+              <label><strong>Nro Anticipo:</strong></label><br/>
+                   <input type="text" name="nro_anticipo" value="{{$servicio->nro_anticipo}}" class="form-control" placeholder="0">
             </div>
 
+
+            <div class="col-md-12 form-group mb-3">
+              <label><strong>Nro Factura:</strong></label><br/>
+                   <input type="text" name="nro_factura" value="{{$servicio->nro_factura}}" class="form-control" placeholder="0">
+            </div>
+
+            <div class="col-md-12 form-group mb-3">
+              <label><strong>Orden Compra:</strong></label><br/>
+                   <input type="text" name="orden_compra" value="{{$servicio->orden_compra}}" class="form-control" placeholder="0">
+            </div>
+
+            <div class="col-md-12 form-group mb-3">
+              <label><strong>Nro Pago:</strong></label><br/>
+                   <input type="text" name="nro_pago" value="{{$servicio->nro_pago}}" class="form-control" placeholder="0">
+            </div>
+
+            <div class="col-md-12 form-group mb-3">
+              <label><strong>Fecha Pago:</strong></label><br/>
+                   <input type="date" name="fecha_pago" value="{{$servicio->fecha_pago}}" class="form-control">
+            </div>
+
+            <div class="col-md-12 form-group mb-3">
+              <label><strong>Banco</strong></label><br/>
+                   <input type="text" name="banco" value="{{$servicio->banco}}" class="form-control" placeholder="Nombre Banco">
+            </div>
+
+            
+            <div class="col-md-12 form-group mb-3">
+              <label><strong>Valor Banco</strong></label><br/>
+                   <input type="text" name="valor_banco" value="{{$servicio->valor_banco}}" class="form-control" placeholder="0">
+            </div>
+
+           
              <div class="col-md-12 form-group mb-3">
+              <label><strong>Doc Contable</strong></label><br/>
+                   <input type="number" name="doc_contable" value="{{$servicio->doc_contable}}" class="form-control" placeholder="0">
+            </div>
+
+            <div class="col-md-12 form-group mb-3">
+              <label><strong>Observaciones Contabilidad:</strong></label><br/>
+                   <textarea class="form-control" name="observaciones_contabilidad" rows="3">{{$servicio->observaciones_contabilidad}}</textarea>
+            </div>
+           
+
+            <div class="col-md-12 form-group mb-3">
               <label><strong>Observaciones Servicio:</strong></label><br/>
                    <textarea class="form-control" name="observaciones" rows="3"></textarea>
             </div>
-             <div class="col-md-12 form-group mb-3">
+            <div class="col-md-12 form-group mb-3">
               <label><strong>Comentarios Servicio:</strong></label>
                   <textarea class="form-control" name="comentarios" rows="3"></textarea>
             </div>

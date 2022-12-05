@@ -5,7 +5,7 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 <table  border="1" style="border-collapse: collapse" >
 <thead>
 <tr>
-<th colspan="17"><img src="{{asset('images/movlife.png')}}"></th>
+<th colspan="17"><p style="margin: 10px"><img src="https://app.movlife.co/images/movlife.png" height="44"></p></th>
 <th colspan="16">CUADRO CIERRE SEMANAL</th>
 <th colspan="16">FR-05-021-00<br>
 				Página 1 de 1<br> 
@@ -18,6 +18,7 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 <th>FECHA DE PRESTACION DEL SERVICIO</th>
 <th>TIPO DE SERVICIO</th>
 <th>COORDINADOR	</th>
+<th>USUARIO SISTEMA</th>
 <th>SEMANA</th>
 <th>PERSONA A TRANSPORTAR</th>
 <th>DOCUMENTO PERSONA A TRANSPORTAR	</th>
@@ -58,7 +59,7 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 <th>FECHA DE PAGO	</th>
 <th>BANCO	 </th>
 <th>VALOR BANCO  Y/O ANTICIPO </th>	 
-<th>SALDO 	 </th>
+<th>SALDO </th>
 <th>NO ORDEN DE COMPRA 	 </th>
 <th>DOC CONTABLE	</th>
 <th>OBSERVACIONES </th>
@@ -111,10 +112,17 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 	<td>{{$servicio->id}}</td>
 	<td>{{$servicio->fecha_servicio}}</td>
 	<td>{{$servicio->fecha_servicio}}</td>
-	<td><?php echo $tipo_servicios[$servicio->tipo_servicio]->nombre;?></td>
+	<td><?php echo $tipo_servicios[$servicio->tipo_servicio-1]->nombre;?></td>
 	<td>
 		@if($servicio->educador_coordinador>0)
 			{{$servicio->coordinador->nombres}} {{$servicio->coordinador->apellidos}}
+		@else
+			NA
+		@endif
+	</td>
+	<td>
+		@if($servicio->user_id>0)
+			{{Helper::getUsername($servicio->user_id);}}
 		@else
 			NA
 		@endif
@@ -125,7 +133,7 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 	<td>{{$servicio->pasajero->telefono}}</td>
 	<td>{{$servicio->cliente->documento}},{{$servicio->cliente->razon_social}}</td>
 	<td>
-		@if($servicio->uri_sede>0)
+		@if( (int) $servicio->uri_sede>0 )
 			{{$servicio->sede->nombre}}
 		@else
 		N/A
@@ -139,7 +147,13 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 			N/A
 		@endif
 	</td>
-	<td>{{$servicio->pasajero->id}}</td>
+	<td>
+		@if( $servicio->pasajero->codigo!="" )
+			{{$servicio->pasajero->codigo}}
+		@else
+			N/A
+		@endif
+	</td>
 	<td>{{$servicio->origen}}</td>
 	<td>{{$servicio->barrio}}</td>
 	<td>{{$servicio->origen}}</td>
@@ -148,12 +162,48 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 	<td>{{$servicio->tiempo}}</td>
 	<td>{{$servicio->hora_recogida}}</td>
 	<td>{{$tipo_viaje[$servicio->tipo_viaje]}}</td>
-	<td>{{$servicio->turno}}</td>
-	<td>N/A</td>
-	<td>{{$servicio->hora_cita}}</td>
-	<td>{{$servicio->hora_terminacion_cita}}</td>
-	<td>{{$servicio->terapia}}</td>
-	<td>{{$servicio->programa}}</td>
+	<td>
+		@if( $servicio->turno!="" )
+			{{$servicio->turno}}
+		@else
+			N/A
+		@endif
+	</td>
+	<td>
+		@if( $servicio->educador_coordinador!="" )
+			{{$servicio->educador_coordinador}}
+		@else
+			N/A
+		@endif
+	</td><!--Educador coordinador-->
+	<td>
+		@if( $servicio->hora_infusion_inicial!="" )
+			{{$servicio->hora_infusion_inicial}}
+		@else
+			N/A
+		@endif
+	</td>
+	<td>
+		@if( $servicio->hora_infusion_final!="" )
+			{{$servicio->hora_infusion_final}}
+		@else
+			N/A
+		@endif
+	</td>
+	<td>
+		@if( $servicio->terapia!="" )
+			{{$servicio->terapia}}
+		@else
+			N/A
+		@endif
+	</td>
+	<td>
+		@if( $servicio->programa!="" )
+			{{$servicio->programa}}
+		@else
+			N/A
+		@endif
+	</td>
 	<td>{{$servicio->observaciones}}</td>
 	<td>{{$servicio->conductor->documento}}</td>
 	<td>{{$servicio->conductor->nombres}} {{$servicio->conductor->apellidos}}</td>
@@ -161,23 +211,23 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 	<td>{{$servicio->conductorServicio->celular}}</td>
 	<td>{{$servicio->conductor->nombres}} {{$servicio->conductor->apellidos}}</td>
 	<td>{{$servicio->conductor->documento}}</td>
-	<td>{{$servicio->valor_conductor}}</td>
+	<td>{{number_format($servicio->valor_conductor,2,',','.')}}</td>
+	<td>{{number_format($servicio->descuento,2,',','.')}}</td>
 	<td>0</td>
-	<td>0</td>
-	<td>{{$servicio->valor_conductor}}</td>
-	<td>{{$servicio->valor_cliente}}</td>
-	<td>{{$servicio->factura}}</td>
-	<td>{{$servicio->anticipo}}</td>
-	<td>{{$servicio->id}}</td>
-	<td>{{$servicio->fecha_servicio}}</td>
+	<td>{{number_format($servicio->valor_conductor,2,',','.')}}</td>
+	<td>{{number_format($servicio->valor_cliente,2,',','.')}}</td>
+	<td>{{$servicio->nro_factura}}</td>
+	<td>{{$servicio->nro_anticipo}}</td>
+	<td>{{$servicio->nro_pago}}</td>
+	<td>{{$servicio->fecha_pago}}</td>
 	<td>{{$servicio->banco}}</td>
-	<td>{{$servicio->valor_conductor}}</td>
-	<td>0</td>
-	<td>{{$servicio->id}}</td>
-	<td>{{$servicio->id}}</td>
-	<td></td>
-	<td>{{$servicio->user}}</td>
+	<td>{{number_format($servicio->valor_banco,2,',','.')}}</td>
+	<td>{{number_format($servicio->saldo,2,',','.')}}</td><!--Saldo-->
+	<td>{{$servicio->orden_compra}}</td>
+	<td>{{$servicio->doc_contable}}</td>
 	<td>{{$servicio->observaciones}}</td>
+	<td>{{$servicio->user}}</td>
+	<td>{{$servicio->observaciones_contabilidad}}</td>
 	<td>{{$servicio->placa}}</td>
 	<td>{{$servicio->conductor->documento}}</td>
 	<td>{{Helper::getUsoVehiculo($servicio->placa)}}</td>
@@ -212,7 +262,7 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 	<td>{{$documentos_vehiculo[$servicio->placa][14]['fecha_vencimiento']}}</td> <!--fecha preventiva!-->
 	<td>{{Helper::getFechasDias($documentos_vehiculo[$servicio->placa][14]['fecha_vencimiento'])}}</td><!--dias vencimientos preventiva!-->
 
-	<tr>
+	</tr>
 	@endforeach
 </tbody>
 </table>

@@ -3,6 +3,8 @@
 namespace App\Http\Helpers\Helper;
 
 use App\Models\Cliente;
+use App\Models\User;
+
 use App\Models\Conductor;
 use App\Models\TipoDocumentos;
 use App\Models\Documentos;
@@ -16,6 +18,12 @@ use Illuminate\Support\Facades\DB;
 
 
 class Helper{
+
+public static function getUserName($id){
+ 	$user=User::find($id);
+ 	return $user->name;
+
+}	
 
 public static function getClientes(){
  	return Cliente::orderBy('nombres', 'Asc')->get();
@@ -46,8 +54,13 @@ public static function selectConductores($id=0){
 	$option_conductores="";
 	foreach ($conductores as $conductor) { 
 		$nombres=$conductor->documento.','.$conductor->nombres.' '.$conductor->apellidos;
-		if($id>0){
-			$option_conductores.='<option value="'.$conductor->id.'" selected="selected">'.$nombres.'</option>';
+			if($id>0){
+				if($conductor->id==$id){
+					$option_conductores.='<option value="'.$conductor->id.'" selected="selected">'.$nombres.'</option>';
+				}else{
+					$option_conductores.='<option value="'.$conductor->id.'">'.$nombres.'</option>';
+				}
+			
 		}else{
 			$option_conductores.='<option value="'.$conductor->id.'">'.$nombres.'</option>';
 		}
@@ -61,7 +74,7 @@ public static function selectPasajeros($id=0){
 	$option_pasajeros="";
 	foreach ($pasajeros as $pasajero) { 
 		$nombres=$pasajero->nombres.' '.$pasajero->apellidos;
-		if($id>0){
+		if($id>0 && $pasajero->id==$id){
 			$option_pasajeros.='<option value="'.$pasajero->id.'" selected="selected" >'.$nombres.'</option>';
 		}else{
 			$option_pasajeros.='<option value="'.$pasajero->id.'">'.$nombres.'</option>';
@@ -131,9 +144,9 @@ public static function getClaseVehiculos(){
          -> get();
 }
 public static function selectClaseVehiculos($id=0){
-	$clase=self::getClaseVehiculos();
+	$clases=self::getClaseVehiculos();
 	$option_clase="<option value=''>Seleccione</option>";
-	foreach ($clase as $clase) { 
+	foreach ($clases as $clase) { 
 		if($id>0){
 			$option_clase.='<option value="'.$clase->id.'" selected="selected">'.$clase->nombre.'</option>';
 		}
@@ -152,9 +165,9 @@ public static function getPropietarios(){
 }
 
 public static function selectPropietarios($id=0){
-	$clase=self::getPropietarios();
+	$clases=self::getPropietarios();
 	$option_clase="<option value=''>Seleccione un Propietario</option>";
-	foreach ($clase as $clase) { 
+	foreach ($clases as $clase) { 
 		$name=$clase->documento.','.$clase->nombres.' '.$clase->apellidos;
 		if($id>0){
 			$option_clase.='<option value="'.$clase->id.'" selected="selected">'.$name. '</option>';
@@ -174,10 +187,28 @@ public static function getVehiculosMarcas(){
 }
 
 public static function selectVehiculoMarca($id=0){
-	$clase=self::getVehiculosMarcas();
+	$clases=self::getVehiculosMarcas();
 	$option_clase="<option value=''>Seleccione</option>";
-	foreach ($clase as $clase) { 
+	foreach ($clases as $clase) { 
 		if($id>0){
+			$option_clase.='<option value="'.$clase->id.'" selected="selected">'.$clase->nombre.'</option>';
+		}
+		else{
+			$option_clase.='<option value="'.$clase->id.'">'.$clase->nombre.'</option>';
+		}
+	}
+	return $option_clase;
+}
+
+public static function selectTipoServicios($id=0){
+	$clases= DB::table('tipo_servicios')
+         -> orderBy('id', 'asc')
+         -> get();
+
+	$option_clase="<option value=''>Seleccione</option>";
+	
+	foreach ($clases as $clase) { 
+		if($id>0 && $clase->id==$id){
 			$option_clase.='<option value="'.$clase->id.'" selected="selected">'.$clase->nombre.'</option>';
 		}
 		else{

@@ -21,8 +21,9 @@
             <h1>Servicios</h1>
             <div class="d-sm-flex mb-3" data-view="print">
                   <span class="m-auto"></span>
-                    <a class="btn btn-primary" href="{{route('servicios.new')}}">Nuevo</a>&nbsp;&nbsp;
-                    <a class="btn btn-success" href="{{route('servicios.descargar')}}">Descargar</a>
+                    <a class="btn btn-success" href="{{route('servicios.new')}}">Nuevo</a>&nbsp;&nbsp;
+                    <a class="btn btn-primary" href="{{route('servicios.descargar')}}" target="_blank" >Descargar</a>&nbsp;&nbsp;
+                    <a class="btn btn-success" href="{{route('servicios.importar')}}" target="_blank" >Importar</a>
             </div>
             
           </div>
@@ -41,15 +42,38 @@
 
                  <div class="col-md-3 form-group mb-3">
                     <label><strong>Estado Servicio:</strong></label>
-                         <select name="estado" class="form-control">
-                            <option value=""  >Todos</option>
-                            <option value="1"  >Iniciado</option>
-                            <option value="2" >En Proceso</option>
-                            <option value="3" >Cumplido</option>
-                            <option value="4"   >Cancelado</option>
+                         <select name="filtros[estado]" class="form-control">
+                            <option value="">Todos</option>
+                            <option value="1" @if ($filtros['estado']==1) selected="selected" @endif>Iniciado</option>
+                            <option value="2" @if ($filtros['estado']==2) selected="selected" @endif>En Proceso</option>
+                            <option value="3" @if ($filtros['estado']==3) selected="selected" @endif>Cumplido</option>
+                            <option value="4" @if ($filtros['estado']==4) selected="selected" @endif>Cancelado</option>
 
                          </select>
                   </div>
+
+                   <div class="col-md-3 form-group mb-3">
+                    <label><strong>Pasajero:</strong></label>
+                         <input type="text" class="form-control" name="filtros[pasajero]" value="{{$filtros['pasajero']}}" >
+                  </div>
+
+                  <div class="col-md-3 form-group mb-3">
+                    <label><strong>Clientes:</strong></label>
+                         <select name="filtros[cliente]" class="form-control">
+                            <?php echo Helper::selectClientes($filtros['cliente']) ?>
+                         </select>
+                  </div>
+
+                  <div class="col-md-3 form-group mb-3">
+                    <label><strong>Conductor:</strong></label>
+                         <select name="filtros[conductor]" class="form-control">
+                            <option value="">Seleccione</option>
+                            <?php echo Helper::selectConductores($filtros['conductor']) ?>
+                         </select>
+                  </div>
+
+
+                  
 
                   <div class="col-md-3 form-group mb-3">
                     <label>&nbsp;&nbsp;&nbsp;</label><br/>
@@ -77,7 +101,7 @@
                   <tbody>
                   	@foreach ($servicios as $servicio)
                     <tr>
-                     <td>{{$servicio->cliente->nombres}}</td>
+                     <td>{{$servicio->cliente->nombres}} {{$servicio->cliente->apellidos}}</td>
                      <td>{{$servicio->placa}}</td>
                      <td>{{$servicio->conductor->nombres}}</td>
                      <td>{{$servicio->pasajero->nombres}}</td>
@@ -93,7 +117,7 @@
                         </a>
                         <a class="text-default mr-2 duplicar" href="{{route('servicios.edit', $servicio->id)}}" title="Duplicar Servicio" >
                         <i class="nav-icon i-Data-Copy font-weight-bold"></i></i></a>
-
+                        
                         <a class="text-danger mr-2 eliminar" href="{{route('servicios.delete', $servicio->id)}}" title="Eliminar" >
                         <i class="nav-icon i-Close-Window font-weight-bold"></i></i>
                         </a>

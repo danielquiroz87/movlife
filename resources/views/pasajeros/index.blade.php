@@ -21,6 +21,7 @@
             <h1>Pasajeros</h1>
             <div class="d-sm-flex mb-3" data-view="print">
                   <span class="m-auto"></span>
+                  <a class="btn btn-success" href="{{route('pasajeros.importar')}}" target="_blank" >Importar</a>&nbsp;&nbsp;
                     <a class="btn btn-primary" href="{{route('pasajeros.new')}}">Nuevo</a>
             </div>
           </div>
@@ -61,7 +62,7 @@
                       <td>{{$user->activo}}</td>
                       <td>
                       	<a class="text-success mr-2" href="{{route('pasajeros.edit', $user->id)}}" title="Editar"><i class="nav-icon i-Pen-2 font-weight-bold"></i></a>
-                      	<a class="text-danger mr-2" href="{{route('pasajeros.delete', $user->id)}}" title="Eliminar" class="eliminar"><i class="nav-icon i-Close-Window"></i></a>
+                      	<a class="text-danger mr-2 eliminar" href="{{route('pasajeros.delete.get', $user->id)}}" title="Eliminar" ><i class="nav-icon i-Close-Window"></i></a>
                       </td>
                     </tr>
                   	@endforeach
@@ -88,7 +89,7 @@
         </div>
 
 
-        	 <form action="#" method="POST" id="user-delete-form"  >
+        	 <form action="#" method="GET" id="user-delete-form"  >
     				{{ csrf_field() }}
       			<input type="hidden" name="id" id="userid" value="0">
    
@@ -108,7 +109,7 @@
  		Swal
 	    .fire({
 	        title: "Eliminar",
-	        text: "Está seguro de eliminar este usuario?",
+	        text: "Está seguro de eliminar este Pasajero?",
 	        icon: 'warning',
 	        showCancelButton: true,
 	        confirmButtonText: "Sí, eliminar",
@@ -117,7 +118,7 @@
 	    .then(resultado => {
 	        if (resultado.value) {
 	            // Hicieron click en "Sí"
- 				$('#user-delete-form').submit();
+ 				     $('#user-delete-form').submit();
 	        } else {
 	            // Dijeron que no
 	            console.log("*NO se elimina la venta*");

@@ -4,7 +4,7 @@
   <div class="breadcrumb">
       <ul>
           <li><a href="/">Inicio</a></li>
-          <li><a href="{{route('servicios')}}">Servicios</a></li>
+          <li><a href="{{route('conductores')}}">Conductores</a></li>
           <li>Importar</li>
       </ul>
   </div>
@@ -34,8 +34,8 @@
     <form action="{{route('general.importar.save')}}" method="POST" id="user-new-form" enctype="multipart/form-data" >
     {{ csrf_field() }}
       <input type="hidden" name="id" value="0">
+      <input type="hidden" name="model" value="conductores">
       <input type="hidden" name="is_new" value="true">
-      <input type="hidden" name="model" value="servicios">
 
         <div class="row">
 
@@ -43,14 +43,10 @@
               <label><strong>Archivo:</strong></label>
                    <input type="file" name="file" value="" class="form-control"  required>
             </div>
-
-           
-
-           
-      
+            
             <div class="col-xs-12 col-sm-12 col-md-12 ">
                 <button id="submit" type="submit" class="btn btn-primary">Enviar</button>
-                <a href="{{ route('servicios') }}" class="btn btn-danger">Cancelar</a>
+                <a href="{{ route('conductores') }}" class="btn btn-danger">Cancelar</a>
             </div>
         </div>
 
@@ -73,7 +69,5 @@
 @section('bottom-js')
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.js"></script>
-
-
 
 @endsection

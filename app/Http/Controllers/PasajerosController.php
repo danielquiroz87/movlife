@@ -192,6 +192,23 @@ class PasajerosController extends Controller
     { 
        
     }
+
+    public function importar(){
+        
+        return view('pasajeros.importar');
+        
+    }
+
+    public function delete($id){
+        
+        $pasajero=Pasajero::find($id);
+        $pasajero->delete();
+
+        \Session::flash('flash_message','Pasajero eliminado exitosamente!.');
+
+        return redirect()->back();
+    }
+    
     private function getRepository(){
         return Pasajero::paginate(Config::get('global_settings.paginate'));
     }

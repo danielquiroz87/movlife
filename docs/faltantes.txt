@@ -64,3 +64,31 @@ Intermunicipal
 36228
 
 
+Costo de la semana
+
+300,000 Anticipo  
+500,000 Total Servicios Semana
+
+
+1) 100,000
+2) 150,000 
+3) 250,000
+
+
+Cuando sobra saldo de un anticipo se acumula para la siguiente semana 
+
+Los dias miercoles / Jueves se liquida con los excedente de los anticipos
+
+
+
+
+Servicios el campo orden de compra
+
+Lo que no tenga orden de compra se debe facturar y poder agregar el numero de la factura
+
+Modulo de facturas filtros
+
+9879758
+2449419
+
+

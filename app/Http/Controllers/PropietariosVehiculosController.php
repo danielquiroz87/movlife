@@ -209,6 +209,11 @@ class PropietariosVehiculosController extends Controller
     { 
        
     }
+    public function importar(){
+        
+        
+    }
+    
     public function delete($id){
         $propietario=Propietario::find($id);
          $propietario->delete();

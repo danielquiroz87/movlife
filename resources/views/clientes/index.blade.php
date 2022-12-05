@@ -9,18 +9,25 @@
       </ul>
   </div>
   <div class="separator-breadcrumb border-top"></div>
- @if ($message = Session::get('flash_message'))
+  @if ($message = Session::get('flash_message'))
     <div class="alert alert-success alert-block">
         <button type="button" class="close" data-dismiss="alert">×</button> 
             <strong>{{ $message }}</strong>
     </div>
   @endif
 
+   @if ($message = Session::get('flash_bad_message'))
+    <div class="alert alert-danger alert-block">
+        <button type="button" class="close" data-dismiss="alert">×</button> 
+            <strong>{{ $message }}</strong>
+    </div>
+  @endif
   <div class="row">
           <div class="col-md-12">
             <h1>Cliente</h1>
             <div class="d-sm-flex mb-3" data-view="print">
                   <span class="m-auto"></span>
+                   <a class="btn btn-success" href="{{route('customers.importar')}}" target="_blank" >Importar</a>&nbsp;&nbsp;
                     <a class="btn btn-primary" href="{{route('customers.new')}}">Nuevo</a>
             </div>
           </div>
@@ -65,7 +72,7 @@
                         <a class="text-success mr-2" href="{{route('customers.edit', $user->id)}}" title="Editar">
                           <i class="nav-icon i-Pen-2 font-weight-bold"></i>
                         </a>
-                      	<a class="text-danger mr-2 eliminar" href="{{route('customers.delete', $user->id)}}" title="Eliminar"><i class="nav-icon i-Close-Window font-weight-bold"></i></a>
+                      	<a class="text-danger mr-2 eliminar" href="{{route('customers.delete.get', $user->id)}}" title="Eliminar"><i class="nav-icon i-Close-Window font-weight-bold"></i></a>
                       </td>
                     </tr>
                   	@endforeach
@@ -92,7 +99,7 @@
         </div>
 
 
-        	 <form action="#" method="POST" id="user-delete-form"  >
+        	 <form action="#" method="get" id="user-delete-form"  >
     				{{ csrf_field() }}
       			<input type="hidden" name="id" id="userid" value="0">
    

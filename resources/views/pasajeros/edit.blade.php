@@ -86,12 +86,12 @@
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Dirección:</strong></label>
-                   <input type="text" name="direccion" class="form-control" placeholder="" maxlength="20" required value="{{$direccion->direccion1}}">
+                   <input type="text" name="direccion" class="form-control" placeholder=""  required value="{{$direccion->direccion1}}">
             </div>
            
             <div class="col-md-6 form-group mb-3">
               <label><strong>Detalle Dirección:</strong></label>
-                   <input type="text" name="direccion_detalle" class="form-control" placeholder="" maxlength="20"  value="{{$direccion->direccion2}}">
+                   <input type="text" name="direccion_detalle" class="form-control" placeholder=""  value="{{$direccion->direccion2}}">
             </div>
             <div class="col-md-6 form-group mb-3">
                     <label><strong>Email:</strong></label>

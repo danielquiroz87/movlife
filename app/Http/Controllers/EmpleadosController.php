@@ -177,6 +177,19 @@ class EmpleadosController extends Controller
     { 
        
     }
+
+     public function importar(){
+        
+        
+    }
+
+    public function delete($id){
+        $empleado=Empleado::find($id);
+         $empleado->delete();
+         \Session::flash('flash_message','Empleado eliminado exitosamente!.');
+         return redirect()->route('employes');
+    }
+
     private function getRepository(){
         return Empleado::paginate(Config::get('global_settings.paginate'));
     }

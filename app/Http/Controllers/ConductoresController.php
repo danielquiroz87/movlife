@@ -322,8 +322,8 @@ class ConductoresController extends Controller
                 $hoja_vida=new ConductorHojaDeVida();
                 $hoja_vida->conductor_id=$conductor->id;
             }
-
-            
+            $hoja_vida->estrato=$request->get('estrato')?$request->get('estrato'):NULL;
+            $hoja_vida->numero_hijos=$request->get('numero_hijos')?$request->get('numero_hijos'):NULL;
             $hoja_vida->save();
 
 
@@ -370,6 +370,22 @@ class ConductoresController extends Controller
     public function update()
     { 
        
+    }
+
+    public function importar(){
+        
+        return view('conductores.importar');
+        
+    }
+
+    public function delete($id){
+        
+        $conductor=Conductor::find($id);
+        $conductor->delete();
+
+        \Session::flash('flash_message','Pasajero eliminado exitosamente!.');
+
+        return redirect()->back();
     }
     private function getRepository(){
         return Conductor::paginate(Config::get('global_settings.paginate'));

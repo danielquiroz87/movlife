@@ -286,6 +286,12 @@ class VehiculosController extends Controller
        
     }
 
+    public function importar(){
+        
+        return view('vehiculos.importar');
+
+    }
+
     public function saveConductores(Request $request){
 
         $conveh=new VehiculoConductores();

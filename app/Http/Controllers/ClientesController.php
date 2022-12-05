@@ -178,6 +178,19 @@ class ClientesController extends Controller
 
 
     }
+
+    public function importar(){
+        
+     return view('clientes.importar');
+
+    }
+
+    public function delete($id){
+         $cliente=Cliente::find($id);
+         $cliente->delete();
+         \Session::flash('flash_message','Cliente eliminado exitosamente!.');
+         return redirect()->route('customers');
+    }
    
     public function update()
     { 

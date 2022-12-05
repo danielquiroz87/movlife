@@ -1,0 +1,37 @@
+1) Se crea el servicio
+2) Luego se crea el anticipo (Validar los servicios que esten en proceso o completados). 
+
+Excel y Orden de Servicios
+
+Costo = Valor Conductor
+Descuento Prestamo=Saldo Anticipo
+Total con Descuento= Valor Conductor - Saldo Anticipo.
+Saldo a FavorConductor=
+
+
+************************************
+Caso Anticipo sea mayor al servicio
+************************************
+
+Costo= Valor Conductor
+Descuento Prestamo= Valor Conductor
+Total Con Descuento Incluido=0
+Saldo Que Debe Conductor=-400,000
+Saldo a Favor Conductor=
+
+Nro Anticipo= Campo nuevo al editar el servicio
+Factura= Campo nuevo al editar el servicio
+#Pago=Campo nuevo al editar el servicio
+Fecha Pago=Campo nuevo al editar el servicio
+Banco= Campo nuevo al editar el servicio
+Valor Banco=  Campo nuevo al editar el servicio
+NO ORDEN DE COMPRA  = Campo nuevo al editar el servicio
+DOC CONTABLE=Campo nuevo al editar el servicio
+OBSERVACIONES CONTABILIDAD= Campo nuevo al editar el servicio
+Saldo = Calculado
+
+
+
+Saldo ( Si es empleado y tiene descuento en saldo 0, si es conductor tiene anticipo en saldo ingresar lo q se debe, y si el conductor debe poner 0)
+
+Dividir 2 Pestañas / Operación , Contabilidad 

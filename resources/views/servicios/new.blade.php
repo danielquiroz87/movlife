@@ -150,14 +150,9 @@
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Tipo Servicio:</strong></label>
-                   <select name="tipo_servicio" class="form-control">
-                     <option value="1">Visitas Domiciliarias</option>
-                     <option value="2">Traslado Pacientes</option>
-                     <option value="3">Entrega FirazyR</option>
-                      <option value="3">Entrega Takhzyro</option>
-
-
-                    </select>
+                  <select name="tipo_servicio" class="form-control">
+                     <?php echo Helper::selectTipoServicios() ?>
+                  </select>
             </div>
 
             <div class="col-md-6 form-group mb-3">
@@ -203,13 +198,16 @@
 
             <div class="opciones_viaje col-md-6 form-group mb-3 ">
               <label class="radio radio-outline-warning">
-                <input type="radio" name="tipo_viaje"><span>Solo Ida</span><span class="checkmark"></span>
+                <input type="radio" name="tipo_viaje" value="1" ><span>Solo Ida</span><span class="checkmark"></span>
               </label>
               <label class="radio radio-outline-success">
-                    <input type="radio" name="tipo_viaje"><span>Ida y Regreso</span><span class="checkmark"></span>
+                    <input type="radio" name="tipo_viaje" value="2"><span>Ida y Regreso</span><span class="checkmark"></span>
               </label>
               <label class="radio radio-outline-danger">
-                  <input type="radio" name="tipo_viaje"><span>Regreso</span><span class="checkmark"></span>
+                  <input type="radio" name="tipo_viaje" value="3"><span>Regreso</span><span class="checkmark"></span>
+              </label>
+                 <label class="radio radio-outline-danger">
+                  <input type="radio" name="tipo_viaje" value="4"><span>Multidestino</span><span class="checkmark"></span>
               </label>
             </div>
 

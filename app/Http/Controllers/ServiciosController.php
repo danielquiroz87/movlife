@@ -4,8 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Servicio;
 use App\Models\OrdenServicioDetalle;
+use App\Models\Anticipos;
+use App\Models\AnticiposAbonos;
+
 
 use App\Models\Cotizacion;
 use App\Models\CotizacionDetalle;
@@ -15,6 +19,8 @@ use App\Models\Empleado;
 use App\Models\User;
 use App\Models\Direccion;
 use Config;
+use Illuminate\Support\Facades\DB;
+
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
@@ -36,14 +42,53 @@ class ServiciosController extends Controller
     public function index(Request $request)
     {   
         $servicios=Servicio::whereIn('estado',array(1,2,3));
-        
-        if($request->has('estado')){
-            $estado=(int) $request->get('estado');
+        $filtros=$request->get('filtros');
+        if(isset($filtros['estado'])){
+            $estado=(int) $filtros['estado'];
             if($estado!="" || $estado>0){
                 $servicios->where('estado','=',$estado);
             }
-            
         }
+        else{
+            $filtros['estado']="";
+        }
+        if(isset($filtros['cliente'])){
+            $cliente=(int) $filtros['cliente'];
+            if($cliente!="" || $cliente>0){
+                $servicios->where('id_cliente','=',$cliente);
+            }
+            
+        }else{
+             $filtros['cliente']="";
+        }
+        if(isset($filtros['conductor'])){
+            $conductor=(int) $filtros['conductor'];
+            if($conductor!="" || $conductor>0){
+                $servicios->where('id_conductor_servicio','=',$conductor);
+            }
+            
+        }else{
+             $filtros['conductor']="";
+        }
+
+        if(isset($filtros['pasajero'])){
+            
+            $pasajero=$filtros['pasajero'];
+
+            if($pasajero!="" ){
+
+               $servicios ->leftJoin('pasajeros AS p', function($join){
+                    $join->on('ordenes_servicio.id_pasajero', '=', 'p.id');
+                   
+            });
+                 $servicios->where('p.nombres', 'LIKE', '%'.$pasajero.'%')
+                            ->orwhere('p.apellidos', 'LIKE', '%'.$pasajero.'%'); 
+            }
+            
+        }else{
+             $filtros['pasajero']="";
+        }
+
         if($request->has('fecha_inicial')){
             $fecha_inicial=(int) $request->get('fecha_inicial');
             $servicios->where('created_at','>=',$fecha_inicial);
@@ -53,9 +98,8 @@ class ServiciosController extends Controller
             $servicios->where('created_at','<=',$fecha_final);
         }
 
-
         $servicios=$servicios->paginate(Config::get('global_settings.paginate'));
-        return view('servicios.index')->with(['servicios'=>$servicios]);
+        return view('servicios.index')->with(['servicios'=>$servicios,'filtros'=>$filtros]);
     }
     public function importar(){
 
@@ -161,6 +205,8 @@ class ServiciosController extends Controller
          if($is_new){
 
             $servicio->create($request->all());
+            $servicio->user_id=Auth::user()->id;
+            $servicio->save();
             \Session::flash('flash_message','Servicio agregado exitosamente!.');
 
              return redirect()->route('servicios');
@@ -168,7 +214,80 @@ class ServiciosController extends Controller
          }else{
             $servicio=Servicio::find($request->get('id'));
             $servicio->update($request->all());
+            $servicio->user_id=Auth::user()->id;
+            
+            //Tipo Anticipo
+            if($request->get('tipo_anticipo')==1){
+               $anticipo=Anticipos::where('conductor_id',$servicio->id_conductor_pago)->where('estado',0)->get()->first();
 
+               if($anticipo){
+                    $existe_abono=AnticiposAbonos::where('orden_servicio_id',$servicio->id)->get()->first();
+                    if($existe_abono){
+                        $abono=$existe_abono;
+                    }else{
+                        $abono=new AnticiposAbonos();
+                        $abono->anticipo_id=$anticipo->id;
+                        $abono->orden_servicio_id=$servicio->id;  
+                    }
+                    $abono->valor=$servicio->valor_conductor;
+                    $abono->save();
+               }
+            }
+
+            //Actualizamos valores de anticipos en la orden de servicio
+            $total_anticipos=false;
+            $total_abonos=false;
+            $results_anticipos = DB::select( DB::raw("SELECT sum(valor) as 'total_anticipos' FROM anticipos WHERE estado=0 and conductor_id = :conductor_id"), array(
+               'conductor_id' => $servicio->id_conductor_pago,
+             ));
+
+            $results_abonos = DB::select( DB::raw("SELECT sum(b.valor) as 'total_abonos' FROM anticipos_abonos b inner join anticipos a on b.anticipo_id=a.id WHERE a.estado=0 and a.conductor_id = :conductor_id"), array(
+               'conductor_id' => $servicio->id_conductor_pago,
+             ));
+            if($results_anticipos){
+                $total_anticipos=$results_anticipos[0]->total_anticipos;
+            }
+            if($results_abonos){
+                $total_abonos=$results_abonos[0]->total_abonos;
+            }
+            if($total_anticipos && $total_abonos){
+
+                $servicio->total_anticipos=$total_anticipos;
+                $servicio->total_abonos=$total_abonos;
+                
+                if($total_anticipos>$total_abonos){
+                    $saldo=$total_anticipos-$total_abonos;
+                }else{
+                    $saldo=$total_abonos-$total_anticipos;
+                }
+                
+                if($saldo<0){
+                    $saldo=0;
+                }
+                $descuento=0;
+                $resta_descuento=$total_anticipos-$total_abonos;
+
+                if($resta_descuento<0){
+                    $descuento=$servicio->valor_conductor+$resta_descuento;
+                }else{
+                     $descuento=$servicio->valor_conductor;
+                }
+                if($descuento>=0){
+                    $saldo=0;
+                }
+                if($resta_descuento<0){
+                    $saldo=$total_abonos-$total_anticipos;
+                }
+                $servicio->descuento=$descuento;
+                $servicio->saldo=$saldo;
+                $servicio->save();
+
+
+            }else{
+                $servicio->saldo=$servicio->valor_conductor;
+                $servicio->save();
+            }
+           
             \Session::flash('flash_message','Servicio actualizado exitosamente!.');
 
              return redirect()->route('servicios');
@@ -183,6 +302,7 @@ class ServiciosController extends Controller
        
     }
 
+ 
     public function delete($id){
         
         $servicio=Servicio::find($id);
@@ -198,10 +318,15 @@ class ServiciosController extends Controller
 
 
     public function descargar(){
-        $servicios=$this->getRepository();
+        $servicios=Servicio::whereIn('estado',array(1,2,3))->orderBy('fecha_servicio','Asc')->get();
         $tipo_servicios=TipoServicios::all();
-       
-        return view('servicios.descargar')->with(['servicios'=>$servicios,'tipo_servicios'=>$tipo_servicios]);
+        $fecha=date('Y-m-d');
+        $filename = 'consolidado-semanal-'.$fecha.'.xls';
+        //header('Content-type: application/excel');
+        //header('Content-Disposition: attachment; filename='.$filename);
+        $tabla=view('servicios.descargar')->with(['servicios'=>$servicios,'tipo_servicios'=>$tipo_servicios])->render();
+        echo $tabla;
+        exit();
     }
 
     private function getRepository(){

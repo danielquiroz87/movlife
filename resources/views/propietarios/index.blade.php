@@ -22,6 +22,7 @@
 
                   <div class="d-sm-flex mb-3" data-view="print">
                     <span class="m-auto"></span>
+                   
                     <a class="btn btn-primary" href="{{route('propietarios.new')}}">Nuevo</a>
                   </div>
                 
@@ -121,7 +122,7 @@
  		Swal
 	    .fire({
 	        title: "Eliminar",
-	        text: "Está seguro de eliminar este usuario?",
+	        text: "Está seguro de eliminar este Registro?",
 	        icon: 'warning',
 	        showCancelButton: true,
 	        confirmButtonText: "Sí, eliminar",

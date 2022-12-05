@@ -35,6 +35,10 @@ Route::get('/clientes/new', 'ClientesController@new')->name('customers.new');
 Route::get('/clientes/edit/{id}', 'ClientesController@edit')->name('customers.edit');
 Route::post('/clientes/save', 'ClientesController@save')->name('customers.save');
 Route::post('/clientes/delete', 'ClientesController@delete')->name('customers.delete');
+Route::get('/clientes/delete/{id}', 'ClientesController@delete')->name('customers.delete.get');
+Route::get('/clientes/importar', 'ClientesController@importar')->name('customers.importar');
+
+
 Route::get('/clientes/register', 'ClientesController@new')->name('signIn');
 
 Route::get('/empleados', 'EmpleadosController@index')->name('employes');
@@ -42,12 +46,18 @@ Route::get('/empleados/new', 'EmpleadosController@new')->name('employes.new');
 Route::get('/empleados/edit/{id}', 'EmpleadosController@edit')->name('employes.edit');
 Route::post('/empleados/save', 'EmpleadosController@save')->name('employes.save');
 Route::post('/empleados/delete', 'EmpleadosController@delete')->name('employes.delete');
+Route::post('/empleados/delete/{id}', 'EmpleadosController@delete')->name('employes.delete.get');
+
 
 Route::get('/pasajeros', 'PasajerosController@index')->name('pasajeros');
 Route::get('/pasajeros/new', 'PasajerosController@new')->name('pasajeros.new');
 Route::get('/pasajeros/edit/{id}', 'PasajerosController@edit')->name('pasajeros.edit');
 Route::post('/pasajeros/save', 'PasajerosController@save')->name('pasajeros.save');
 Route::post('/pasajeros/delete', 'PasajerosController@delete')->name('pasajeros.delete');
+Route::get('/pasajeros/delete/{id}', 'PasajerosController@delete')->name('pasajeros.delete.get');
+Route::get('/pasajeros/importar', 'PasajerosController@importar')->name('pasajeros.importar');
+
+
 
 Route::get('/propietarios', 'PropietariosVehiculosController@index')->name('propietarios');
 Route::get('/propietarios/new', 'PropietariosVehiculosController@new')->name('propietarios.new');
@@ -63,10 +73,11 @@ Route::get('/conductores/new', 'ConductoresController@new')->name('conductores.n
 Route::get('/conductores/edit/{id}', 'ConductoresController@edit')->name('conductores.edit');
 Route::post('/conductores/save', 'ConductoresController@save')->name('conductores.save');
 Route::post('/conductores/hojavida/save', 'ConductoresController@hojavidasave')->name('conductores.hojavida.save');
-
 Route::post('/conductores/documentos/save', 'ConductoresController@documentossave')->name('conductores.documentos.save');
-
 Route::post('/conductores/delete', 'ConductoresController@delete')->name('conductores.delete');
+Route::get('/conductores/delete/{id}', 'ConductoresController@delete')->name('conductores.delete.get');
+Route::get('/conductores/importar', 'ConductoresController@importar')->name('conductores.importar');
+
 
 Route::get('/vehiculos', 'VehiculosController@index')->name('vehiculos');
 Route::get('/vehiculos/new', 'VehiculosController@new')->name('vehiculos.new');
@@ -86,8 +97,9 @@ Route::get('/servicios/edit/{id}', 'ServiciosController@edit')->name('servicios.
 Route::post('/servicios/save', 'ServiciosController@save')->name('servicios.save');
 Route::get('/servicios/delete/{id}', 'ServiciosController@delete')->name('servicios.delete');
 Route::post('/servicios/delete/{id}', 'ServiciosController@delete')->name('servicios.delete');
-
 Route::get('/servicios/descargar', 'ServiciosController@descargar')->name('servicios.descargar');
+Route::get('/servicios/importar', 'ServiciosController@importar')->name('servicios.importar');
+
 Route::get('/facturas', 'FacturasController@index')->name('facturas');
 
 
@@ -113,4 +125,7 @@ Route::get('/anticipos/abonos/{id}', 'AbonosController@index')->name('anticipos.
 
 Route::get('/municipios', 'UtilsController@municipios')->name('utils.municipios');
 Route::get('/conductores/placa/{placa}', 'VehiculosController@getConductoresPlaca')->name('vehiculos.conductores.placa');
+
+Route::post('/general/importar/save', 'ImportadorController@index')->name('general.importar.save');
+
 

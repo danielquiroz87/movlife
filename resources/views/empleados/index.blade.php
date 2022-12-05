@@ -21,6 +21,7 @@
             <h1>Empleados</h1>
             <div class="d-sm-flex mb-3" data-view="print">
                   <span class="m-auto"></span>
+                   
                     <a class="btn btn-primary" href="{{route('employes.new')}}">Nuevo</a>
             </div>
           </div>
@@ -65,7 +66,7 @@
                       <a class="text-success mr-2" href="{{route('employes.edit', $user->id)}}" title="Editar">
                         <i class="nav-icon i-Pen-2 font-weight-bold"></i>
                       </a>
-                      <a class="text-danger mr-2 eliminar" href="{{route('employes.delete', $user->id)}}" title="Eliminar"><i class="nav-icon i-Close-Window"></i>
+                      <a class="text-danger mr-2 eliminar" href="{{route('employes.delete.get', $user->id)}}" title="Eliminar"><i class="nav-icon i-Close-Window"></i>
                       </a>
                       </td>
                     </tr>
@@ -93,7 +94,7 @@
         </div>
 
 
-        	 <form action="#" method="POST" id="user-delete-form"  >
+        	 <form action="#" method="GET" id="user-delete-form"  >
     				{{ csrf_field() }}
       			<input type="hidden" name="id" id="userid" value="0">
    
@@ -113,7 +114,7 @@
  		Swal
 	    .fire({
 	        title: "Eliminar",
-	        text: "Está seguro de eliminar este usuario?",
+	        text: "Está seguro de eliminar este Empleado?",
 	        icon: 'warning',
 	        showCancelButton: true,
 	        confirmButtonText: "Sí, eliminar",
