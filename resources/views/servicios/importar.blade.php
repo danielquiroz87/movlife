@@ -31,7 +31,7 @@
                 <h3 class="card-title mb3">Nueva Importación</h3>
   
  <div class="box box-info">
-    <form action="{{route('general.importar.save')}}" method="POST" id="user-new-form" enctype="multipart/form-data" >
+    <form action="{{route('servicios.importar.save')}}" method="POST" id="user-new-form" enctype="multipart/form-data" >
     {{ csrf_field() }}
       <input type="hidden" name="id" value="0">
       <input type="hidden" name="is_new" value="true">

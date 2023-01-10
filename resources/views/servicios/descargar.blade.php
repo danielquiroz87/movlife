@@ -17,7 +17,6 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 <th>FECHA DE SOLICITUD DEL SERVICIO</th>
 <th>FECHA DE PRESTACION DEL SERVICIO</th>
 <th>TIPO DE SERVICIO</th>
-<th>COORDINADOR	</th>
 <th>USUARIO SISTEMA</th>
 <th>SEMANA</th>
 <th>PERSONA A TRANSPORTAR</th>
@@ -113,13 +112,6 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 	<td>{{$servicio->fecha_servicio}}</td>
 	<td>{{$servicio->fecha_servicio}}</td>
 	<td><?php echo $tipo_servicios[$servicio->tipo_servicio-1]->nombre;?></td>
-	<td>
-		@if($servicio->educador_coordinador>0)
-			{{$servicio->coordinador->nombres}} {{$servicio->coordinador->apellidos}}
-		@else
-			NA
-		@endif
-	</td>
 	<td>
 		@if($servicio->user_id>0)
 			{{Helper::getUsername($servicio->user_id);}}

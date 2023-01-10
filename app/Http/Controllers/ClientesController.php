@@ -42,6 +42,7 @@ class ClientesController extends Controller
                 $clientes=Cliente::where('documento','LIKE', '%'.$search.'%')
                                           ->orWhere('nombres', 'LIKE', '%'.$search.'%')
                                           ->orWhere('apellidos', 'LIKE', '%'.$search.'%')
+                                          ->orWhere('razon_social', 'LIKE', '%'.$search.'%')
                                           ->orWhere('email_contacto', 'LIKE', '%'.$search.'%')
                                           ->orWhere('celular', 'LIKE', '%'.$search.'%')
                                           ->orWhere('telefono', 'LIKE', '%'.$search.'%')
@@ -176,7 +177,7 @@ class ClientesController extends Controller
 
          }
 
-
+         
     }
 
     public function importar(){

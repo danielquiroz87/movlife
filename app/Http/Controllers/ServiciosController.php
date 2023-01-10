@@ -6,9 +6,15 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Servicio;
+use App\Models\Cliente;
+use App\Models\Pasajero;
+use App\Models\Municipios;
+
+
 use App\Models\OrdenServicioDetalle;
 use App\Models\Anticipos;
 use App\Models\AnticiposAbonos;
+use App\Models\Conductor;
 
 
 use App\Models\Cotizacion;
@@ -106,7 +112,175 @@ class ServiciosController extends Controller
         return view('servicios.importar');
  
     }
- 
+
+    public function importarsave(Request $request){
+
+        $file = $request->file('file');
+
+        $fopen=fopen($file->getRealPath(),'r');
+        $importData_arr = array(); // Read through the file and store the contents as an array
+        $i = 0;
+        $error=false;
+        //Read the contents of the uploaded file 
+        while (($filedata = fgetcsv($fopen, 1000, ";")) !== FALSE) {
+            $num = count($filedata);
+            // Skip first row (Remove below comment if you want to skip the first row)
+            if ($i == 0) {
+                $i++;
+                continue;
+            }
+            for ($c = 0; $c < $num; $c++) {
+                $importData_arr[$i][] = $filedata[$c];
+            }
+            $i++;
+        }
+
+        fclose($fopen); //Close after reading
+
+        $j = 0;
+        $arr_servicios=array();
+         foreach ($importData_arr as $importData) {
+        $j++;
+        $error=false;
+
+        try {
+
+            DB::beginTransaction();
+
+            $fecha_solicitud=$importData[1];
+            $fecha_prestacion=$importData[2];
+            $tipo_servicio=$importData[3];
+            $coordinador=$importData[4];
+            $semana=$importData[5];
+            $persona_transportar=$importData[6];
+            $telefono_paciente=$importData[7];
+            $nombre_cliente=$importData[8];
+            $nombre_uri_sede=$importData[9];
+
+            $ciudad=$importData[10];
+            $depto=$importData[11];
+            $cod_paciente=$importData[12];
+            $direccion_recogida=$importData[13];
+            $barrio=$importData[14];
+            $origen=$importData[15];
+            $destino=$importData[16];
+            $kilometros=$importData[17];
+            $tiempo=$importData[18];
+
+            $hora_recogida=$importData[19];
+            
+            if(strpos($hora_recogida, "a")){
+                $hora_recogida=explode(" ", $hora_recogida);
+                $hora_recogida=$hora_recogida[0];
+            }
+            if(strpos($hora_recogida, "p")){
+                $hora_recogida=explode(" ", $hora_recogida);
+                $hora_recogida=$hora_recogida[0];
+                $horas=explode(":",$hora_recogida);
+                if($horas[0]>12){
+                    $horas[0]=12+$horas[0];
+                    $hora_recogida=$horas[0].':'.$horas[1].$horas[2];
+                }
+            }   
+
+            $tipo_viaje=$importData[20];
+            $turno=$importData[21];
+            if($turno=="N/A" || $turno==""){
+                $turno=NULL;
+            }
+            $educadora_coordinadora=$importData[22];
+            $hora_inf_inicial=$importData[23];
+            $hora_inf_final=$importData[24];
+            $observaciones=$importData[25];
+            $terapia=$importData[26];
+            $programa=$importData[27];
+            $nombres_conductor_paga=$importData[28];
+            $cedula_conductor_paga=$importData[29];
+            $nombres_conductor_servicio=$importData[30];
+            $telefono_conductor=$importData[31];
+            $persona_pago=$importData[32];
+            $cedula_persona_pago=$importData[33];
+            $costo=$importData[34];
+            $descuento=$importData[35]?$importData[35]:0;
+            $precio_alimentacion=$importData[36];
+            $tota_con_descuento=$importData[37];
+            $tarifa_cliente=$importData[38];
+            $placa=$importData[52];
+            $cedula_placa=$importData[53];
+            $exp=explode("-", $cedula_placa);
+            $cedula_cond_servicio=$exp[0];
+
+
+            $pasajero=Pasajero::where('documento',$persona_transportar)->get()->first();
+           
+            $ciudad=Municipios::find($ciudad);
+            $id_cliente=null;
+            if($nombre_cliente!="" && $nombre_cliente!="N/A"){
+
+                $cliente=Cliente::where('nombres', 'LIKE', '%'.$nombre_cliente.'%')
+                                ->orWhere('apellidos', 'LIKE', '%'.$nombre_cliente.'%')
+                                ->orWhere('razon_social', 'LIKE', '%'.$nombre_cliente.'%')->get()->first();
+                
+                $id_cliente=$cliente->id;
+            }
+
+            $cond_pago=Conductor::where('documento',$cedula_persona_pago)->get()->first();
+            $cond_serv=Conductor::where('documento',$cedula_cond_servicio)->get()->first();
+
+            $servicio=new Servicio();
+            $servicio->id_cliente=$id_cliente;
+            $servicio->placa=$placa;
+            $servicio->id_conductor_pago=$cond_pago->id;
+            $servicio->id_conductor_servicio=$cond_serv->id;
+            $servicio->id_pasajero=$pasajero->id;
+            $servicio->fecha_solicitud=$fecha_solicitud;
+            $servicio->fecha_servicio=$fecha_prestacion;
+            $servicio->hora_recogida=$hora_recogida;    
+            $servicio->semana=$semana;
+            $servicio->barrio=$barrio;
+            $servicio->origen=$origen;
+            $servicio->destino=$destino;
+
+            $servicio->tipo_viaje=$tipo_viaje;
+            $servicio->tipo_servicio=$tipo_servicio;
+            $servicio->valor_conductor=$costo;
+            $servicio->valor_cliente=$tarifa_cliente;
+            $servicio->descuento=$descuento;
+            $servicio->turno=$turno;
+            $servicio->observaciones=$observaciones;
+            $servicio->hora_infusion_inicial=$hora_inf_inicial;
+            $servicio->hora_infusion_final=$hora_inf_final;
+            $servicio->educador_coordinador=$educadora_coordinadora;
+            $servicio->terapia=$terapia;
+            $servicio->programa=$programa;
+            $servicio->estado=1;
+            $servicio->save();
+            DB::commit();
+            
+            if($j==1){
+                break;
+            }
+
+
+        } catch (\Exception $e) {
+               $error=true;
+               var_dump($e->getMessage());
+                DB::rollBack();
+                die();
+        }
+
+        }
+
+        if(!$error){
+            \Session::flash('flash_message','Servicios importados exitosamente!.');
+        }else{
+             \Session::flash('flash_bad_message','Error al tratar de impotar los servicios!.');
+        }
+
+        return redirect()->route('servicios');
+
+    }
+
     public function new()
     { 
         $dt=new CotizacionDetalle();

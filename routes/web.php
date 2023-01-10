@@ -99,6 +99,9 @@ Route::get('/servicios/delete/{id}', 'ServiciosController@delete')->name('servic
 Route::post('/servicios/delete/{id}', 'ServiciosController@delete')->name('servicios.delete');
 Route::get('/servicios/descargar', 'ServiciosController@descargar')->name('servicios.descargar');
 Route::get('/servicios/importar', 'ServiciosController@importar')->name('servicios.importar');
+Route::post('/servicios/importar/save', 'ServiciosController@importarsave')->name('servicios.importar.save');
+
+
 
 Route::get('/facturas', 'FacturasController@index')->name('facturas');
 

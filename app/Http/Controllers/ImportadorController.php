@@ -36,8 +36,6 @@ class ImportadorController extends Controller
     public function index(Request $request)
     {   
 
-        
-
         $file = $request->file('file');
         $model=$request->get('model');
         switch ($model) {
