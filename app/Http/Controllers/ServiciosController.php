@@ -49,6 +49,7 @@ class ServiciosController extends Controller
     {   
         $servicios=Servicio::whereIn('estado',array(1,2,3));
         $filtros=$request->get('filtros');
+
         if(isset($filtros['estado'])){
             $estado=(int) $filtros['estado'];
             if($estado!="" || $estado>0){
@@ -95,16 +96,28 @@ class ServiciosController extends Controller
              $filtros['pasajero']="";
         }
 
-        if($request->has('fecha_inicial')){
-            $fecha_inicial=(int) $request->get('fecha_inicial');
-            $servicios->where('created_at','>=',$fecha_inicial);
+        if(isset($filtros['fecha_inicial'])){
+            $fecha_inicial=$filtros['fecha_inicial'];
+            if($fecha_inicial!=""){
+               $servicios->where('fecha_servicio','>=',$fecha_inicial); 
+            }
+            
+        }else{
+            $filtros['fecha_inicial']=date('Y-m-01');
         }
-        if($request->has('fecha_final')){
-            $fecha_final=(int) $request->get('fecha_final');
-            $servicios->where('created_at','<=',$fecha_final);
+        if(isset($filtros['fecha_final'])){
+            $fecha_final=$filtros['fecha_final'];
+            if($fecha_final!=""){
+               $servicios->where('fecha_servicio','<=',$fecha_final); 
+            }
+            
+        }else{
+            $filtros['fecha_final']=date('Y-m-d');
         }
 
-        $servicios=$servicios->paginate(Config::get('global_settings.paginate'));
+        //$servicios=$servicios->paginate(Config::get('global_settings.paginate'));
+        $servicios=$servicios->paginate(2);
+
         return view('servicios.index')->with(['servicios'=>$servicios,'filtros'=>$filtros]);
     }
     public function importar(){
@@ -148,8 +161,13 @@ class ServiciosController extends Controller
             DB::beginTransaction();
 
             $fecha_solicitud=$importData[1];
+            $fecha_solicitud=explode("/",$fecha_solicitud);
+            $fecha_solicitud=$fecha_solicitud[2].'-'.$fecha_solicitud[1].'-'.$fecha_solicitud[0];
             $fecha_prestacion=$importData[2];
-            $tipo_servicio=$importData[3];
+            $fecha_prestacion=explode("/",$fecha_prestacion);
+            $fecha_prestacion=$fecha_prestacion[2].'-'.$fecha_prestacion[1].'-'.$fecha_prestacion[0];
+            
+            $str_tipo_servicio=$importData[3];
             $coordinador=$importData[4];
             $semana=$importData[5];
             $persona_transportar=$importData[6];
@@ -167,15 +185,17 @@ class ServiciosController extends Controller
             $kilometros=$importData[17];
             $tiempo=$importData[18];
 
-            $hora_recogida=$importData[19];
+            $hora_recogida=strtolower($importData[19]);
             
             if(strpos($hora_recogida, "a")){
                 $hora_recogida=explode(" ", $hora_recogida);
                 $hora_recogida=$hora_recogida[0];
+                $hora_recogida=str_replace("am","", $hora_recogida);
             }
             if(strpos($hora_recogida, "p")){
                 $hora_recogida=explode(" ", $hora_recogida);
                 $hora_recogida=$hora_recogida[0];
+                $hora_recogida=str_replace("pm","", $hora_recogida);
                 $horas=explode(":",$hora_recogida);
                 if($horas[0]>12){
                     $horas[0]=12+$horas[0];
@@ -183,7 +203,30 @@ class ServiciosController extends Controller
                 }
             }   
 
-            $tipo_viaje=$importData[20];
+            $str_tipo_viaje=$importData[20];
+            if($str_tipo_viaje!=""){
+               if($str_tipo_viaje=="IDA"){
+                    $tipo_viaje=1;
+               }
+               if($str_tipo_viaje=="IDA Y REGRESO"){
+                    $tipo_viaje=2;
+               }
+               if($str_tipo_viaje=="REGRESO"){
+                    $tipo_viaje=3;
+               }
+            }
+
+            if($str_tipo_servicio!=""){
+                $obj_tipo_servicio=TipoServicios::where('nombre', 'LIKE', '%'.$str_tipo_servicio.'%')->get()->first();
+                if($obj_tipo_servicio){
+                    $tipo_servicio=$obj_tipo_servicio->id;
+                }else{
+                    $tipo_servicio=1;
+                }
+            }
+
+
+
             $turno=$importData[21];
             if($turno=="N/A" || $turno==""){
                 $turno=NULL;
@@ -210,10 +253,20 @@ class ServiciosController extends Controller
             $exp=explode("-", $cedula_placa);
             $cedula_cond_servicio=$exp[0];
 
-
-            $pasajero=Pasajero::where('documento',$persona_transportar)->get()->first();
            
-            $ciudad=Municipios::find($ciudad);
+            $pasajero=false;
+            if($cod_paciente!=""){
+                $pasajero=Pasajero::where('codigo',$cod_paciente)->get()->first();
+            }
+            if(!$pasajero){
+                $exp_telefono_paciente=explode("/", $telefono_paciente);
+                $pasajero=Pasajero::where('celular',$exp_telefono_paciente[0])->get()->first();
+            }
+            if(!$pasajero){
+               $pasajero=new \stdClass();
+               $pasajero->id=null;
+            }
+           
             $id_cliente=null;
             if($nombre_cliente!="" && $nombre_cliente!="N/A"){
 
@@ -221,11 +274,25 @@ class ServiciosController extends Controller
                                 ->orWhere('apellidos', 'LIKE', '%'.$nombre_cliente.'%')
                                 ->orWhere('razon_social', 'LIKE', '%'.$nombre_cliente.'%')->get()->first();
                 
-                $id_cliente=$cliente->id;
+                if($cliente){
+                   $id_cliente=$cliente->id;  
+                }
+               
             }
+            echo "hora_recogida=".$hora_recogida.'<br/>';
 
             $cond_pago=Conductor::where('documento',$cedula_persona_pago)->get()->first();
             $cond_serv=Conductor::where('documento',$cedula_cond_servicio)->get()->first();
+
+            if(!$cond_pago){
+                $cond_pago=new \stdClass();
+                $cond_pago->id=null;
+            }
+            if(!$cond_serv){
+                $cond_serv=new \stdClass();
+                $cond_serv->id=null;
+            }
+
 
             $servicio=new Servicio();
             $servicio->id_cliente=$id_cliente;
@@ -254,11 +321,11 @@ class ServiciosController extends Controller
             $servicio->terapia=$terapia;
             $servicio->programa=$programa;
             $servicio->estado=1;
-            $servicio->save();
-            DB::commit();
+            //$servicio->save();
+            //DB::commit();
             
             if($j==1){
-                break;
+               // break;
             }
 
 
@@ -270,7 +337,7 @@ class ServiciosController extends Controller
         }
 
         }
-
+        die();
         if(!$error){
             \Session::flash('flash_message','Servicios importados exitosamente!.');
         }else{

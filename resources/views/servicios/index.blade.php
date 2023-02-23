@@ -57,7 +57,17 @@
                          </select>
                   </div>
 
-                   <div class="col-md-3 form-group mb-3">
+                  <div class="col-md-3 form-group mb-3">
+                    <label><strong>Fecha Inicial:</strong></label>
+                         <input type="date" class="form-control" name="filtros[fecha_inicial]" value="{{$filtros['fecha_inicial']}}" >
+                  </div>
+
+                  <div class="col-md-3 form-group mb-3">
+                    <label><strong>Fecha Final:</strong></label>
+                         <input type="date" class="form-control" name="filtros[fecha_final]" value="{{$filtros['fecha_final']}}" >
+                  </div>
+
+                  <div class="col-md-3 form-group mb-3">
                     <label><strong>Pasajero:</strong></label>
                          <input type="text" class="form-control" name="filtros[pasajero]" value="{{$filtros['pasajero']}}" >
                   </div>
@@ -142,7 +152,7 @@
 
                 <div class="d-flex justify-content-center">
    				    <div class="">
-   				    	<?php echo $servicios->links(); ?>
+   				    	<?php echo $servicios->withQueryString()->links(); ?>
    				    </div>
 
 				</div>

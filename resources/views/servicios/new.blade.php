@@ -211,6 +211,20 @@
               </label>
             </div>
 
+
+            <div class="opciones_viaje col-md-6 form-group mb-3 ">
+              <label class="radio radio-outline-warning">
+                <input type="radio" name="jornada" value="0" ><span>N/A</span><span class="checkmark"></span>
+              </label>
+              <label class="radio radio-outline-success">
+                    <input type="radio" name="jornada" value="1"><span>Media Jornada</span><span class="checkmark"></span>
+              </label>
+              <label class="radio radio-outline-danger">
+                  <input type="radio" name="jornada" value="2"><span>Jornada Completa</span><span class="checkmark"></span>
+              </label>
+                
+            </div>
+
             <div class="opciones_disponibilidad col-md-6 form-group mb-3 ">
               <label class="checkbox checkbox-outline-primary">
                     <input type="checkbox" name="tiempo_adicional" id="tiempo_adicional" value="1"><span>Disponibilidad de Tiempo Adicional</span><span class="checkmark"></span>
