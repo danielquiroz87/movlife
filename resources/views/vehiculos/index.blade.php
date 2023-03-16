@@ -59,7 +59,7 @@
                       <td>ok</td>
                       <td>
                       	<a href="{{route('vehiculos.edit', $vehiculo->id)}}" title="Editar"> <i class="nav-icon i-Pen-2 font-weight-bold"></i></a>
-                      	<a href="{{route('vehiculos.delete', $vehiculo->id)}}" title="Eliminar" class="eliminar"><i class="nav-icon i-Close-Window font-weight-bold"></i></a>
+                      	<a href="{{route('vehiculos.delete.get', $vehiculo->id)}}" title="Eliminar" class="eliminar"><i class="nav-icon i-Close-Window font-weight-bold"></i></a>
                       </td>
                     </tr>
                   	@endforeach

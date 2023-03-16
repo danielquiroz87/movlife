@@ -352,6 +352,13 @@ class VehiculosController extends Controller
        
        
     }
+     public function delete($id){
+         $vehiculo=Vehiculo::find($id);
+         $vehiculo->delete();
+         \Session::flash('flash_message','Vehiculo eliminado exitosamente!.');
+         return redirect()->route('vehiculos');
+    }
+   
     private function getRepository(){
         return Vehiculo::paginate(Config::get('global_settings.paginate'));
     }

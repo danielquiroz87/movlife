@@ -115,8 +115,8 @@ class ServiciosController extends Controller
             $filtros['fecha_final']=date('Y-m-d');
         }
 
-        //$servicios=$servicios->paginate(Config::get('global_settings.paginate'));
-        $servicios=$servicios->paginate(2);
+        $servicios=$servicios->paginate(Config::get('global_settings.paginate'));
+        //$servicios=$servicios->paginate(2);
 
         return view('servicios.index')->with(['servicios'=>$servicios,'filtros'=>$filtros]);
     }
