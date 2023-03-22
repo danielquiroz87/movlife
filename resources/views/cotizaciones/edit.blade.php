@@ -60,6 +60,13 @@
 
 <div class="row">
 
+   @if ($message = Session::get('flash_message'))
+    <div class="alert alert-success alert-block">
+        <button type="button" class="close" data-dismiss="alert">×</button> 
+            <strong>{{ $message }}</strong>
+    </div>
+  @endif
+
     @if ($errors->any())
         <div class="alert alert-danger">
             <strong>Error!</strong>
@@ -167,6 +174,22 @@
                    <input type="text" name="destino5" id="destination-input5" value="" class="form-control" placeholder=""  >
             </div>
 
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Cantidad:</strong></label>
+                   <input type="number" name="cantidad" id="cantidad" value="{{$cotizacion->cantidad}}" class="form-control" placeholder="" maxlength="100" required>
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Valor Unitario:</strong></label>
+                   <input type="number" name="valor_unitario" id="valor_unitario" value="{{$cotizacion->valor}}" class="form-control" placeholder="0" maxlength="11" required>
+            </div>
+
+
+            <div class="col-md-12 form-group mb-3">
+              <label><strong>Total:</strong></label>
+                   <input type="number" name="total" id="total" value="{{$cotizacion->total}}" class="form-control" placeholder="0" maxlength="11" disabled="disabled" required>
+            </div>
+
             <div class="opciones_viaje col-md-6 form-group mb-3 ">
               <label class="radio radio-outline-warning">
                 <input type="radio" name="tipo_viaje" value="1" @if($cotizacion->tipo_viaje==1) checked="checked" @endif ><span>Solo Ida</span><span class="checkmark"></span>
@@ -178,6 +201,9 @@
                   <input type="radio" name="tipo_viaje" value="3" @if($cotizacion->tipo_viaje==3 ) checked="checked" @endif><span>Regreso</span><span class="checkmark"></span>
               </label>
             </div>
+
+
+            
 
           @if($cotizacion->finalizada==0)
 
@@ -205,10 +231,9 @@
               <thead>
               <th>Origen</th>
               <th>Destino</th>
-              <th>Dir Destino 2</th>
-              <th>Dir Destino 3</th>
-              <th>Dir Destino 4</th>
-              <th>Dir Destino 5</th>
+              <th>Cantidad</th>
+              <th>Valor</th>
+              <th>Total</th>
               <th colspan="2">Acciones</th>
               </thead>
               <tbody>
@@ -219,13 +244,16 @@
               </td>  
               <td>
                 {{$direccion->destino}}
+                @if($direccion->destino2){{$direccion->destino2}}, @endif
+                @if($direccion->destino3){{$direccion->destino3}}, @endif
+                @if($direccion->destino4){{$direccion->destino4}}, @endif
+                @if($direccion->destino5){{$direccion->destino5}} @endif
               </td>
-              <td>{{$direccion->destino2}}</td>
-              <td>{{$direccion->destino3}}</td>
-              <td>{{$direccion->destino4}}</td>
-              <td>{{$direccion->destino5}} </td>
+              <td>{{$direccion->cantidad}}</td>
+              <td>{{number_format($direccion->valor,2,',','.')}}</td>
+              <td>{{number_format($direccion->total,2,',','.')}}</td>
               <td><a href="{{route('servicios.new.fromaddress',[$direccion->id])}}">Nueva Orden De Servicio</a></td>
-              <td> <a class="text-danger mr-2 eliminar" href="{{route('cotizaciones.delete.item', $direccion->id)}}" title="Eliminar"><i class="nav-icon i-Close-Window font-weight-bold"></i></a></td>
+              <td> <a class="text-danger mr-2 eliminar" href="{{route('cotizaciones.delete.detalle', $direccion->id)}}" title="Eliminar"><i class="nav-icon i-Close-Window font-weight-bold"></i></a></td>
               </tr>
               @endforeach
               </tbody>
@@ -233,21 +261,6 @@
             </table>
             </div>
              
-            <div class="col-md-6 form-group mb-3">
-              <label><strong>Cantidad:</strong></label>
-                   <input type="number" name="cantidad" id="cantidad" value="{{$cotizacion->cantidad}}" class="form-control" placeholder="" maxlength="1" required>
-            </div>
-
-            <div class="col-md-6 form-group mb-3">
-              <label><strong>Valor Unitario:</strong></label>
-                   <input type="number" name="valor_unitario" id="valor_unitario" value="{{$cotizacion->valor}}" class="form-control" placeholder="0" maxlength="11" required>
-            </div>
-
-
-            <div class="col-md-12 form-group mb-3">
-              <label><strong>Total:</strong></label>
-                   <input type="number" name="total" id="total" value="{{$cotizacion->total}}" class="form-control" placeholder="0" maxlength="11" disabled="disabled" required>
-            </div>
             
             <div class="col-md-12 form-group mb-3">
               <label><strong>Foto Vehiculo:</strong></label>

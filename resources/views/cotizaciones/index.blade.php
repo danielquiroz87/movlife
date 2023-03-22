@@ -74,7 +74,7 @@
                       <a class="text-success mr-2" href="{{route('cotizaciones.edit',['id'=>$cotizacion->id])}}" title="Editar">
                           <i class="nav-icon i-Pen-2 font-weight-bold"></i>
                       </a>
-                      <a class="text-danger mr-2 eliminar" href="{{route('cotizaciones.delete', $cotizacion->id)}}" title="Eliminar"><i class="nav-icon i-Close-Window font-weight-bold"></i>
+                      <a class="text-danger mr-2 eliminar" href="{{route('cotizaciones.delete.item', $cotizacion->id)}}" title="Eliminar"><i class="nav-icon i-Close-Window font-weight-bold"></i>
                       </a>
                       
                      
@@ -135,6 +135,7 @@
 	    .then(resultado => {
 	        if (resultado.value) {
 	            // Hicieron click en "Sí"
+
  				$('#user-delete-form').submit();
 	        } else {
 	            // Dijeron que no

@@ -1,4 +1,4 @@
-<?php $total=0;?>
+<?php $total=0;$cantidad_total=0?>
 
 
 <html xmlns:v="urn:schemas-microsoft-com:vml"
@@ -581,15 +581,16 @@ EXCEL -->
 <?php $rutas=$cotizacion->detalle;?>
 
 @foreach ($rutas as $detalle)
-<?php $total+=$cotizacion->valor ?>
+<?php $total+=$detalle->total ?>
+<?php $cantidad_total+=$detalle->cantidad ?>
 <tr height=64 style='mso-height-source:userset;height:48.75pt'>
   <td height=64 class=xl64 style='height:48.75pt;border-top:none'>1</td>
   <td colspan=3 class=xl83 width=371 style='border-left:none;width:278pt'>Origen:{{$detalle->origen}}<br/> Destino: {{$detalle->destino}} </td>
-  <td colspan=2 class=xl64 style='border-left:none; text-align: center;'>1</td>
-  <td colspan=2 class=xl84 style='border-left:none; text-align: center;'>$ {{number_format($cotizacion->valor)}}</td>
+  <td colspan=2 class=xl64 style='border-left:none; text-align: center;'>{{$detalle->cantidad}}</td>
+  <td colspan=2 class=xl84 style='border-left:none; text-align: center;'>$ {{number_format($detalle->valor)}}</td>
   <td colspan=2 class=xl85 style='border-left:none'><span
   style='mso-spacerun:yes'> </span>$<span
-  style='mso-spacerun:yes'> </span>{{number_format($cotizacion->valor)}}</td>
+  style='mso-spacerun:yes'> </span>{{number_format($detalle->total)}}</td>
 </tr>
 
 @endforeach
@@ -619,8 +620,9 @@ EXCEL -->
  </tr>
  <tr height=20 style='height:15.0pt'>
   <td colspan=10 rowspan=3 height=60 class=xl72 width=1015 style='height:45.0pt;
-  width:761pt'>Observaciones*<br>
-    -En el libro &quot;Detalle Tarifas&quot; encuentran las tarifar detalladas</td>
+  width:761pt'>Observaciones: <span>* {{$cotizacion->observaciones}} </span>
+  
+   </td>
  </tr>
  <tr height=20 style='height:15.0pt'>
  </tr>

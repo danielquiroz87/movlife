@@ -40,7 +40,12 @@ public static function selectClientes($id=0){
 	foreach ($clientes as $cliente) { 
 		$nombres=$cliente->documento.','.$cliente->razon_social;
 		if($id>0){
-			$option_clientes.='<option value="'.$cliente->id.'" selected="selected">'.$nombres.'</option>';
+			if($id==$cliente->id){
+				$option_clientes.='<option value="'.$cliente->id.'" selected="selected">'.$nombres.'</option>';
+			}else{
+				$option_clientes.='<option value="'.$cliente->id.'">'.$nombres.'</option>';
+
+			}
 		}
 		else{
 			$option_clientes.='<option value="'.$cliente->id.'">'.$nombres.'</option>';

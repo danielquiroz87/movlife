@@ -12,7 +12,7 @@ class CotizacionDetalle extends  Model
 
     protected $table = 'cotizacion_detalle';
 
-    protected $fillable = ['cotizacion_id','origen','destino','destino1','destino2','destino3','destino4','destino5'];
+    protected $fillable = ['cotizacion_id','origen','destino','destino1','destino2','destino3','destino4','destino5','valor','cantidad','total'];
 
 
     public function cotizacion(){

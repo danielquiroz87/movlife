@@ -181,6 +181,7 @@ class CotizacionesController extends Controller
                 $cd->destino3=$request->get('destino3');
                 $cd->destino4=$request->get('destino4');
                 $cd->destino5=$request->get('destino5');
+
                 $cd->save();
             }
 
@@ -205,6 +206,9 @@ class CotizacionesController extends Controller
             $cd->destino3=$request->get('destino3');
             $cd->destino4=$request->get('destino4');
             $cd->destino5=$request->get('destino5');
+            $cd->valor=$request->get('valor_unitario',0);
+            $cd->cantidad=$request->get('cantidad',1);
+            $cd->total=($cd->cantidad*$cd->valor);
             $cd->save();
 
         \Session::flash('flash_message','Cotización actualizada exitosamente!.');
@@ -221,7 +225,8 @@ class CotizacionesController extends Controller
     { 
        
     }
-    public function delete(Cotizacion $cotizacion){
+    public function delete($id){
+        $cotizacion=Cotizacion::find($id);
         $cotizacion->delete();
 
         \Session::flash('flash_message','Cotización eliminada exitosamente!.');
@@ -230,7 +235,17 @@ class CotizacionesController extends Controller
 
 
     }
+    public function deleteDetalle($id){
 
+        $cotizacion=CotizacionDetalle::find($id);
+        $cotizacion->delete();
+
+        \Session::flash('flash_message','Item cotización eliminada exitosamente!.');
+
+        return redirect()->back();
+
+
+    }
     public function descargar($id){
         $cotizacion=Cotizacion::find($id);
         $detalle=$cotizacion->detalle();

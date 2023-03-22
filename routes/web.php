@@ -114,7 +114,10 @@ Route::get('/cotizaciones/edit/{id}', 'CotizacionesController@edit')->name('coti
 Route::post('/cotizaciones/save', 'CotizacionesController@save')->name('cotizaciones.save');
 Route::post('/cotizaciones/delete', 'CotizacionesController@delete')->name('cotizaciones.delete');
 Route::post('/cotizaciones/save/item', 'CotizacionesController@saveItem')->name('cotizaciones.save.item');
-Route::post('/cotizaciones/delete/item', 'CotizacionesController@delete')->name('cotizaciones.delete.item');
+Route::get('/cotizaciones/delete/{id}', 'CotizacionesController@delete')->name('cotizaciones.delete.item');
+Route::post('/cotizaciones/delete/{id}', 'CotizacionesController@delete')->name('cotizaciones.delete.item');
+
+Route::get('/cotizaciones/delete/detalle/{id}', 'CotizacionesController@deleteDetalle')->name('cotizaciones.delete.detalle');
 
 Route::get('/cotizaciones/descargar/{id}', 'CotizacionesController@descargar')->name('cotizaciones.descargar');
 
