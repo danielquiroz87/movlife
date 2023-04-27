@@ -135,7 +135,7 @@ class ServiciosController extends Controller
         $i = 0;
         $error=false;
         //Read the contents of the uploaded file 
-        while (($filedata = fgetcsv($fopen, 1000, ";")) !== FALSE) {
+        while (($filedata = fgetcsv($fopen, 2000, ";")) !== FALSE) {
             $num = count($filedata);
             // Skip first row (Remove below comment if you want to skip the first row)
             if ($i == 0) {
@@ -155,7 +155,7 @@ class ServiciosController extends Controller
          foreach ($importData_arr as $importData) {
         $j++;
         $error=false;
-
+        $message="";
         try {
 
             DB::beginTransaction();
@@ -184,8 +184,40 @@ class ServiciosController extends Controller
             $destino=$importData[16];
             $kilometros=$importData[17];
             $tiempo=$importData[18];
-
+            $str_tipo_viaje=$importData[20];
             $hora_recogida=strtolower($importData[19]);
+            $hora_recogida=trim($hora_recogida);
+            $hora_regreso=NULL;
+
+            if($str_tipo_viaje!=""){
+               if($str_tipo_viaje=="IDA"){
+                    $tipo_viaje=1;
+               }
+               if($str_tipo_viaje=="IDA Y REGRESO"){
+                    $tipo_viaje=2;
+               }
+               if($str_tipo_viaje=="REGRESO"){
+                    $tipo_viaje=3;
+               }
+            }
+
+
+            if($hora_recogida=="n/a" || $hora_recogida=="no aplica"){
+                $hora_recogida=NULL;
+            }
+            
+            if(strpos($hora_recogida, "/")){
+                $horas_explode=explode("/", $hora_recogida);
+                if(count($horas_explode)>=2){
+                    $hora_recogida=trim($horas_explode[0]);
+                    if($tipo_viaje==2){
+                        $hora_regreso=trim($horas_explode[1]);
+                    }
+                    
+                }    
+            }
+            
+
             
             if(strpos($hora_recogida, "a")){
                 $hora_recogida=explode(" ", $hora_recogida);
@@ -203,19 +235,22 @@ class ServiciosController extends Controller
                 }
             }   
 
-            $str_tipo_viaje=$importData[20];
-            if($str_tipo_viaje!=""){
-               if($str_tipo_viaje=="IDA"){
-                    $tipo_viaje=1;
-               }
-               if($str_tipo_viaje=="IDA Y REGRESO"){
-                    $tipo_viaje=2;
-               }
-               if($str_tipo_viaje=="REGRESO"){
-                    $tipo_viaje=3;
-               }
+            if(strpos($hora_regreso, "a")){
+                $hora_regreso=explode(" ", $hora_regreso);
+                $hora_regreso=$hora_regreso[0];
+                $hora_regreso=str_replace("am","", $hora_regreso);
             }
-
+            if(strpos($hora_regreso, "p")){
+                $hora_regreso=explode(" ", $hora_regreso);
+                $hora_regreso=$hora_regreso[0];
+                $hora_regreso=str_replace("pm","", $hora_regreso);
+                $horas=explode(":",$hora_regreso);
+                if($horas[0]>12){
+                    $horas[0]=12+$horas[0];
+                    $hora_regreso=$horas[0].':'.$horas[1].$horas[2];
+                }
+            }   
+            
             if($str_tipo_servicio!=""){
                 $obj_tipo_servicio=TipoServicios::where('nombre', 'LIKE', '%'.$str_tipo_servicio.'%')->get()->first();
                 if($obj_tipo_servicio){
@@ -228,9 +263,11 @@ class ServiciosController extends Controller
 
 
             $turno=$importData[21];
-            if($turno=="N/A" || $turno==""){
+            
+            if($turno=="N/A" || $turno=="" || $turno=="NO APLICA" ){
                 $turno=NULL;
             }
+
             $educadora_coordinadora=$importData[22];
             $hora_inf_inicial=$importData[23];
             $hora_inf_final=$importData[24];
@@ -244,12 +281,34 @@ class ServiciosController extends Controller
             $persona_pago=$importData[32];
             $cedula_persona_pago=$importData[33];
             $costo=$importData[34];
+            $costo=trim($costo);
+            $costo=str_replace("$","",$costo);
+            $costo=str_replace(".","",$costo);
+
+            if( $costo==""){
+                $costo=0;
+            }
+
             $descuento=$importData[35]?$importData[35]:0;
+            $descuento=trim($descuento);
+            $descuento=str_replace("$","",$descuento);
+            $descuento=str_replace(".","",$descuento);
+            if($descuento==""){
+                $descuento=0;
+            }
             $precio_alimentacion=$importData[36];
             $tota_con_descuento=$importData[37];
             $tarifa_cliente=$importData[38];
-            $placa=$importData[52];
-            $cedula_placa=$importData[53];
+            $tarifa_cliente=trim($tarifa_cliente);
+
+            $tarifa_cliente=str_replace("$","",$tarifa_cliente);
+            $tarifa_cliente=str_replace(".","",$tarifa_cliente);
+            if($tarifa_cliente=="" ){
+                $tarifa_cliente=0;
+            }
+            
+            $placa=$importData[50];
+            $cedula_placa=$importData[51];
             $exp=explode("-", $cedula_placa);
             $cedula_cond_servicio=$exp[0];
 
@@ -279,7 +338,8 @@ class ServiciosController extends Controller
                 }
                
             }
-            echo "hora_recogida=".$hora_recogida.'<br/>';
+           
+            //echo "hora_recogida=".$hora_recogida.'<br/>';
 
             $cond_pago=Conductor::where('documento',$cedula_persona_pago)->get()->first();
             $cond_serv=Conductor::where('documento',$cedula_cond_servicio)->get()->first();
@@ -303,6 +363,7 @@ class ServiciosController extends Controller
             $servicio->fecha_solicitud=$fecha_solicitud;
             $servicio->fecha_servicio=$fecha_prestacion;
             $servicio->hora_recogida=$hora_recogida;    
+            $servicio->hora_regreso=$hora_regreso;
             $servicio->semana=$semana;
             $servicio->barrio=$barrio;
             $servicio->origen=$origen;
@@ -321,27 +382,24 @@ class ServiciosController extends Controller
             $servicio->terapia=$terapia;
             $servicio->programa=$programa;
             $servicio->estado=1;
-            //$servicio->save();
-            //DB::commit();
+            $servicio->save();
             
-            if($j==1){
-               // break;
-            }
+            DB::commit();
 
 
         } catch (\Exception $e) {
-               $error=true;
-               var_dump($e->getMessage());
-                DB::rollBack();
-                die();
+                $error=true;
+                $message='Error en la fila '.($j+1).'<br/>';
+                $message.=($e->getMessage());
+                break;
         }
-
         }
-        die();
         if(!$error){
-            \Session::flash('flash_message','Servicios importados exitosamente!.');
+            \Session::flash('flash_message','Archivo Importado Exitosamente!.');
         }else{
-             \Session::flash('flash_bad_message','Error al tratar de impotar los servicios!.');
+              DB::rollBack();
+               
+             \Session::flash('flash_bad_message','Error al tratar de impotar los servicios!.'.$message);
         }
 
         return redirect()->route('servicios');
@@ -563,8 +621,8 @@ class ServiciosController extends Controller
         $tipo_servicios=TipoServicios::all();
         $fecha=date('Y-m-d');
         $filename = 'consolidado-semanal-'.$fecha.'.xls';
-        //header('Content-type: application/excel');
-        //header('Content-Disposition: attachment; filename='.$filename);
+        header('Content-type: application/excel');
+        header('Content-Disposition: attachment; filename='.$filename);
         $tabla=view('servicios.descargar')->with(['servicios'=>$servicios,'tipo_servicios'=>$tipo_servicios])->render();
         echo $tabla;
         exit();

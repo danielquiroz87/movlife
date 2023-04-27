@@ -144,7 +144,7 @@
 
              <div class="col-md-6 form-group mb-3">
               <label><strong>Hora Estimada Salida (Hasta):</strong></label>
-                   <input type="time" name="hora_estimada_salida" value="10:00:00" class="form-control" max="23:59:59" min="00:00:00"  required >
+                   <input type="time" name="hora_estimada_salida" value="10:00:00" class="form-control" max="23:59:59" min="00:00:00"   >
             </div>
 
 
@@ -259,7 +259,7 @@
         
             <div class="col-xs-12 col-sm-12 col-md-12 ">
                 <button id="submit" type="submit" class="btn btn-primary">Enviar</button>
-                <a href="{{ route('pasajeros') }}" class="btn btn-danger">Cancelar</a>
+                <a href="{{ route('servicios') }}" class="btn btn-danger">Cancelar</a>
             </div>
         </div>
 
@@ -300,7 +300,7 @@
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.js"></script>
 
 <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAAXnAaSyOMKc7h9pXnQowO8sO4vpz5ZvQ&callback=initMap&libraries=places&v=weekly"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCP9sxMbXwsUb0_DnlL4lQxP54BYBXyD_M&callback=initMap&libraries=places&v=weekly"
       async
     ></script>
 

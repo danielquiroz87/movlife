@@ -64,8 +64,8 @@ Route::get('/propietarios/new', 'PropietariosVehiculosController@new')->name('pr
 Route::get('/propietarios/edit/{id}', 'PropietariosVehiculosController@edit')->name('propietarios.edit');
 Route::post('/propietarios/save', 'PropietariosVehiculosController@save')->name('propietarios.save');
 Route::post('/propietarios/delete/{id}', 'PropietariosVehiculosController@delete')->name('propietarios.delete');
-
 Route::get('/propietarios/delete/{id}', 'PropietariosVehiculosController@delete')->name('propietarios.delete.get');
+
 
 
 Route::get('/conductores', 'ConductoresController@index')->name('conductores');
@@ -90,6 +90,8 @@ Route::post('/vehiculos/conductores/save', 'VehiculosController@saveConductores'
 Route::post('/vehiculos/documentos/save', 'VehiculosController@documentossave')->name('vehiculos.documentos.save');
 
 Route::get('/vehiculos/delete/conductor/{id}', 'VehiculosController@deleteConductor')->name('vehiculos.delete.conductor');
+Route::get('/vehiculos/importar', 'VehiculosController@importar')->name('vehiculos.importar');
+
 
 Route::get('/servicios', 'ServiciosController@index')->name('servicios');
 Route::get('/servicios/new', 'ServiciosController@new')->name('servicios.new');

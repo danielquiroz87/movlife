@@ -153,7 +153,13 @@ public static function selectClaseVehiculos($id=0){
 	$option_clase="<option value=''>Seleccione</option>";
 	foreach ($clases as $clase) { 
 		if($id>0){
-			$option_clase.='<option value="'.$clase->id.'" selected="selected">'.$clase->nombre.'</option>';
+			
+			if($clase->id==$id){
+				$option_clase.='<option value="'.$clase->id.'" selected="selected">'.$clase->nombre. '</option>';
+			}else{
+				$option_clase.='<option value="'.$clase->id.'">'.$clase->nombre.'</option>';
+			}
+			//$option_clase.='<option value="'.$clase->id.'" selected="selected">'.$clase->nombre.'</option>';
 		}
 		else{
 			$option_clase.='<option value="'.$clase->id.'">'.$clase->nombre.'</option>';
@@ -196,7 +202,12 @@ public static function selectVehiculoMarca($id=0){
 	$option_clase="<option value=''>Seleccione</option>";
 	foreach ($clases as $clase) { 
 		if($id>0){
-			$option_clase.='<option value="'.$clase->id.'" selected="selected">'.$clase->nombre.'</option>';
+			if($clase->id==$id){
+				$option_clase.='<option value="'.$clase->id.'" selected="selected">'.$clase->nombre. '</option>';
+			}else{
+				$option_clase.='<option value="'.$clase->id.'">'.$clase->nombre.'</option>';
+			}
+			
 		}
 		else{
 			$option_clase.='<option value="'.$clase->id.'">'.$clase->nombre.'</option>';

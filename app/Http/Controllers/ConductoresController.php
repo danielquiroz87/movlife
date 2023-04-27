@@ -61,6 +61,11 @@ class ConductoresController extends Controller
     {   
         $conductor=Conductor::find($id);
         $direccion=Direccion::where('tipo_usuario',5)->where('parent_id',$conductor->id)->get()->first();
+        if($direccion){
+
+        }else{
+            $direccion=false;
+        }
         $user=User::where('email',$conductor->email_contacto)->get()->first();
         $documentos=Documentos::whereIn('id_tipo_documento',[1,2,3,4,5,6,7,16,17,18,19,20])
                                 ->where('id_registro',$id)->get();
@@ -203,20 +208,21 @@ class ConductoresController extends Controller
             $v = Validator::make($request->all(), [
                 'nombres' => 'required|max:255',
                 'apellidos' => 'required|max:255',
-                'email'=>'required|email|max:255',
                 'celular'=>'required',
-                'password'=>'required|max:20',
                 'documento'=>'required|unique:conductores,documento|max:20',
-                'departamento_id'=>'required',
-                'ciudad_id'=>'required',
-                'direccion'=>'required'
+                'departamento'=>'required',
+                'ciudad'=>'required',
+                //'email'=>'required|email|max:255',
+                //'password'=>'required|max:20',
+                
+                //'direccion'=>'required'
 
             ]);   
 
             $direccion=new Direccion();
             $direccion->departamento_id=$request->get('departamento');
-            $direccion->ciudad_id=$request->get('ciudad_id');
-            $direccion->direccion1=$request->get('direccion');
+            $direccion->ciudad_id=$request->get('ciudad');
+            $direccion->direccion1=$request->get('direccion','NA');
             $direccion->direccion2=$request->get('direccion_detalle');
             if($request->has('barrio')){
                 $direccion->barrio=$request->get('barrio');
@@ -229,20 +235,19 @@ class ConductoresController extends Controller
                 'nombres' => 'required|max:255',
                 'apellidos' => 'required|max:255',
                 'documento'=>'required|max:20',
-                'direccion'=>'required'
+                //'direccion'=>'required'
             ]);
 
             $direccion=Direccion::where('tipo_usuario',5)->where('parent_id',$conductor->id)->get()->first();
             $direccion->departamento_id=$request->get('departamento');
-            $direccion->ciudad_id=$request->get('ciudad_id');
+            $direccion->ciudad_id=$request->get('ciudad');
             $direccion->direccion1=$request->get('direccion');
             $direccion->direccion2=$request->get('direccion_detalle');
             if($request->has('barrio')){
                 $direccion->barrio=$request->get('barrio');
             }
             $direccion->save();
-            $user=User::where('email',$conductor->email_contacto)->get()->first();
-
+           
         }
         
 
@@ -251,16 +256,22 @@ class ConductoresController extends Controller
             return redirect()->back()->withErrors($v->errors());
         }
 
-          
-            $user->name=$request->get('nombres');
-            $user->email=$request->get('email');
-            //Si el password es diferente de vacio lo cambiamos
-            if($request->get('password')!=""){
-                $user->password=Hash::make($request->get('password'));
+            if($request->get('email')!=""){
+                
+                $user=User::where('email',$conductor->email_contacto)->get()->first();
+
+                //Si el password es diferente de vacio lo cambiamos
+                if($request->get('password')!=""){
+                    $user->name=$request->get('nombres');
+                    $user->email=$request->get('email');
+                    $user->password=Hash::make($request->get('password'));
+                    $user->save();
+                    $conductor->user_id=$user->id;
+
+                }
             }
-
-            $user->save();
-
+            
+            
             $conductor->documento=$request->get('documento');
             $conductor->nombres=$request->get('nombres');
             $conductor->apellidos=$request->get('apellidos');
@@ -269,7 +280,6 @@ class ConductoresController extends Controller
             $conductor->telefono_contacto=$request->get('telefono_contacto');
            
             $conductor->celular=$request->get('celular');
-            $conductor->user_id=$user->id;
             $conductor->direccion_id=$direccion->id;
             $conductor->activo=1;
             

@@ -97,7 +97,7 @@
             <div class="col-md-6 form-group mb-3">
                     <label><strong>Email:</strong></label>
                     <input type="email" name="email" class="form-control" placeholder="example@email.com"
-                         maxlength="255" required value="{{$cliente->email_contacto}}">
+                         maxlength="255"  value="{{$cliente->email_contacto}}">
             </div>
             <div class="col-md-6 form-group mb-3">
                    <label> <strong>Nuevo Password:</strong></label>
@@ -146,7 +146,6 @@ $('#user-new-form').validate({
         nombres: { required:true },
         apellidos: { required:true },
         razon_social: { required:true },
-        email:{ required:true },
         documento:{ required:true },
         departamento_id:{ required:true },
         ciudad_id: { required:true },

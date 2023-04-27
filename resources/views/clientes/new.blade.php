@@ -105,12 +105,12 @@
             <div class="col-md-6 form-group mb-3">
                     <label><strong>Email:</strong></label>
                     <input type="email" name="email" class="form-control" placeholder="example@email.com"
-                        value="" maxlength="255" required>
+                        value="" maxlength="255" >
             </div>
             <div class="col-md-6 form-group mb-3">
                   <label> <strong>Password:</strong></label>
                   <input type="password" name="password" class="form-control" placeholder=""
-                        value="" maxlength="20" required>
+                        value="" maxlength="20" >
                
             </div>
 
@@ -156,11 +156,10 @@ $('#user-new-form').validate({
         nombres: { required:true },
         apellidos: { required:true },
         razon_social: { required:true },
-        email:{ required:true },
         documento:{ required:true },
         departamento_id:{ required:true },
         ciudad_id: { required:true },
-        password:{ required:true },
+       
         file: { 
               required:true ,
               extension:"jpg,jpeg,png",

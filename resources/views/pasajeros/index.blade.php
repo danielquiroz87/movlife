@@ -39,7 +39,6 @@
                   <thead>
                     <tr>
                       <th>Documento</th>
-                      <th>Razón Social</th>
                       <th>Nombres</th>
                       <th>Email Contacto</th>
                       <th>Teléfono</th>
@@ -53,7 +52,6 @@
                   	@foreach ($pasajeros as $user)
                     <tr>
                       <td>{{$user->documento}}</td>
-                      <td>{{$user->razon_social}}</td>
                       <td>{{$user->nombres}} {{$user->apellidos}}</td>
                       <td>{{$user->email_contacto}}</td>
                       <td>{{$user->telefono}}</td>

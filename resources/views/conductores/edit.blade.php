@@ -117,31 +117,39 @@
                  <div class="col-md-6 form-group mb-3">
                   <label><strong>Departamento:</strong></label>
                   <select class="form-control departamentos" name="departamento">
+                    @if($direccion)
                     <?php echo Helper::selectDepartamentos($direccion->departamento_id) ?>
+                    @else
+                    <?php echo Helper::selectDepartamentos() ?>
+                    @endif
                   </select>
 
                 </div>
 
                 <div class="col-md-6 form-group mb-3">
                   <label><strong>Ciudad:</strong></label>
-                  <select class="form-control municipios" name="ciudad_id">
-                    <?php echo Helper::selectMunicipios($direccion->departamento_id,$direccion->ciudad_id) ?>
+                  <select class="form-control municipios" name="ciudad">
+                    @if($direccion)
+                      <?php echo Helper::selectMunicipios($direccion->departamento_id,$direccion->ciudad_id) ?>
+                    @else
+                      <?php echo Helper::selectMunicipios() ?>
+                    @endif
                   </select>
                 </div>
 
                 <div class="col-md-6 form-group mb-3">
                   <label><strong>Barrio:</strong></label>
-                  <input type="text" name="barrio"  class="form-control" placeholder="" maxlength="20" required value="{{$direccion->barrio}}">
+                  <input type="text" name="barrio"  class="form-control" placeholder="" maxlength="20"  value="@if($direccion){{$direccion->barrio}}@endif">
                 </div>
 
                 <div class="col-md-6 form-group mb-3">
                   <label><strong>Dirección:</strong></label>
-                  <input type="text" name="direccion" class="form-control" placeholder="" maxlength="20" required value="{{$direccion->direccion1}}">
+                  <input type="text" name="direccion" class="form-control" placeholder="" maxlength="20"  value="@if($direccion){{$direccion->direccion1}}@endif">
                 </div>
 
                 <div class="col-md-6 form-group mb-3">
                   <label><strong>Detalle Dirección:</strong></label>
-                  <input type="text" name="direccion_detalle" class="form-control" placeholder="" maxlength="255"  value="{{$direccion->direccion2}}">
+                  <input type="text" name="direccion_detalle" class="form-control" placeholder="" maxlength="255"  value="@if($direccion){{$direccion->direccion2}}@endif">
                 </div>
                 <div class="col-md-6 form-group mb-3">
                   <label><strong>Estrato:</strong></label>
@@ -653,10 +661,10 @@ $('#user-new-form').validate({
   rules: {
     nombres: { required:true },
     apellidos: { required:true },
-    email:{ required:true },
     documento:{ required:true },
     departamento_id:{ required:true },
     ciudad_id: { required:true },
+    email:{ required:false },
     password:{ required:false },
 
   },messages: {

@@ -28,7 +28,8 @@
 <div class="col-md-8 mb-4">
       <div class="card text-left">
           <div class="card-body">
-                <h3 class="card-title mb3">Nueva Importación</h3>
+                <h3 class="card-title mb3">Nueva Importación / <a href="/importadores/pasajeros_movlife.csv" download="pasajeros_movlife.csv" target="_blank">Archivo Ejemplo</a>
+</h3>
   
  <div class="box box-info">
     <form action="{{route('general.importar.save')}}" method="POST" id="user-new-form" enctype="multipart/form-data" >

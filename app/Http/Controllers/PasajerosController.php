@@ -81,11 +81,11 @@ class PasajerosController extends Controller
                 'apellidos' => 'required|max:255',
                 //'email'=>'required|email|max:255',
                 //'password'=>'required|max:20',
-                'celular'=>'required',
+                //'celular'=>'required',
                 //'documento'=>'required|unique:pasajeros,documento|max:20',
-                'departamento_id'=>'required',
-                'ciudad_id'=>'required',
-                'direccion'=>'required'
+                'departamento'=>'required',
+                'ciudad'=>'required',
+                //'direccion'=>'required'
 
             ]);   
 
@@ -102,8 +102,10 @@ class PasajerosController extends Controller
             $v = Validator::make($request->all(), [
                 'nombres' => 'required|max:255',
                 'apellidos' => 'required|max:255',
-                'documento'=>'unique:pasajeros,documento,'.$id.'|max:20',
-                'direccion'=>'required'
+                'departamento'=>'required',
+                'ciudad'=>'required',
+                //'documento'=>'unique:pasajeros,documento,'.$id.'|max:20',
+                //'direccion'=>'required'
             ]);
 
             $direccion=Direccion::find($pasajero->direccion_id);

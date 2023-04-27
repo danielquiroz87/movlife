@@ -57,21 +57,21 @@
            <div class="col-md-6 form-group mb-3">
               <label><strong>Teléfono:</strong></label>
               <input type="number" name="telefono" class="form-control" placeholder="000000"
-                         maxlength="10" required value="{{$pasajero->telefono}}">
+                         maxlength="10"  value="{{$pasajero->telefono}}">
             </div>
              <div class="col-md-6 form-group mb-3">
                    <label> <strong>Celular:</strong></label>
                     <input type="number" name="celular" class="form-control" placeholder="0000000000"
-                        maxlength="255" required value="{{$pasajero->celular}}">
+                        maxlength="255"  value="{{$pasajero->celular}}">
             </div>
             <div class="col-md-6 form-group mb-3">
                    <label> <strong>Whatsapp:</strong></label>
                     <input type="number" name="whatsapp" class="form-control" placeholder="0000000000"
-                         maxlength="255" required value="{{$pasajero->whatsapp}}">
+                         maxlength="255"  value="{{$pasajero->whatsapp}}">
             </div>
            <div class="col-md-6 form-group mb-3">
               <label><strong>Departamento:</strong></label>
-                    <select class="form-control" name="departamento">
+                    <select class="form-control departamentos" name="departamento">
                       <?php echo Helper::selectDepartamentos($direccion->departamento_id) ?>
                     </select>
                    
@@ -79,14 +79,14 @@
            
            <div class="col-md-6 form-group mb-3">
               <label><strong>Ciudad:</strong></label>
-                  <select class="form-control" name="ciudad">
+                  <select class="form-control municipios" name="ciudad">
                       <?php echo Helper::selectMunicipios($direccion->departamento_id, $direccion->ciudad_id) ?>
                   </select>
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Dirección:</strong></label>
-                   <input type="text" name="direccion" class="form-control" placeholder=""  required value="{{$direccion->direccion1}}">
+                   <input type="text" name="direccion" class="form-control" placeholder=""   value="{{$direccion->direccion1}}">
             </div>
            
             <div class="col-md-6 form-group mb-3">

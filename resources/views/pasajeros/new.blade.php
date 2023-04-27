@@ -67,40 +67,40 @@
            <div class="col-md-6 form-group mb-3">
               <label><strong>Teléfono:</strong></label>
               <input type="number" name="telefono" class="form-control" placeholder="000000"
-                        value="" maxlength="10" required>
+                        value="" maxlength="10" >
             </div>
              <div class="col-md-6 form-group mb-3">
                    <label> <strong>Celular:</strong></label>
                     <input type="number" name="celular" class="form-control" placeholder="0000000000"
-                        value="" maxlength="255" required>
+                        value="" maxlength="255" >
             </div>
             <div class="col-md-6 form-group mb-3">
                    <label> <strong>Whatsapp:</strong></label>
                     <input type="number" name="whatsapp" class="form-control" placeholder="0000000000"
-                        value="" maxlength="255" required>
+                        value="" maxlength="255" >
             </div>
            <div class="col-md-6 form-group mb-3">
               <label><strong>Departamento:</strong></label>
-                     <select name="departamento_id" class="form-control departamentos">
+                     <select name="departamento" class="form-control departamentos">
                        <?php echo Helper::selectDepartamentos() ?>
                     </select>
             </div>
            
            <div class="col-md-6 form-group mb-3">
               <label><strong>Ciudad:</strong></label>
-                  <select name="ciudad_id" class="form-control municipios">
+                  <select name="ciudad" class="form-control municipios">
                      <?php echo Helper::selectMunicipios() ?>
                   </select>
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Dirección:</strong></label>
-                   <input type="text" name="direccion" value="" class="form-control" placeholder="" maxlength="255" required>
+                   <input type="text" name="direccion" value="" class="form-control" placeholder="" maxlength="255">
             </div>
 
              <div class="col-md-6 form-group mb-3">
               <label><strong>Detalle Dirección:</strong></label>
-                   <input type="text" name="direccion_detalle" value="" class="form-control" placeholder="" maxlength="255" required>
+                   <input type="text" name="direccion_detalle" value="" class="form-control" placeholder="" maxlength="255" >
             </div>
            
             

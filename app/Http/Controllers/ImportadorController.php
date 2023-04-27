@@ -13,11 +13,13 @@ use App\Models\Cliente;
 use App\Models\Pasajero;
 use App\Models\Conductor;
 use App\Models\ConductorHojaDeVida;
+use App\Models\Vehiculo;
 
 
 use App\Models\User;
 use App\Models\Direccion;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 
 class ImportadorController extends Controller
@@ -48,6 +50,10 @@ class ImportadorController extends Controller
             case 'conductores':
                 $this->setConductor($file);
                  break;
+            case 'vehiculos':
+                $this->setVehiculos($file);
+                break;
+                 
             default:
                 # code...
                 break;
@@ -306,8 +312,15 @@ class ImportadorController extends Controller
             DB::beginTransaction();
            
             $documento=$importData[0];
+            $documento=trim($documento); 
+            $documento=filter_var($documento,FILTER_SANITIZE_STRING);
             $nombres=$importData[1];
+            $nombres=trim($nombres);
+            $nombres=filter_var($nombres,FILTER_SANITIZE_STRING);
             $apellidos=$importData[2];
+            $apellidos=trim($apellidos);
+            $apellidos=filter_var($apellidos,FILTER_SANITIZE_STRING);
+            
             $lugar_exp_documento=$importData[3];
             $telefono=$importData[4];
             $celular=$importData[5];
@@ -396,9 +409,98 @@ class ImportadorController extends Controller
             }
         }
         if(!$error){
+            \Session::flash('flash_message','Conductores importados exitosamente!.');
+        }else{
+             \Session::flash('flash_bad_message','Error al tratar de impotar los conductores!.');
+        }
+        
+    }
+
+
+    public function setVehiculos($file){
+
+        $fopen=fopen($file->getRealPath(),'r');
+        $importData_arr = array(); // Read through the file and store the contents as an array
+        $i = 0;
+        $error=false;
+        //Read the contents of the uploaded file 
+        while (($filedata = fgetcsv($fopen, 1000, ";")) !== FALSE) {
+            $num = count($filedata);
+            // Skip first row (Remove below comment if you want to skip the first row)
+            if ($i == 0) {
+                $i++;
+                continue;
+            }
+            for ($c = 0; $c < $num; $c++) {
+                $importData_arr[$i][] = $filedata[$c];
+            }
+            $i++;
+        }
+        fclose($fopen); //Close after reading
+
+        $j = 0;
+        
+        DB::beginTransaction();
+
+        foreach ($importData_arr as $importData) {
+        $j++;
+        
+        try {
+           
+            $placa=trim($importData[0]);
+            $modelo=trim($importData[1]);
+            $clase=trim($importData[2]);
+            $marca=trim($importData[3]);
+            $departamento_id=trim($importData[4]);
+            $ciudad_id=trim($importData[5]);
+            $propietario=trim($importData[6]);
+            $id_clase=NULL;
+
+
+            
+            if($clase){
+               $obclase=DB::table('vehiculos_clase')->where('nombre', $clase)->first();
+               if($obclase){
+                $id_clase=$obclase->id;
+               }
+            }
+            if($marca){
+               $obmarca=DB::table('vehiculos_marcas')->where('nombre', $marca)->first();
+               if($obmarca){
+                $id_marca=$obmarca->id;
+               }
+            }
+            if($propietario){
+                $obpropietario=DB::table('propietarios')->where('documento', $propietario)->first();
+                if($obpropietario){
+                    $propietario_id=$obpropietario->id;
+                }
+            }
+
+            $row_vehiculo=new Vehiculo();
+            $row_vehiculo->placa=$placa;
+            $row_vehiculo->modelo=$modelo;
+            $row_vehiculo->id_vehiculo_clase=$id_clase;
+            $row_vehiculo->id_vehiculo_marca=$id_marca;
+            $row_vehiculo->departamento_id=$departamento_id;
+            $row_vehiculo->ciudad_id=$ciudad_id;
+            $row_vehiculo->propietario_id=$propietario_id;
+
+            $row_vehiculo->save();
+            
+            } catch (\Exception $e) {
+               $error=true;
+                $message='Error en la fila '.($j+1).'<br/>';
+                $message.=($e->getMessage());
+                DB::rollBack();
+            }
+        }
+        if(!$error){
+            DB::commit();
             \Session::flash('flash_message','Clientes importados exitosamente!.');
         }else{
-             \Session::flash('flash_bad_message','Error al tratar de impotar los clientes!.');
+             DB::rollBack();
+             \Session::flash('flash_bad_message','Error al tratar de impotar los vehiculos!.'.$message);
         }
         
     }

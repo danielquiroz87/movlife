@@ -88,9 +88,9 @@ class ClientesController extends Controller
                 'nombres' => 'required|max:255',
                 'apellidos' => 'required|max:255',
                 'razon_social'=>'required|max:255',
-                'email'=>'required|email|max:255',
+                //'email'=>'required|email|max:255',
+                //'password'=>'required|max:20',
                 'celular'=>'required',
-                'password'=>'required|max:20',
                 'documento'=>'required|unique:clientes,documento|max:20',
                 'departamento_id'=>'required',
                 'ciudad_id'=>'required',
@@ -130,15 +130,19 @@ class ClientesController extends Controller
             return redirect()->back()->withErrors($v->errors());
         }
 
-          
-            $user->name=$request->get('nombres');
-            $user->email=$request->get('email');
-            //Si el password es diferente de vacio lo cambiamos
-            if($request->get('password')!=""){
-                $user->password=Hash::make($request->get('password'));
-            }
+            if($request->get('email')!=""){
+                
+                //Si el password es diferente de vacio lo cambiamos
+                if($request->get('password')!=""){
+                    $user->name=$request->get('nombres');
+                    $user->email=$request->get('email');
+                    $user->password=Hash::make($request->get('password'));
+                    $user->save();
+                    $cliente->user_id=$user->id;
 
-            $user->save();
+                }
+            }
+            
 
             $cliente->documento=$request->get('documento');
             $cliente->nombres=$request->get('nombres');
@@ -146,7 +150,6 @@ class ClientesController extends Controller
             $cliente->razon_social=$request->get('razon_social',"");
             $cliente->email_contacto=$request->get('email');
             $cliente->celular=$request->get('celular');
-            $cliente->user_id=$user->id;
             $cliente->direccion_id=$direccion->id;
             $cliente->activo=1;
 

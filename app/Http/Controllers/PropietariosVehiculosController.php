@@ -116,7 +116,6 @@ class PropietariosVehiculosController extends Controller
             $direccion->direccion1=$request->get('direccion');
             $direccion->direccion2=$request->get('direccion_detalle');
             $direccion->save();
-            $user=User::where('email',$propietario->email_contacto)->get()->first();
 
         }
         
@@ -132,7 +131,6 @@ class PropietariosVehiculosController extends Controller
             $propietario->nombres=$request->get('nombres');
             $propietario->apellidos=$request->get('apellidos');
             $propietario->razon_social=$request->get('razon_social',"");
-            $propietario->email_contacto=$request->get('email');
             $propietario->celular=$request->get('celular');
             $propietario->direccion_id=$direccion->id;
             $propietario->activo=1;
@@ -154,6 +152,8 @@ class PropietariosVehiculosController extends Controller
             //Si el password es diferente de vacio lo cambiamos
             
             if($request->get('email')!=""){
+
+                $propietario->email_contacto=$request->get('email');
                 $user->email=$request->get('email');
 
                 $user=new User();
@@ -175,8 +175,11 @@ class PropietariosVehiculosController extends Controller
              return redirect()->route('propietarios');
 
          }else{
-            $user=User::where('email',$propietario->email_contacto)->get()->first();
-            if(!$user){
+
+            if($propietario->email_contacto!=""){
+                $user=User::where('email',$propietario->email_contacto)->get()->first();
+            }
+            if(!$user && $request->get('email')!=""){
                 $user=new User();
                 $user->name=$propietario->nombres.' '.$propietario->apellidos;
             }
@@ -184,7 +187,6 @@ class PropietariosVehiculosController extends Controller
                 $user->email=$request->get('email');
             }
             if($request->get('password')!=""){
-
                 $user->password=Hash::make($request->get('password'));
             }
             if($user){
@@ -193,13 +195,9 @@ class PropietariosVehiculosController extends Controller
                 $user->save();
             }
 
-
-
             \Session::flash('flash_message','Propietario actualizado exitosamente!.');
 
             return redirect()->route('propietarios');
-
-            
          }
 
 
