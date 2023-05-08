@@ -16,6 +16,13 @@
             <strong>{{ $message }}</strong>
     </div>
   @endif
+  @if ($message = Session::get('flash_bad_message'))
+    <div class="alert alert-danger alert-block">
+        <button type="button" class="close" data-dismiss="alert">×</button> 
+            <strong>{{ $message }}</strong>
+    </div>
+  @endif
+
   <div class="row">
           <div class="col-md-12">
             <h1>Pasajeros</h1>

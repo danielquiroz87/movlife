@@ -91,13 +91,17 @@ class ImportadorController extends Controller
         $j = 0;
         $arr_clientes=array();
 
+        DB::beginTransaction();
+
+
         foreach ($importData_arr as $importData) {
         $j++;
         
         try {
-            DB::beginTransaction();
            
             $documento=$importData[0];
+            $documento=trim($documento);
+            
             $nombres=$importData[1];
             $apellidos=$importData[2];
             $razon_social=$importData[3];
@@ -136,6 +140,37 @@ class ImportadorController extends Controller
                 $user_id=$user->id;
             }
 
+             if($documento!=""){
+                $existec=Cliente::where('documento','=',$documento)->get()->first();
+                if($existec){
+                    $error=true;
+                    throw new \Exception("Ya existe un cliente con el número de documento ".$documento);
+                    break;
+                }
+            }else{
+               $error=true;
+                throw new \Exception("El documento es requerido.");
+                break; 
+            }
+
+            if($departamento_id==""){
+                    $error=true;
+                    throw new \Exception("El campo departamento es requerido");
+                    break;
+            }
+            if($ciudad_id==""){
+                    $error=true;
+                    throw new \Exception("El campo ciudad es requerido");
+                    break;
+            }
+
+             if($telefono=="" || $celular=="" || $whatsapp==""){
+                $error=true;
+                throw new \Exception("El teléfono,celular o whatsapp son requeridos");
+                break;
+            }
+
+
             $row_cliente=Cliente::create([
             'documento' => $documento,
             'nombres' => $nombres,
@@ -155,17 +190,20 @@ class ImportadorController extends Controller
                 $direccion->parent_id=$row_cliente->id;
                 $direccion->save();
             }
-            DB::commit();
             $arr_clientes[]=$row_cliente;
             } catch (\Exception $e) {
-               $error=true;
+                $error=true;
+                $message='Error en la fila '.($j+1).' ';
+                $message.=($e->getMessage());
                 DB::rollBack();
+               
             }
         }
         if(!$error){
+            DB::commit();
             \Session::flash('flash_message','Clientes importados exitosamente!.');
         }else{
-             \Session::flash('flash_bad_message','Error al tratar de impotar los clientes!.');
+             \Session::flash('flash_bad_message','Error al tratar de impotar los clientes!. '.$message);
         }
         
     }
@@ -195,14 +233,17 @@ class ImportadorController extends Controller
         $j = 0;
         $arr_pasajeros=array();
 
+        DB::beginTransaction();
+
+
         foreach ($importData_arr as $importData) {
         $j++;
         
         try {
-            DB::beginTransaction();
            
             $documento_cliente=$importData[0];
             $documento=$importData[1];
+            $documento=trim($documento);
             $nombres=$importData[2];
             $apellidos=$importData[3];
             $codigo=$importData[4];
@@ -231,6 +272,27 @@ class ImportadorController extends Controller
 
                 $direccion_id=$direccion->id;
             }
+            else{
+                if($departamento_id==""){
+                    $error=true;
+                    throw new \Exception("El campo departamento es requerido");
+                    break;
+                }
+                if($ciudad_id==""){
+                    $error=true;
+                    throw new \Exception("El campo ciudad es requerido");
+                    break;
+                }
+            }
+            if($documento!=""){
+                $existep=Pasajero::where('documento','=',$documento)->get()->first();
+                if($existep){
+                    $error=true;
+                    throw new \Exception("Ya existe un pasajero con el número de documento ".$documento);
+                    break;
+                }
+            }
+
             if($email!="" && $password!=""){
                 $user=new User();
                 $user->name=$nombres;
@@ -265,17 +327,21 @@ class ImportadorController extends Controller
                 $direccion->save();
             }
             //Send Email
-            DB::commit();
             $arr_pasajeros[]=$row_pasajero;
             } catch (\Exception $e) {
-               $error=true;
+                $error=true;
+                $message='Error en la fila '.($j+1).' ';
+                $message.=($e->getMessage());
                 DB::rollBack();
+           
             }
         }
         if(!$error){
+            DB::commit();
             \Session::flash('flash_message','Pasajeros importados exitosamente!.');
         }else{
-             \Session::flash('flash_bad_message','Error al tratar de impotar los clientes!.');
+             DB::rollBack();
+             \Session::flash('flash_bad_message','Error al tratar de importar los pasajeros!. '.$message);
         }
         
     }
@@ -305,11 +371,13 @@ class ImportadorController extends Controller
         $j = 0;
         $arr_conductores=array();
 
+        DB::beginTransaction();
+
+
         foreach ($importData_arr as $importData) {
         $j++;
         
         try {
-            DB::beginTransaction();
            
             $documento=$importData[0];
             $documento=trim($documento); 
@@ -366,6 +434,28 @@ class ImportadorController extends Controller
                 $user_id=$user->id;
             }
 
+            if($documento==""){
+                $error=true;
+                throw new \Exception("El documento es requerido.");
+                break;
+            }
+            else{
+                $existec=Conductor::where('documento','=',$documento)->get()->first();
+                if($existec){
+                    $error=true;
+                    throw new \Exception("Ya existe un conductor con el número de documento ".$documento);
+                    break;
+                }
+            }
+
+            if($telefono=="" || $celular=="" || $whatsapp==""){
+                $error=true;
+                throw new \Exception("El teléfono,celular o whatsapp son requeridos");
+                break;
+            }
+
+
+
             $row_conductor=Conductor::create([
             'documento' => $documento,
             'nombres' => $nombres,
@@ -399,19 +489,20 @@ class ImportadorController extends Controller
                 $direccion->parent_id=$row_conductor->id;
                 $direccion->save();
             }
-            DB::commit();
             $arr_conductores[]=$row_conductor;
             } catch (\Exception $e) {
-               $error=true;
-               var_dump($e);
+                $error=true;
+                $message='Error en la fila '.($j+1).' ';
+                $message.=($e->getMessage());
                 DB::rollBack();
-                die();
+               
             }
         }
         if(!$error){
+            DB::commit();
             \Session::flash('flash_message','Conductores importados exitosamente!.');
         }else{
-             \Session::flash('flash_bad_message','Error al tratar de impotar los conductores!.');
+             \Session::flash('flash_bad_message','Error al tratar de impotar los conductores!.'.$message);
         }
         
     }
@@ -448,6 +539,20 @@ class ImportadorController extends Controller
         try {
            
             $placa=trim($importData[0]);
+            
+            if($placa=="" || empty($placa)){
+                $error=true;
+                $message="La placa es requerida.";
+                //throw new \Exception("La placa es requerida");
+                break;
+            }
+
+            $existev=Vehiculo::where('placa','=',$placa)->get()->first();
+
+            if($existev){
+                  throw new \Exception("La placa #$placa,ya existe en el sistema.");
+            }
+
             $modelo=trim($importData[1]);
             $clase=trim($importData[2]);
             $marca=trim($importData[3]);
@@ -475,6 +580,11 @@ class ImportadorController extends Controller
                 if($obpropietario){
                     $propietario_id=$obpropietario->id;
                 }
+            }else{
+                $error=true;
+                $message="No se encontro propietario para el vehiculo.";
+                //throw new \Exception("La placa es requerida");
+                break; 
             }
 
             $row_vehiculo=new Vehiculo();
@@ -488,9 +598,9 @@ class ImportadorController extends Controller
 
             $row_vehiculo->save();
             
-            } catch (\Exception $e) {
-               $error=true;
-                $message='Error en la fila '.($j+1).'<br/>';
+            } catch (\Exception $e) {  
+                $error=true;
+                $message='Error en la fila '.($j+1).' ';
                 $message.=($e->getMessage());
                 DB::rollBack();
             }
@@ -500,7 +610,7 @@ class ImportadorController extends Controller
             \Session::flash('flash_message','Clientes importados exitosamente!.');
         }else{
              DB::rollBack();
-             \Session::flash('flash_bad_message','Error al tratar de impotar los vehiculos!.'.$message);
+             \Session::flash('flash_bad_message','Error al tratar de impotar los vehiculos!. '.$message);
         }
         
     }
