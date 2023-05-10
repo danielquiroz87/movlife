@@ -152,13 +152,16 @@ class ServiciosController extends Controller
 
         $j = 0;
         $arr_servicios=array();
-         foreach ($importData_arr as $importData) {
+
+        DB::beginTransaction();
+
+        foreach ($importData_arr as $importData) {
         $j++;
         $error=false;
         $message="";
+
         try {
 
-            DB::beginTransaction();
 
             $fecha_solicitud=$importData[1];
             $fecha_solicitud=explode("/",$fecha_solicitud);
@@ -384,17 +387,17 @@ class ServiciosController extends Controller
             $servicio->estado=1;
             $servicio->save();
             
-            DB::commit();
 
 
         } catch (\Exception $e) {
                 $error=true;
-                $message='Error en la fila '.($j+1).'<br/>';
+                $message='Error en la fila '.($j+1).',';
                 $message.=($e->getMessage());
                 break;
         }
         }
         if(!$error){
+            DB::commit();
             \Session::flash('flash_message','Archivo Importado Exitosamente!.');
         }else{
               DB::rollBack();
