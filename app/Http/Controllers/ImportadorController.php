@@ -14,6 +14,7 @@ use App\Models\Pasajero;
 use App\Models\Conductor;
 use App\Models\ConductorHojaDeVida;
 use App\Models\Vehiculo;
+use App\Models\Propietario;
 
 
 use App\Models\User;
@@ -53,7 +54,9 @@ class ImportadorController extends Controller
             case 'vehiculos':
                 $this->setVehiculos($file);
                 break;
-                 
+            case 'propietarios':
+                $this->setPropietario($file);
+                break;     
             default:
                 # code...
                 break;
@@ -506,6 +509,147 @@ class ImportadorController extends Controller
         }
         
     }
+
+
+    public function setPropietario($file){
+
+        $fopen=fopen($file->getRealPath(),'r');
+        $importData_arr = array(); // Read through the file and store the contents as an array
+        $i = 0;
+        $error=false;
+        //Read the contents of the uploaded file 
+        while (($filedata = fgetcsv($fopen, 1000, ";")) !== FALSE) {
+            $num = count($filedata);
+            // Skip first row (Remove below comment if you want to skip the first row)
+            if ($i == 0) {
+                $i++;
+                continue;
+            }
+            for ($c = 0; $c < $num; $c++) {
+                $importData_arr[$i][] = $filedata[$c];
+            }
+            $i++;
+        }
+        fclose($fopen); //Close after reading
+
+        $j = 0;
+        $arr_propietarios=array();
+
+        DB::beginTransaction();
+
+
+        foreach ($importData_arr as $importData) {
+        $j++;
+        
+        try {
+           
+            $documento=$importData[0];
+            $documento=trim($documento); 
+            $documento=filter_var($documento,FILTER_SANITIZE_STRING);
+            $nombres=$importData[1];
+            $nombres=trim($nombres);
+            $nombres=filter_var($nombres,FILTER_SANITIZE_STRING);
+            $apellidos=$importData[2];
+            $apellidos=trim($apellidos);
+            $apellidos=filter_var($apellidos,FILTER_SANITIZE_STRING);
+            $razon_social=$importData[3];
+            $razon_social=trim($razon_social);
+            $razon_social=filter_var($razon_social,FILTER_SANITIZE_STRING);
+            
+            $telefono=$importData[4];
+            $celular=$importData[5];
+            $whatsapp=$importData[6];
+            $departamento_id=$importData[7];
+            $ciudad_id=$importData[8];
+            $direccion_str=$importData[9];
+            $detalle_direccion=$importData[10];
+            $email=$importData[11];
+            $password=$importData[12];
+           
+            $direccion_id=null;
+            $user_id=null;
+
+            if($departamento_id!="" && $ciudad_id!="" ){
+                $direccion=new Direccion();
+                $direccion->departamento_id=$departamento_id;
+                $direccion->ciudad_id=$ciudad_id;
+                //$direccion->barrio=$barrio;
+                $direccion->direccion1=$direccion_str;
+                $direccion->direccion2=$detalle_direccion;
+                $direccion->tipo_usuario=4;
+                $direccion->save();
+                $direccion_id=$direccion->id;
+            }
+            if($email!="" && $password!=""){
+                $user=new User();
+                $user->name=$nombres;
+                $user->email=$email;
+                //Si el password es diferente de vacio lo cambiamos
+                if($password!=""){
+                    $user->password=Hash::make($password);
+                }
+                $user->save();
+                $user_id=$user->id;
+            }
+
+            if($documento==""){
+                $error=true;
+                throw new \Exception("El documento es requerido.");
+                break;
+            }
+            else{
+                $existec=Propietario::where('documento','=',$documento)->get()->first();
+                if($existec){
+                    $error=true;
+                    throw new \Exception("Ya existe un propietario con el número de documento ".$documento);
+                    break;
+                }
+            }
+            
+            /*
+            if($telefono=="" || $celular=="" || $whatsapp==""){
+                $error=true;
+                throw new \Exception("El teléfono,celular o whatsapp son requeridos");
+                break;
+            }   
+            */
+
+
+            $row_propietario=Propietario::create([
+            'documento' => $documento,
+            'nombres' => $nombres,
+            'apellidos' => $apellidos,
+            'razon_social'=>$razon_social,
+            'telefono' => $telefono,
+            'celular' => $celular,
+            'whatsapp'=>$whatsapp,
+            'activo'=>1,
+            'user_id'=>$user_id,
+            'direccion_id'=>$direccion_id,
+            
+            
+            ]);
+            
+            
+            $arr_propietarios[]=$row_propietario;
+
+            } catch (\Exception $e) {
+                $error=true;
+                $message='Error en la fila '.($j+1).' ';
+                $message.=($e->getMessage());
+                DB::rollBack();
+               
+            }
+        }
+        if(!$error){
+            DB::commit();
+            \Session::flash('flash_message','Propietarios importados exitosamente!.');
+        }else{
+             \Session::flash('flash_bad_message','Error al tratar de impotar los propietarios!.'.$message);
+        }
+        
+    }
+
 
 
     public function setVehiculos($file){

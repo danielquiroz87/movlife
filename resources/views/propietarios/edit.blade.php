@@ -83,7 +83,11 @@
            <div class="col-md-6 form-group mb-3">
               <label><strong>Departamento:</strong></label>
                     <select class="form-control departamentos" name="departamento_id">
-                      <?php echo Helper::selectDepartamentos($direccion->departamento_id) ?>
+                        @if($direccion)
+                          <?php echo Helper::selectDepartamentos($direccion->departamento_id) ?>
+                        @else
+                          <?php echo Helper::selectDepartamentos() ?>
+                        @endif
                     </select>
                    
             </div>
@@ -91,18 +95,22 @@
            <div class="col-md-6 form-group mb-3">
               <label><strong>Ciudad:</strong></label>
                   <select class="form-control municipios" name="ciudad_id">
+                    @if($direccion)
                       <?php echo Helper::selectMunicipios($direccion->departamento_id,$direccion->ciudad_id) ?>
+                    @else
+                      <?php echo Helper::selectMunicipios() ?>
+                    @endif
                   </select>
             </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Dirección:</strong></label>
-                   <input type="text" name="direccion" class="form-control" placeholder="" maxlength="255"  value="{{$direccion->direccion1}}">
+                   <input type="text" name="direccion" class="form-control" placeholder="" maxlength="255"  value="@if($direccion){{$direccion->direccion1}}@endif">
             </div>
            
             <div class="col-md-6 form-group mb-3">
               <label><strong>Detalle Dirección:</strong></label>
-                   <input type="text" name="direccion_detalle" class="form-control" placeholder="" maxlength="255"  value="{{$direccion->direccion2}}">
+                   <input type="text" name="direccion_detalle" class="form-control" placeholder="" maxlength="255"  value="@if($direccion){{$direccion->direccion2}}@endif">
             </div>
             <div class="col-md-6 form-group mb-3">
                     <label><strong>Email:</strong></label>

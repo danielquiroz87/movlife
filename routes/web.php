@@ -65,6 +65,7 @@ Route::get('/propietarios/edit/{id}', 'PropietariosVehiculosController@edit')->n
 Route::post('/propietarios/save', 'PropietariosVehiculosController@save')->name('propietarios.save');
 Route::post('/propietarios/delete/{id}', 'PropietariosVehiculosController@delete')->name('propietarios.delete');
 Route::get('/propietarios/delete/{id}', 'PropietariosVehiculosController@delete')->name('propietarios.delete.get');
+Route::get('/propietarios/importar', 'PropietariosVehiculosController@importar')->name('propietarios.importar');
 
 
 

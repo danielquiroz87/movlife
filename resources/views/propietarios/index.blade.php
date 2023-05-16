@@ -27,7 +27,8 @@
 
                   <div class="d-sm-flex mb-3" data-view="print">
                     <span class="m-auto"></span>
-                   
+                   <span class="m-auto"></span>
+                  <a class="btn btn-success" href="{{route('propietarios.importar')}}" target="_blank" >Importar</a>&nbsp;&nbsp;
                     <a class="btn btn-primary" href="{{route('propietarios.new')}}">Nuevo</a>
                   </div>
                 

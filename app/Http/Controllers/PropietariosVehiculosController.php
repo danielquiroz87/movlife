@@ -209,7 +209,8 @@ class PropietariosVehiculosController extends Controller
     }
     public function importar(){
         
-        
+        return view('propietarios.importar');
+
     }
     
     public function delete($id){

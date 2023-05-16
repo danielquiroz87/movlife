@@ -322,11 +322,15 @@ class ServiciosController extends Controller
             }
             if(!$pasajero){
                 $exp_telefono_paciente=explode("/", $telefono_paciente);
-                $pasajero=Pasajero::where('celular',$exp_telefono_paciente[0])->get()->first();
+                $pasajero=Pasajero::where('telefono',$exp_telefono_paciente[0])
+                ->orWhere('celular',$exp_telefono_paciente[0])
+                ->orWhere('whatsapp',$exp_telefono_paciente[0])
+                ->get()->first();
             }
             if(!$pasajero){
-               $pasajero=new \stdClass();
-               $pasajero->id=null;
+                $error=true;
+                throw new \Exception("Error, no se encontró el pasajero en el sistema ");
+                break;
             }
            
             $id_cliente=null;
@@ -348,12 +352,15 @@ class ServiciosController extends Controller
             $cond_serv=Conductor::where('documento',$cedula_cond_servicio)->get()->first();
 
             if(!$cond_pago){
-                $cond_pago=new \stdClass();
-                $cond_pago->id=null;
+                $error=true;
+                throw new \Exception("Error, El conductor con #$cedula_cond_servicio no se encontró el conductor");
+                break;
             }
             if(!$cond_serv){
-                $cond_serv=new \stdClass();
-                $cond_serv->id=null;
+                $error=true;
+                throw new \Exception("Error, no se encontró el conductor que prestará el servicio en el sistema. ".
+                    $cedula_cond_servicio);
+                break;
             }
 
 
