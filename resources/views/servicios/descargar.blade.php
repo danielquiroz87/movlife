@@ -123,7 +123,13 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 	<td>{{$servicio->pasajero->nombres}} {{$servicio->pasajero->apellidos}}</td>
 	<td>{{$servicio->pasajero->documento}}
 	<td>{{$servicio->pasajero->telefono}}</td>
-	<td>{{$servicio->cliente->documento}},{{$servicio->cliente->razon_social}}</td>
+	<td>
+		@if($servicio->cliente)
+        	{{$servicio->cliente->documento}},{{$servicio->cliente->razon_social}}
+        @else
+        	N/A
+        @endif
+	</td>
 	<td>
 		@if( (int) $servicio->uri_sede>0 )
 			{{$servicio->sede->nombre}}
@@ -134,7 +140,6 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 	<td>		
 		@if($servicio->uri_sede>0)
 			{{$servicio->sede->ciudad->nombre}}
-
 		@else
 			N/A
 		@endif

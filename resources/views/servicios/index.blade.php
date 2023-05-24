@@ -116,7 +116,13 @@
                   <tbody>
                   	@foreach ($servicios as $servicio)
                     <tr>
-                     <td>{{$servicio->cliente->nombres}} {{$servicio->cliente->apellidos}}</td>
+                     <td>
+                        @if($servicio->cliente)
+                            {{$servicio->cliente->nombres}} {{$servicio->cliente->apellidos}}
+                        @else
+                          N/A
+                        @endif
+                      </td>
                      <td>{{$servicio->placa}}</td>
                      <td>{{$servicio->conductor->nombres}}</td>
                      <td>{{$servicio->pasajero->nombres}}</td>

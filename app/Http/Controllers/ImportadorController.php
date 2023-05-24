@@ -248,7 +248,13 @@ class ImportadorController extends Controller
             $documento=$importData[1];
             $documento=trim($documento);
             $nombres=$importData[2];
+            $nombres=trim($nombres);
+            $nombres=filter_var($nombres,FILTER_SANITIZE_STRING);
+            
             $apellidos=$importData[3];
+            $apellidos=trim($apellidos);
+            $apellidos=filter_var($apellidos,FILTER_SANITIZE_STRING);
+            
             $codigo=$importData[4];
             $telefono=$importData[5];
             $celular=$importData[6];
@@ -263,6 +269,8 @@ class ImportadorController extends Controller
             $password=$importData[15];
             $direccion_id=null;
             $user_id=null;
+            $existep=false;
+            $existepa=false;
 
             if($departamento_id!="" && $ciudad_id!=""){
                 $direccion=new Direccion();
@@ -289,13 +297,19 @@ class ImportadorController extends Controller
             }
             if($documento!=""){
                 $existep=Pasajero::where('documento','=',$documento)->get()->first();
-                if($existep){
+            }
+
+            $existepa=Pasajero::where('nombres','=',$nombres)->where('apellidos',$apellidos)->get()->first();
+            if($existepa){
+                    $error=true;
+                    throw new \Exception("Ya existe un pasajero con los nombres ".$nombres.' '.$apellidos);
+                    break;
+            }
+            if($existep){
                     $error=true;
                     throw new \Exception("Ya existe un pasajero con el número de documento ".$documento);
                     break;
-                }
             }
-
             if($email!="" && $password!=""){
                 $user=new User();
                 $user->name=$nombres;

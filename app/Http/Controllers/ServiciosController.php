@@ -24,6 +24,8 @@ use App\Models\Sedes;
 use App\Models\Empleado;
 use App\Models\User;
 use App\Models\Direccion;
+use App\Models\Vehiculo;
+
 use Config;
 use Illuminate\Support\Facades\DB;
 
@@ -186,7 +188,15 @@ class ServiciosController extends Controller
             $origen=$importData[15];
             $destino=$importData[16];
             $kilometros=$importData[17];
+            $kilometros=str_replace(",",".", $kilometros);
+            if($kilometros=="N/A"){
+                $kilometros=0;
+            }
+
             $tiempo=$importData[18];
+
+
+
             $str_tipo_viaje=$importData[20];
             $hora_recogida=strtolower($importData[19]);
             $hora_recogida=trim($hora_recogida);
@@ -278,7 +288,9 @@ class ServiciosController extends Controller
             $terapia=$importData[26];
             $programa=$importData[27];
             $nombres_conductor_paga=$importData[28];
-            $cedula_conductor_paga=$importData[29];
+            $cedula_conductor_principal=$importData[29];
+            $cedula_conductor_principal=trim($cedula_conductor_principal);
+
             $nombres_conductor_servicio=$importData[30];
             $telefono_conductor=$importData[31];
             $persona_pago=$importData[32];
@@ -313,7 +325,8 @@ class ServiciosController extends Controller
             $placa=$importData[50];
             $cedula_placa=$importData[51];
             $exp=explode("-", $cedula_placa);
-            $cedula_cond_servicio=$exp[0];
+            
+            //$cedula_cond_servicio=$exp[0];
 
            
             $pasajero=false;
@@ -323,13 +336,16 @@ class ServiciosController extends Controller
             if(!$pasajero){
                 $exp_telefono_paciente=explode("/", $telefono_paciente);
                 $pasajero=Pasajero::where('telefono',$exp_telefono_paciente[0])
+                ->orWhere('telefono','LIKE','%'.$exp_telefono_paciente[0].'%')
                 ->orWhere('celular',$exp_telefono_paciente[0])
+                ->orWhere('celular', 'LIKE', '%'.$exp_telefono_paciente[0].'%')
                 ->orWhere('whatsapp',$exp_telefono_paciente[0])
+                ->orWhere('whatsapp', 'LIKE', '%'.$exp_telefono_paciente[0].'%')
                 ->get()->first();
             }
             if(!$pasajero){
                 $error=true;
-                throw new \Exception("Error, no se encontró el pasajero en el sistema ");
+                throw new \Exception("Error, no se encontró el pasajero ".$persona_transportar." en el sistema ");
                 break;
             }
            
@@ -349,20 +365,30 @@ class ServiciosController extends Controller
             //echo "hora_recogida=".$hora_recogida.'<br/>';
 
             $cond_pago=Conductor::where('documento',$cedula_persona_pago)->get()->first();
-            $cond_serv=Conductor::where('documento',$cedula_cond_servicio)->get()->first();
+            $cond_serv=Conductor::where('documento',$cedula_conductor_principal)->get()->first();
 
             if(!$cond_pago){
                 $error=true;
-                throw new \Exception("Error, El conductor con #$cedula_cond_servicio no se encontró el conductor");
+                throw new \Exception("Error, El conductor con #$cedula_conductor_principal no se encontró el conductor");
                 break;
             }
             if(!$cond_serv){
                 $error=true;
                 throw new \Exception("Error, no se encontró el conductor que prestará el servicio en el sistema. ".
-                    $cedula_cond_servicio);
+                    $cedula_conductor_principal);
                 break;
             }
+            if($placa!=""){
+                $vehiculo=Vehiculo::where('placa',$placa)->get()->first();
 
+                if(!is_object($vehiculo)){
+                    throw new \Exception("Error, no se encontró un vehiculo con la placa ".$placa." en el sistema.");
+
+                }
+            }else{
+               throw new \Exception("Error, La placa es requerida para impotar el servicio.");
+                break; 
+            }
 
             $servicio=new Servicio();
             $servicio->id_cliente=$id_cliente;
@@ -385,6 +411,8 @@ class ServiciosController extends Controller
             $servicio->valor_cliente=$tarifa_cliente;
             $servicio->descuento=$descuento;
             $servicio->turno=$turno;
+            $servicio->kilometros=$kilometros;
+            $servicio->tiempo=$tiempo;
             $servicio->observaciones=$observaciones;
             $servicio->hora_infusion_inicial=$hora_inf_inicial;
             $servicio->hora_infusion_final=$hora_inf_final;
@@ -469,7 +497,6 @@ class ServiciosController extends Controller
         }
         if($is_new){
             $v = Validator::make($request->all(), [
-                'id_cliente' => 'required',
                 'id_pasajero' => 'required',
                 'id_conductor_pago' => 'required',
                 'id_conductor_servicio' => 'required',
@@ -488,7 +515,6 @@ class ServiciosController extends Controller
         }else{
 
             $v = Validator::make($request->all(), [
-                'id_cliente' => 'required',
                 'id_pasajero' => 'required',
                 'id_conductor_pago' => 'required',
                 'id_conductor_servicio' => 'required',
