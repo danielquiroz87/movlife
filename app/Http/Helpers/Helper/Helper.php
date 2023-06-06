@@ -13,6 +13,8 @@ use App\Models\Servicio;
 use App\Models\VehiculoUsos;
 
 use App\Models\Pasajero;
+use App\Models\Municipios;
+
 use App\Http\Helpers\Helper\NumeroALetras;
 use Illuminate\Support\Facades\DB;
 
@@ -247,8 +249,10 @@ public function totalClientes(){
 }
 
 public function totalVentas(){
+	$ventas=Servicio::select(DB::raw('sum(valor_cliente) as totalVentas'))->where('estado','=',3)->where('fecha_servicio','>=',date('Y-m-01'))->get()->first();
 	
-	return 0;
+
+	return $ventas->totalVentas?number_format($ventas->totalVentas):0;
 }
 
 public function totalOrdenes(){
@@ -284,8 +288,9 @@ public static function getDocumentosConductor($id_conductor){
 }
 
 public static function getDocumentosVehiculo($placa){
-	
+
 	$vehiculo=Vehiculo::where('placa',$placa)->get()->first();
+
 
 	$tipo_documentos=TipoDocumentos::where('tipo_usuario',6)->get();
 	$arr_documentos=array();
@@ -349,6 +354,12 @@ public function getEmpresaAfiliadora($placa){
 	 	$nombre=$vehiculo->empresa_afiliadora;
 	}
 	return $nombre;
+}
+
+public function getCiudad($id){
+	$m=Municipios::find($id);
+	return $m->nombre;
+
 }
 
 }

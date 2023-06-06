@@ -15,7 +15,8 @@ use App\Models\Conductor;
 use App\Models\ConductorHojaDeVida;
 use App\Models\Vehiculo;
 use App\Models\Propietario;
-
+use App\Models\Documentos;
+use App\Models\TipoDocumentos;
 
 use App\Models\User;
 use App\Models\Direccion;
@@ -424,6 +425,29 @@ class ImportadorController extends Controller
             $grupo_sanguineo=$importData[18];
             $numero_hijos=$importData[19];
             $estrato=$importData[20];
+            $placa=$importData[21];
+           
+            $nro_licencia=trim($importData[22]);//1
+            $str_fecha_licencia=trim($importData[23]);
+            $fecha_licencia="";
+            if($str_fecha_licencia!=""){
+                $exp_fecha_licencia=explode("/", $str_fecha_licencia);
+                $fecha_licencia=$exp_fecha_licencia[2].'-'.$exp_fecha_licencia[1].'-'.$exp_fecha_licencia[0];
+            }
+            $estado_licencia=trim($importData[24]);
+            
+            $planilla_ss=trim($importData[25]); //2
+            $planilla_ss=strtoupper($planilla_ss);
+
+            $rut=trim($importData[26]); //7
+            $rut=strtoupper($rut); //7
+            
+            $antecedentes=trim($importData[27]); // 18
+            $antecedentes=strtoupper($antecedentes); // 18
+            
+            $cursos=trim($importData[28]); //19
+            $cursos=strtoupper($cursos); // 19
+            
 
             $direccion_id=null;
             $user_id=null;
@@ -472,7 +496,6 @@ class ImportadorController extends Controller
             }
 
 
-
             $row_conductor=Conductor::create([
             'documento' => $documento,
             'nombres' => $nombres,
@@ -506,6 +529,48 @@ class ImportadorController extends Controller
                 $direccion->parent_id=$row_conductor->id;
                 $direccion->save();
             }
+            if($nro_licencia!=""){
+
+                $doc=new Documentos();
+                $doc->id_tipo_documento=1;
+                $doc->id_registro=$row_conductor->id;
+                
+                if($fecha_licencia!=""){
+                    $doc->fecha_final=$fecha_licencia;
+                }
+                if($nro_licencia!=""){
+                    $doc->numero_documento=$nro_licencia;
+                }
+                
+                $doc->save();
+            }
+
+            if($planilla_ss=="SI"){
+                $doc=new Documentos();
+                $doc->id_tipo_documento=2;
+                $doc->id_registro=$row_conductor->id;
+                $doc->save();
+            }
+
+            if($rut=="SI"){
+                $doc=new Documentos();
+                $doc->id_tipo_documento=7;
+                $doc->id_registro=$row_conductor->id;
+                $doc->save();
+            }
+            if($antecedentes=="SI"){
+                $doc=new Documentos();
+                $doc->id_tipo_documento=18;
+                $doc->id_registro=$row_conductor->id;
+                $doc->save();
+            }
+            if($cursos=="SI"){
+                $doc=new Documentos();
+                $doc->id_tipo_documento=19;
+                $doc->id_registro=$row_conductor->id;
+                $doc->save();
+            }
+
             $arr_conductores[]=$row_conductor;
             } catch (\Exception $e) {
                 $error=true;

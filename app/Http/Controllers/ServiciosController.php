@@ -176,13 +176,17 @@ class ServiciosController extends Controller
             $coordinador=$importData[4];
             $semana=$importData[5];
             $persona_transportar=$importData[6];
+            $persona_transportar=trim($persona_transportar);
             $telefono_paciente=$importData[7];
             $nombre_cliente=$importData[8];
             $nombre_uri_sede=$importData[9];
 
             $ciudad=$importData[10];
             $depto=$importData[11];
-            $cod_paciente=$importData[12];
+            $cod_paciente=trim($importData[12]);
+            if($cod_paciente=="N/A"){
+                $cod_paciente=0;
+            }
             $direccion_recogida=$importData[13];
             $barrio=$importData[14];
             $origen=$importData[15];
@@ -281,6 +285,14 @@ class ServiciosController extends Controller
                 $turno=NULL;
             }
 
+            $obj_uri=false;
+
+
+            if($nombre_uri_sede!="" || $nombre_uri_sede!="N/A"){
+                $obj_uri=DB::table('sedes')->where('nombre', 'LIKE', '%'.$nombre_uri_sede.'%')->first();
+            }
+
+
             $educadora_coordinadora=$importData[22];
             $hora_inf_inicial=$importData[23];
             $hora_inf_final=$importData[24];
@@ -330,10 +342,11 @@ class ServiciosController extends Controller
 
            
             $pasajero=false;
-            if($cod_paciente!=""){
+            if($cod_paciente!="" && $cod_paciente>0){
                 $pasajero=Pasajero::where('codigo',$cod_paciente)->get()->first();
             }
-            if(!$pasajero){
+
+            if(!$pasajero && $telefono_paciente!=""){
                 $exp_telefono_paciente=explode("/", $telefono_paciente);
                 $pasajero=Pasajero::where('telefono',$exp_telefono_paciente[0])
                 ->orWhere('telefono','LIKE','%'.$exp_telefono_paciente[0].'%')
@@ -343,10 +356,19 @@ class ServiciosController extends Controller
                 ->orWhere('whatsapp', 'LIKE', '%'.$exp_telefono_paciente[0].'%')
                 ->get()->first();
             }
+
+            //Buscamos el pasajero por los nombres
             if(!$pasajero){
-                $error=true;
-                throw new \Exception("Error, no se encontró el pasajero ".$persona_transportar." en el sistema ");
-                break;
+
+                $pasajero= DB::table('pasajeros')->join('direcciones','pasajeros.direccion_id','=','direcciones.id')
+                ->where('direcciones.ciudad_id',$ciudad)
+                ->whereRaw('CONCAT(nombres," ",apellidos) LIKE "%'.$persona_transportar.'%"')->get()->first();
+                
+                if(!$pasajero){
+                    $error=true;
+                    throw new \Exception("Error, no se encontró el pasajero ".$persona_transportar." en el sistema ");
+                    break;
+                }
             }
            
             $id_cliente=null;
@@ -358,6 +380,10 @@ class ServiciosController extends Controller
                 
                 if($cliente){
                    $id_cliente=$cliente->id;  
+                }else{
+                    $error=true;
+                    throw new \Exception("Error, no se encontró el cliente ".$nombre_cliente." en el sistema ");
+                    break;
                 }
                
             }
@@ -395,7 +421,14 @@ class ServiciosController extends Controller
             $servicio->placa=$placa;
             $servicio->id_conductor_pago=$cond_pago->id;
             $servicio->id_conductor_servicio=$cond_serv->id;
-            $servicio->id_pasajero=$pasajero->id;
+
+            if($pasajero){
+                $servicio->id_pasajero=$pasajero->id;
+            }
+            if($obj_uri){
+                $servicio->uri_sede=$obj_uri->id;
+            }
+            
             $servicio->fecha_solicitud=$fecha_solicitud;
             $servicio->fecha_servicio=$fecha_prestacion;
             $servicio->hora_recogida=$hora_recogida;    
@@ -657,7 +690,7 @@ class ServiciosController extends Controller
         $tipo_servicios=TipoServicios::all();
         $fecha=date('Y-m-d');
         $filename = 'consolidado-semanal-'.$fecha.'.xls';
-        header('Content-type: application/excel');
+        header('Content-type: application/vnd.ms-excel; charset=UTF-8');
         header('Content-Disposition: attachment; filename='.$filename);
         $tabla=view('servicios.descargar')->with(['servicios'=>$servicios,'tipo_servicios'=>$tipo_servicios])->render();
         echo $tabla;

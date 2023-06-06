@@ -24,7 +24,7 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 <th>TELEFONO PACIENTE	</th>
 <th>CLIENTE	</th>
 <th>UR / SEDE</th>
-<th>CIUDAD</th>
+<th>CIUDAD DEL PACIENTE</th>
 <th>CODIGO DEL PACIENTE</th>
 <th>DIRECCIÓN AUTORIZADA RECOGIDA 	</th>
 <th>BARRIO</th>	
@@ -120,9 +120,27 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 		@endif
 	</td>
 	<td>{{$servicio->semana}}</td>
-	<td>{{$servicio->pasajero->nombres}} {{$servicio->pasajero->apellidos}}</td>
-	<td>{{$servicio->pasajero->documento}}
-	<td>{{$servicio->pasajero->telefono}}</td>
+	<td>
+		@if($servicio->pasajero)
+             {{$servicio->pasajero->nombres}} {{$servicio->pasajero->apellidos}}
+        @else
+            N/A
+        @endif		
+		
+	</td>
+	<td>
+		@if($servicio->pasajero)
+			{{$servicio->pasajero->documento}}
+		@else
+		 N/A
+		@endif
+	<td>
+		@if($servicio->pasajero)
+			{{$servicio->pasajero->telefono}}
+		@else
+		 N/A
+		@endif
+	</td>
 	<td>
 		@if($servicio->cliente)
         	{{$servicio->cliente->documento}},{{$servicio->cliente->razon_social}}
@@ -138,14 +156,20 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 		@endif
 	</td>
 	<td>		
-		@if($servicio->uri_sede>0)
-			{{$servicio->sede->ciudad->nombre}}
+		@if( $servicio->pasajero )
+			@if($servicio->pasajero->direccion)
+
+			 	<?php echo Helper::getCiudad($servicio->pasajero->direccion->ciudad_id) ?>
+				
+			@else
+			 N/A
+			@endif
 		@else
 			N/A
 		@endif
 	</td>
 	<td>
-		@if( $servicio->pasajero->codigo!="" )
+		@if( $servicio->pasajero )
 			{{$servicio->pasajero->codigo}}
 		@else
 			N/A

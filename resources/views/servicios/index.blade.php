@@ -118,14 +118,21 @@
                     <tr>
                      <td>
                         @if($servicio->cliente)
-                            {{$servicio->cliente->nombres}} {{$servicio->cliente->apellidos}}
+                           {{$servicio->cliente->documento}},{{$servicio->cliente->razon_social}} 
                         @else
                           N/A
                         @endif
                       </td>
                      <td>{{$servicio->placa}}</td>
                      <td>{{$servicio->conductor->nombres}}</td>
-                     <td>{{$servicio->pasajero->nombres}}</td>
+                     <td>
+                        @if($servicio->pasajero)
+                          {{$servicio->pasajero->nombres}} {{$servicio->pasajero->apellidos}}
+                        @else
+                         N/A
+                        @endif
+                        
+                      </td>
                      <td>{{$servicio->fecha_servicio}}</td>
                      <td>{{$servicio->origen}}</td>
                      <td>{{$servicio->destino}}</td>
