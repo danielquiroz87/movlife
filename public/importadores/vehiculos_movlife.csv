@@ -1,2 +1,4 @@
-﻿placa;codigo_interno;modelo;pasajeros;color;marca;linea;clase;clasificacion;tipo_combustible;nro_chasis;nro_motor;departamento;ciudad
-qwe123;1234;2000;40;blanco;scania;xxx;bus;publico;gasolina;;;;
+﻿Placa*;modelo*;Clase de vehículo*;Marca de vehículo*;Departamento*;Ciudad*;Cédula del propietario*
+OKR123;2023;chery;mazda;70;2;1035851980
+qwe123;2000;bus;scania;70;2;1035851980
+HJN987;1990;Automovil;CHEVROLET;70;2;1035851980

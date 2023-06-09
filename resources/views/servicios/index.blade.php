@@ -134,8 +134,8 @@
                         
                       </td>
                      <td>{{$servicio->fecha_servicio}}</td>
-                     <td>{{$servicio->origen}}</td>
-                     <td>{{$servicio->destino}}</td>
+                     <td  style="max-width: 100px">{{$servicio->origen}}</td>
+                     <td  style="max-width: 100px">{{$servicio->destino}}</td>
                      <td>{{$servicio->hora_recogida}}</td>
                      <td>{{$servicio->hora_estimada_salida}}</td>
                      <td>{{$servicio->valor_cliente}}</td>

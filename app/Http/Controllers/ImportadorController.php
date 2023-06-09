@@ -22,7 +22,7 @@ use App\Models\User;
 use App\Models\Direccion;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-
+use App\Http\Helpers\Helper\Helper;
 
 class ImportadorController extends Controller
 {
@@ -534,7 +534,7 @@ class ImportadorController extends Controller
                 $doc=new Documentos();
                 $doc->id_tipo_documento=1;
                 $doc->id_registro=$row_conductor->id;
-                
+
                 if($fecha_licencia!=""){
                     $doc->fecha_final=$fecha_licencia;
                 }
@@ -782,10 +782,31 @@ class ImportadorController extends Controller
             $departamento_id=trim($importData[4]);
             $ciudad_id=trim($importData[5]);
             $propietario=trim($importData[6]);
+            
+            $empresa_afiliadora=trim($importData[8]);
+            $uso_vehiculo=trim($importData[9]);
+            $fotos_vehiculo=trim($importData[10]);
+            $fecha_seguro_ob=trim($importData[11]);
+            $fecha_tarjeta_op=trim($importData[12]);
+            $fecha_tecnomecanica=trim($importData[13]);
+            
+            $soat=strtoupper(trim($importData[14]));
+            $simit=strtoupper(trim($importData[15]));
+            $runt=strtoupper(trim($importData[16]));
+            $revision_tecnomecanica=strtoupper(trim($importData[17]));
+            $tarjeta_operacion=strtoupper(trim($importData[18]));
+            $poliza_rcc=strtoupper(trim($importData[19]));
+            $poliza_rce=strtoupper(trim($importData[20]));
+            $revision_preventiva=strtoupper(trim($importData[21]));
+            
+            $fecha_poliza_contra=trim($importData[22]);
+            $fecha_poliza_extra=trim($importData[23]);
+            $fuec=trim($importData[24]);
+            $fuec_cliente=trim($importData[25]);
+            $fuec_movlife=trim($importData[26]);
+
             $id_clase=NULL;
 
-
-            
             if($clase){
                $obclase=DB::table('vehiculos_clase')->where('nombre', $clase)->first();
                if($obclase){
@@ -802,11 +823,14 @@ class ImportadorController extends Controller
                 $obpropietario=DB::table('propietarios')->where('documento', $propietario)->first();
                 if($obpropietario){
                     $propietario_id=$obpropietario->id;
+                }else{
+                    $error=true;
+                    $message="No se encontro propietario para el vehiculo.";
+                    break; 
                 }
             }else{
                 $error=true;
                 $message="No se encontro propietario para el vehiculo.";
-                //throw new \Exception("La placa es requerida");
                 break; 
             }
 
@@ -819,7 +843,124 @@ class ImportadorController extends Controller
             $row_vehiculo->ciudad_id=$ciudad_id;
             $row_vehiculo->propietario_id=$propietario_id;
 
+
+            if($uso_vehiculo!=""){
+                $row_vehiculo->id_vehiculo_uso=$uso_vehiculo;
+            }
+
             $row_vehiculo->save();
+
+            if($fotos_vehiculo!=""){
+                $doc=new Documentos();
+                $doc->id_tipo_documento=15;      
+                $doc->cara_frontal='uploads/na.jpg';
+                $doc->id_registro=$row_vehiculo->id;
+                $doc->save();
+            }
+
+            if($fecha_seguro_ob!=""){
+                $fechadb=Helper::getFechaBd($fecha_seguro_ob);
+
+                $doc=new Documentos();
+                $doc->id_tipo_documento=9;
+                $doc->fecha_final=$fechadb;
+                $doc->cara_frontal='uploads/na.jpg';
+                $doc->id_registro=$row_vehiculo->id;
+                $doc->save();
+            }
+
+
+            if($soat=="SI" && $fecha_seguro_ob==""){
+                $doc=new Documentos();
+                $doc->id_tipo_documento=9;
+                $doc->cara_frontal='uploads/na.jpg';
+
+                $doc->id_registro=$row_vehiculo->id;
+                $doc->save();
+            }
+
+            if($fecha_tarjeta_op!=""){
+                $fechadb=Helper::getFechaBd($fecha_tarjeta_op);
+
+                $doc=new Documentos();
+                $doc->id_tipo_documento=13;
+                $doc->fecha_final=$fechadb;
+                $doc->cara_frontal='uploads/na.jpg';
+                $doc->id_registro=$row_vehiculo->id;
+                $doc->save();
+            }
+
+            if($tarjeta_operacion=="SI" && $fecha_tarjeta_op==""){
+                $doc=new Documentos();
+                $doc->id_tipo_documento=13;
+                $doc->cara_frontal='uploads/na.jpg';
+                $doc->id_registro=$row_vehiculo->id;
+                $doc->save();
+            }
+
+            if($fecha_tecnomecanica!=""){
+                $fechadb=Helper::getFechaBd($fecha_tecnomecanica);
+
+                $doc=new Documentos();
+                $doc->id_tipo_documento=10;
+                $doc->cara_frontal='uploads/na.jpg';
+                $doc->fecha_final=$fechadb;
+                $doc->id_registro=$row_vehiculo->id;
+                $doc->save();
+            }
+            if($revision_tecnomecanica=="SI" && $fecha_tecnomecanica==""){
+                $doc=new Documentos();
+                $doc->id_tipo_documento=10;
+                $doc->cara_frontal='uploads/na.jpg';
+                $doc->id_registro=$row_vehiculo->id;
+                $doc->save();
+            }
+
+
+            if($simit=="SI"){
+                $doc=new Documentos();
+                $doc->id_tipo_documento=16;
+                $doc->cara_frontal='uploads/na.jpg';
+                $doc->id_registro=$row_vehiculo->id;
+                $doc->save();
+            }
+            if($runt=="SI"){
+                $doc=new Documentos();
+                $doc->id_tipo_documento=17;
+                $doc->cara_frontal='uploads/na.jpg';
+                $doc->id_registro=$row_vehiculo->id;
+                $doc->save();
+            }
+         
+            
+            if($poliza_rcc=="SI"){
+                $doc=new Documentos();
+                $doc->id_tipo_documento=11;
+                $doc->cara_frontal='uploads/na.jpg';
+                $doc->id_registro=$row_vehiculo->id;
+                $doc->save();
+            }
+            if($poliza_rce=="SI"){
+                $doc=new Documentos();
+                $doc->id_tipo_documento=12;
+                $doc->cara_frontal='uploads/na.jpg';
+                $doc->id_registro=$row_vehiculo->id;
+                $doc->save();
+            }
+            if($revision_preventiva=="SI"){
+                $doc=new Documentos();
+                $doc->id_tipo_documento=14;
+                $doc->cara_frontal='uploads/na.jpg';
+                $doc->id_registro=$row_vehiculo->id;
+                $doc->save();
+            }
+            
+            if($fecha_poliza_contra!=""){
+                
+            }
+            if($fecha_poliza_extra!=""){
+                
+            }
             
             } catch (\Exception $e) {  
                 $error=true;

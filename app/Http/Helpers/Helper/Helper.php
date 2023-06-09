@@ -325,13 +325,24 @@ public static function getFechasDias($fecha2){
 	if($fecha2!="" && $fecha2!='NA'){
 		$f1=new \DateTime(date('Y-m-d'));
 		$f2=new \DateTime($fecha2);
-		$diff=$f1->diff($f2);
-		return $diff->days;
+		if($f2>=$f1){
+			$diff=$f1->diff($f2);
+			$days='+'.$diff->days.'/Vigente';
+		}else{
+			$diff=$f2->diff($f1);
+			$days='-'.$diff->days.'/ Vencido';
+		}
+		return $days;
 	}else{
 		return 'NA';
 	}
 	
 
+}
+
+public static function getFechaBd($fecha){
+	$exp_fecha=explode("/", $fecha);
+	return $exp_fecha[2].'-'.$exp_fecha[1].'-'.$exp_fecha[0];
 }
 
 public function getUsoVehiculo($placa){
