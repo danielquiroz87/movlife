@@ -448,6 +448,11 @@ class ImportadorController extends Controller
             $cursos=trim($importData[28]); //19
             $cursos=strtoupper($cursos); // 19
             
+            $simit=trim($importData[29]); //16
+            $simit=strtoupper($simit); // 16
+            
+            
+
 
             $direccion_id=null;
             $user_id=null;
@@ -541,13 +546,14 @@ class ImportadorController extends Controller
                 if($nro_licencia!=""){
                     $doc->numero_documento=$nro_licencia;
                 }
-                
+                $doc->cara_frontal='uploads/na.jpg';
                 $doc->save();
             }
 
             if($planilla_ss=="SI"){
                 $doc=new Documentos();
-                $doc->id_tipo_documento=2;
+                $doc->id_tipo_documento=4;
+                $doc->cara_frontal='uploads/na.jpg';
                 $doc->id_registro=$row_conductor->id;
                 $doc->save();
             }
@@ -555,21 +561,34 @@ class ImportadorController extends Controller
             if($rut=="SI"){
                 $doc=new Documentos();
                 $doc->id_tipo_documento=7;
+                $doc->cara_frontal='uploads/na.jpg';
                 $doc->id_registro=$row_conductor->id;
                 $doc->save();
             }
             if($antecedentes=="SI"){
                 $doc=new Documentos();
                 $doc->id_tipo_documento=18;
+                $doc->cara_frontal='uploads/na.jpg';
                 $doc->id_registro=$row_conductor->id;
                 $doc->save();
             }
+            if($simit=="SI"){
+                $doc=new Documentos();
+                $doc->id_tipo_documento=16;
+                $doc->cara_frontal='uploads/na.jpg';
+                $doc->id_registro=$row_conductor->id;
+                $doc->save();
+            }
+          
             if($cursos=="SI"){
                 $doc=new Documentos();
                 $doc->id_tipo_documento=19;
+                $doc->cara_frontal='uploads/na.jpg';
                 $doc->id_registro=$row_conductor->id;
                 $doc->save();
             }
+
+         
 
             $arr_conductores[]=$row_conductor;
             } catch (\Exception $e) {
@@ -791,20 +810,26 @@ class ImportadorController extends Controller
             $fecha_tecnomecanica=trim($importData[13]);
             
             $soat=strtoupper(trim($importData[14]));
-            $simit=strtoupper(trim($importData[15]));
-            $runt=strtoupper(trim($importData[16]));
-            $revision_tecnomecanica=strtoupper(trim($importData[17]));
-            $tarjeta_operacion=strtoupper(trim($importData[18]));
-            $poliza_rcc=strtoupper(trim($importData[19]));
-            $poliza_rce=strtoupper(trim($importData[20]));
-            $revision_preventiva=strtoupper(trim($importData[21]));
+            //$simit=strtoupper(trim($importData[15]));
             
-            $fecha_poliza_contra=trim($importData[22]);
-            $fecha_poliza_extra=trim($importData[23]);
-            $fuec=trim($importData[24]);
-            $fuec_cliente=trim($importData[25]);
-            $fuec_movlife=trim($importData[26]);
+            $revision_tecnomecanica=strtoupper(trim($importData[15]));
+            $tarjeta_operacion=strtoupper(trim($importData[16]));
+            $poliza_rcc=strtoupper(trim($importData[17]));
+            $poliza_rce=strtoupper(trim($importData[18]));
+            $revision_preventiva=strtoupper(trim($importData[19]));
+            $fecha_revision_preventiva=strtoupper(trim($importData[20]));
 
+            $fecha_poliza_contra=trim($importData[21]);
+            $fecha_poliza_extra=trim($importData[22]);
+            $runt=strtoupper(trim($importData[23]));
+            $licencia_transito=strtoupper(trim($importData[24]));
+
+
+            /*
+            $fuec=trim($importData[23]);
+            $fuec_cliente=trim($importData[24]);
+            $fuec_movlife=trim($importData[25]);
+            */
             $id_clase=NULL;
 
             if($clase){
@@ -842,7 +867,7 @@ class ImportadorController extends Controller
             $row_vehiculo->departamento_id=$departamento_id;
             $row_vehiculo->ciudad_id=$ciudad_id;
             $row_vehiculo->propietario_id=$propietario_id;
-
+            $row_vehiculo->empresa_afiliadora=$empresa_afiliadora;
 
             if($uso_vehiculo!=""){
                 $row_vehiculo->id_vehiculo_uso=$uso_vehiculo;
@@ -916,51 +941,56 @@ class ImportadorController extends Controller
                 $doc->save();
             }
 
-
-            if($simit=="SI"){
-                $doc=new Documentos();
-                $doc->id_tipo_documento=16;
-                $doc->cara_frontal='uploads/na.jpg';
-                $doc->id_registro=$row_vehiculo->id;
-                $doc->save();
-            }
-            if($runt=="SI"){
-                $doc=new Documentos();
-                $doc->id_tipo_documento=17;
-                $doc->cara_frontal='uploads/na.jpg';
-                $doc->id_registro=$row_vehiculo->id;
-                $doc->save();
-            }
-         
             
-            if($poliza_rcc=="SI"){
+            if($poliza_rcc=="SI" && $fecha_poliza_contra!=""){
+                
+                $fechadb=Helper::getFechaBd($fecha_poliza_contra);
+
                 $doc=new Documentos();
                 $doc->id_tipo_documento=11;
                 $doc->cara_frontal='uploads/na.jpg';
                 $doc->id_registro=$row_vehiculo->id;
+                $doc->fecha_final=$fechadb;
                 $doc->save();
             }
-            if($poliza_rce=="SI"){
+            if($poliza_rce=="SI" && $fecha_poliza_extra){
+                $fechadb=Helper::getFechaBd($fecha_poliza_extra);
+
                 $doc=new Documentos();
                 $doc->id_tipo_documento=12;
                 $doc->cara_frontal='uploads/na.jpg';
                 $doc->id_registro=$row_vehiculo->id;
+                $doc->fecha_final=$fechadb;
                 $doc->save();
             }
-            if($revision_preventiva=="SI"){
+            if($revision_preventiva=="SI" && $fecha_revision_preventiva){
+                $fechadb=Helper::getFechaBd($fecha_poliza_extra);
+
                 $doc=new Documentos();
                 $doc->id_tipo_documento=14;
+                $doc->cara_frontal='uploads/na.jpg';
+                $doc->id_registro=$row_vehiculo->id;
+                $doc->fecha_final=$fechadb;
+                $doc->save();
+            }
+
+            if($runt=="SI"){
+                $doc=new Documentos();
+                $doc->id_tipo_documento=17;      
+                $doc->cara_frontal='uploads/na.jpg';
+                $doc->id_registro=$row_vehiculo->id;
+                $doc->save();
+            }
+
+             if($licencia_transito=="SI"){
+                $doc=new Documentos();
+                $doc->id_tipo_documento=8;      
                 $doc->cara_frontal='uploads/na.jpg';
                 $doc->id_registro=$row_vehiculo->id;
                 $doc->save();
             }
             
-            if($fecha_poliza_contra!=""){
-                
-            }
-            if($fecha_poliza_extra!=""){
-                
-            }
+       
             
             } catch (\Exception $e) {  
                 $error=true;
@@ -971,7 +1001,7 @@ class ImportadorController extends Controller
         }
         if(!$error){
             DB::commit();
-            \Session::flash('flash_message','Clientes importados exitosamente!.');
+            \Session::flash('flash_message','Registros importados exitosamente!.');
         }else{
              DB::rollBack();
              \Session::flash('flash_bad_message','Error al tratar de impotar los vehiculos!. '.$message);

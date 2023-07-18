@@ -33,8 +33,75 @@ class FacturasController extends Controller
     {   
         $servicios=Servicio::whereIn('estado',array(3));
         
+        $filtros=$request->get('filtros');
+
+        if(isset($filtros['estado'])){
+            $estado=(int) $filtros['estado'];
+            if($estado!="" || $estado>0){
+                $servicios->where('estado','=',$estado);
+            }
+        }
+        else{
+            $filtros['estado']=3;
+        }
+        if(isset($filtros['cliente'])){
+            $cliente=(int) $filtros['cliente'];
+            if($cliente!="" || $cliente>0){
+                $servicios->where('id_cliente','=',$cliente);
+            }
+            
+        }else{
+             $filtros['cliente']="";
+        }
+        if(isset($filtros['conductor'])){
+            $conductor=(int) $filtros['conductor'];
+            if($conductor!="" || $conductor>0){
+                $servicios->where('id_conductor_servicio','=',$conductor);
+            }
+            
+        }else{
+             $filtros['conductor']="";
+        }
+
+        if(isset($filtros['pasajero'])){
+            
+            $pasajero=$filtros['pasajero'];
+
+            if($pasajero!="" ){
+
+               $servicios ->leftJoin('pasajeros AS p', function($join){
+                    $join->on('ordenes_servicio.id_pasajero', '=', 'p.id');
+                   
+            });
+                 $servicios->where('p.nombres', 'LIKE', '%'.$pasajero.'%')
+                            ->orwhere('p.apellidos', 'LIKE', '%'.$pasajero.'%'); 
+            }
+            
+        }else{
+             $filtros['pasajero']="";
+        }
+
+        if(isset($filtros['fecha_inicial'])){
+            $fecha_inicial=$filtros['fecha_inicial'];
+            if($fecha_inicial!=""){
+               $servicios->where('fecha_servicio','>=',$fecha_inicial); 
+            }
+            
+        }else{
+            $filtros['fecha_inicial']=date('Y-m-01');
+        }
+        if(isset($filtros['fecha_final'])){
+            $fecha_final=$filtros['fecha_final'];
+            if($fecha_final!=""){
+               $servicios->where('fecha_servicio','<=',$fecha_final); 
+            }
+            
+        }else{
+            $filtros['fecha_final']=date('Y-m-d');
+        }
+
         $servicios=$servicios->paginate(25);
-        return view('facturas.index')->with(['servicios'=>$servicios]);
+        return view('facturas.index')->with(['servicios'=>$servicios,'filtros'=>$filtros]);
     }
     
 

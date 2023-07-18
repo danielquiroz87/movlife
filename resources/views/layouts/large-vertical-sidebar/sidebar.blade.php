@@ -44,6 +44,14 @@
                 </a>
                 <div class="triangle"></div>
             </li>
+
+            <li class="nav-item {{ request()->is('sedes/*') ? 'active' : '' }}" data-item="sedes">
+                <a class="nav-item-hold" href="#">
+                    <i class="nav-icon i-Gear"></i>
+                    <span class="nav-text">Configuración</span>
+                </a>
+                <div class="triangle"></div>
+            </li>
             @endif
             <li class="nav-item {{ request()->is('customers/*') ? 'active' : '' }}" data-item="informes">
                 <a class="nav-item-hold" href="#">
@@ -53,13 +61,7 @@
                 <div class="triangle"></div>
             </li>
 
-             <li class="nav-item {{ request()->is('customers/*') ? 'active' : '' }}" data-item="users">
-                <a class="nav-item-hold" href="#">
-                    <i class="nav-icon i-Gear"></i>
-                    <span class="nav-text">Configuración</span>
-                </a>
-                <div class="triangle"></div>
-            </li>
+         
            
         </ul>
        
@@ -277,22 +279,14 @@
         </ul>
 
 
-         <ul class="childNav" data-parent="informes">
+         <ul class="childNav" data-parent="sedes">
             <li class="nav-item ">
-                <a class="{{ Route::currentRouteName()=='contabilidad' ? 'open' : '' }}"
-                    href="{{route('anticipos')}}">
+                <a class="{{ Route::currentRouteName()=='sedes' ? 'open' : '' }}"
+                    href="{{route('sedes')}}">
                     <i class="nav-icon i-Car-Wheel"></i>
-                    <span class="item-name">Anticipos</span>
+                    <span class="item-name">Sedes</span>
                 </a>
             </li>
-            <li class="nav-item ">
-                <a class="{{ Route::currentRouteName()=='contabilidad' ? 'open' : '' }}"
-                    href="{{route('facturas')}}">
-                    <i class="nav-icon i-Car-Wheel"></i>
-                    <span class="item-name">Facturas</span>
-                </a>
-            </li>
-        
             
         </ul>
       

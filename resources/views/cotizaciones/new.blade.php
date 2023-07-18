@@ -96,7 +96,18 @@
                   <?php echo Helper::selectClientes() ?>
                 </select>
             </div>
-
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Contacto Nombres y/o Razón Social:</strong></label>
+                <input type="text" name="contacto_nombres" value="" class="form-control" placeholder="" maxlength="255" >
+            </div>
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Contacto Teléfono</strong></label>
+                <input type="text" name="contacto_telefono" value="" class="form-control" placeholder="" maxlength="255" >
+            </div>
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Contacto Email</strong></label>
+                <input type="text" name="contacto_email" value="" class="form-control" placeholder="" maxlength="255" >
+            </div>
             <div class="col-md-6 form-group mb-3">
               <label><strong>Forma de Pago / Días:</strong></label>
                <input type="number" name="forma_pago" class="form-control" placeholder="Forma de Pago" value="30" step="15" max="90" min="15" />

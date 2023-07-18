@@ -11,8 +11,11 @@ use App\Models\Documentos;
 use App\Models\Vehiculo;
 use App\Models\Servicio;
 use App\Models\VehiculoUsos;
+use App\Models\AnticiposAbonos;
 
 use App\Models\Pasajero;
+use App\Models\Departamentos;
+
 use App\Models\Municipios;
 
 use App\Http\Helpers\Helper\NumeroALetras;
@@ -94,6 +97,26 @@ public static function getDepartamentos(){
 	return DB::table('departamentos')
          -> orderBy('nombre', 'asc')
          -> get();
+}
+
+public static function getNombreDepartamento($id){
+	 $departamento= Departamentos::find($id);
+	 if($departamento){
+	 	 return $departamento->nombre;
+	 	}else{
+	 		return "N/A";
+	 	}
+	
+}
+
+public static function getNombreCiudad($id){
+	 $municipio= Municipios::find($id);
+	 if($municipio){
+	 	 return $municipio->nombre;
+	 	}else{
+	 		return "N/A";
+	 	}
+	
 }
 
 public static function selectDepartamentos($id=0){
@@ -357,6 +380,20 @@ public function getUsoVehiculo($placa){
 	return $nombre_uso;
 }
 
+public function getMarcaVehiculo($placa){
+
+	$vehiculo=Vehiculo::where('placa',$placa)->get()->first();
+	return $vehiculo->marca->nombre;
+	
+}
+
+public function getModeloVehiculo($placa){
+
+	$vehiculo=Vehiculo::where('placa',$placa)->get()->first();
+	return $vehiculo->modelo;
+	
+}
+
 public function getEmpresaAfiliadora($placa){
 
 	$vehiculo=Vehiculo::where('placa',$placa)->get()->first();
@@ -365,6 +402,40 @@ public function getEmpresaAfiliadora($placa){
 	 	$nombre=$vehiculo->empresa_afiliadora;
 	}
 	return $nombre;
+}
+public static function getEstadoServicio($id){
+	$estados=[1=>'Iniciado',2=>'En Proceso',3=>'Completado',4=>'Cancelado'];
+	return $estados[$id];
+}
+
+public static function getTipoAnticipo($id){
+	if($id>=1 && $id<=4){
+		$tipos=[1=>'Anticipo',2=>'Empleado',3=>'Factura',4=>'Nequi',5=>'Daviplata'];
+		return $tipos[$id];
+	}
+
+	return "N/A";
+	
+}
+
+public static function getIdAnticipo($id){
+	
+	$abono=AnticiposAbonos::where('orden_servicio_id',$id)->get()->first();
+	if($abono){
+		return $abono->anticipo_id;
+	}
+	return "";
+	
+}
+
+public static function getPasajero($id){
+	
+	$pasajero=Pasajero::where('id',$id)->get()->first();
+	if($pasajero){
+		return $pasajero->nombres.' '.$pasajero->apellidos;
+	}
+	return "";
+	
 }
 
 public function getCiudad($id){

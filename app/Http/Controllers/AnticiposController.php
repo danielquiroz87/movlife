@@ -105,9 +105,12 @@ class AnticiposController extends Controller
     { 
        
     }
-     public function delete()
+     public function delete(Request $request,$id)
     { 
-       
+        $anticipo=Anticipos::find($id);
+         $anticipo->delete();
+         \Session::flash('flash_message','Anticipo eliminado exitosamente!.');
+         return redirect()->route('anticipos');
     }
     private function getRepository(){
         return Anticipos::paginate(25);

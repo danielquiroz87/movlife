@@ -30,16 +30,50 @@
           <div class="card-body">
                 <h3 class="card-title mb3">Lista Servicios Completados</h3>
               <!-- /.card-header -->
-                             <form>
+            
+              <form>
 
               <div class="row">
 
                  <div class="col-md-3 form-group mb-3">
                     <label><strong>Estado Servicio:</strong></label>
-                         <select name="estado" class="form-control">
+                        <select name="estado" class="form-control">
                             <option value="3" >Cumplido</option>
                          </select>
                   </div>
+
+                  <div class="col-md-3 form-group mb-3">
+                    <label><strong>Fecha Inicial:</strong></label>
+                         <input type="date" class="form-control" name="filtros[fecha_inicial]" value="{{$filtros['fecha_inicial']}}" >
+                  </div>
+
+                  <div class="col-md-3 form-group mb-3">
+                    <label><strong>Fecha Final:</strong></label>
+                         <input type="date" class="form-control" name="filtros[fecha_final]" value="{{$filtros['fecha_final']}}" >
+                  </div>
+
+                  <div class="col-md-3 form-group mb-3">
+                    <label><strong>Pasajero:</strong></label>
+                         <input type="text" class="form-control" name="filtros[pasajero]" value="{{$filtros['pasajero']}}" >
+                  </div>
+
+                  <div class="col-md-3 form-group mb-3">
+                    <label><strong>Clientes:</strong></label>
+                         <select name="filtros[cliente]" class="form-control">
+                            <?php echo Helper::selectClientes($filtros['cliente']) ?>
+                         </select>
+                  </div>
+
+                  <div class="col-md-3 form-group mb-3">
+                    <label><strong>Conductor:</strong></label>
+                         <select name="filtros[conductor]" class="form-control">
+                            <option value="">Seleccione</option>
+                            <?php echo Helper::selectConductores($filtros['conductor']) ?>
+                         </select>
+                  </div>
+
+
+                  
 
                   <div class="col-md-3 form-group mb-3">
                     <label>&nbsp;&nbsp;&nbsp;</label><br/>
@@ -47,6 +81,7 @@
                   </div>
               </div>
                 </form>
+
 
              <table id="hidden_column_table" class="display table table-striped table-bordered dataTable dtr-inline" style="width: 100%;" role="grid" aria-describedby="hidden_column_table_info">
                   <thead>
@@ -67,10 +102,10 @@
                   <tbody>
                   	@foreach ($servicios as $servicio)
                     <tr>
-                     <td>{{$servicio->cliente->nombres}}</td>
+                     <td>{{$servicio->cliente->razon_social}}</td>
                      <td>{{$servicio->placa}}</td>
-                     <td>{{$servicio->conductor->nombres}}</td>
-                     <td>{{$servicio->pasajero->nombres}}</td>
+                     <td>{{$servicio->conductor->nombres}} {{$servicio->conductor->apellidos}}</td>
+                     <td>{{$servicio->pasajero->nombres}} {{$servicio->pasajero->apellidos}}</td>
                      <td>{{$servicio->fecha_servicio}}</td>
                      <td>{{$servicio->origen}}</td>
                      <td>{{$servicio->destino}}</td>

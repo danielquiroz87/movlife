@@ -116,6 +116,7 @@ class ServiciosController extends Controller
         }else{
             $filtros['fecha_final']=date('Y-m-d');
         }
+        $request->session()->put('filtros_servicios', $filtros);
 
         $servicios=$servicios->paginate(Config::get('global_settings.paginate'));
         //$servicios=$servicios->paginate(2);
@@ -324,7 +325,7 @@ class ServiciosController extends Controller
                 $descuento=0;
             }
             $precio_alimentacion=$importData[36];
-            $tota_con_descuento=$importData[37];
+            $total_con_descuento=$importData[37];
             $tarifa_cliente=$importData[38];
             $tarifa_cliente=trim($tarifa_cliente);
 
@@ -333,9 +334,60 @@ class ServiciosController extends Controller
             if($tarifa_cliente=="" ){
                 $tarifa_cliente=0;
             }
+
+            $str_tipo_anticipo=strtoupper(trim($importData[40]));
+            $tipo_anticipo=6;
+
+            if($str_tipo_anticipo=='ANTICIPO'){
+                $tipo_anticipo=1;
+            }
+            if($str_tipo_anticipo=='EMPLEADO'){
+                $tipo_anticipo=2;
+            }
+            if($str_tipo_anticipo=='FACTURA'){
+                $tipo_anticipo=3;
+            }
+            if($str_tipo_anticipo=='NEQUI'){
+                $tipo_anticipo=4;
+            }
+            if($str_tipo_anticipo=='DAVIPLATA'){
+                $tipo_anticipo=5;
+            }
+           
+
+            $valor_banco=trim($importData[44]);
+            $valor_banco=trim(str_replace("$","",$valor_banco));
+            $valor_banco=str_replace(".","",$valor_banco);
+            $valor_banco=str_replace(",",".",$valor_banco);
+
+
+            $saldo=trim($importData[45]);
+            $saldo=str_replace("$","",$saldo);
+            $saldo=str_replace(".","",$saldo);
+            $saldo=str_replace(",",".",$saldo);
+
+            if($saldo==""){
+                $saldo=0;
+            }
+            if($tipo_anticipo==1 && $valor_banco>0){
+                $saldo=($costo+$precio_alimentacion)-$valor_banco;
+            }
             
+            if($tipo_anticipo==2){
+                $saldo=0;
+            }
+            
+            $orden_compra=trim($importData[46]);
+
             $placa=$importData[50];
             $cedula_placa=$importData[51];
+            $estado_servicio=trim($importData[52]);
+            if($estado_servicio==""){
+                $estado_servicio=1;
+            }else{
+                $estado_servicio=(int) $estado_servicio;
+            }
+
             $exp=explode("-", $cedula_placa);
             
             //$cedula_cond_servicio=$exp[0];
@@ -360,17 +412,20 @@ class ServiciosController extends Controller
             //Buscamos el pasajero por los nombres
             if(!$pasajero){
 
-                $pasajero= DB::table('pasajeros')->join('direcciones','pasajeros.direccion_id','=','direcciones.id')
+                $dtpasajero= DB::table('pasajeros')->join('direcciones','pasajeros.direccion_id','=','direcciones.id')
                 ->where('direcciones.ciudad_id',$ciudad)
                 ->whereRaw('CONCAT(nombres," ",apellidos) LIKE "%'.$persona_transportar.'%"')->get()->first();
                 
-                if(!$pasajero){
+                if(!$dtpasajero){
                     $error=true;
-                    throw new \Exception("Error, no se encontró el pasajero ".$persona_transportar." en el sistema ");
+                    throw new \Exception("Error, no se encontró el pasajero ".$persona_transportar." en la ciudad $ciudad, en el sistema ");
                     break;
                 }
+                else{
+                    $pasajero=Pasajero::find($dtpasajero->parent_id);
+                }
             }
-           
+            
             $id_cliente=null;
             if($nombre_cliente!="" && $nombre_cliente!="N/A"){
 
@@ -428,6 +483,8 @@ class ServiciosController extends Controller
             if($obj_uri){
                 $servicio->uri_sede=$obj_uri->id;
             }
+
+
             
             $servicio->fecha_solicitud=$fecha_solicitud;
             $servicio->fecha_servicio=$fecha_prestacion;
@@ -437,23 +494,49 @@ class ServiciosController extends Controller
             $servicio->barrio=$barrio;
             $servicio->origen=$origen;
             $servicio->destino=$destino;
-
+            if($tipo_anticipo){
+                $servicio->tipo_anticipo=$tipo_anticipo;
+            }
             $servicio->tipo_viaje=$tipo_viaje;
             $servicio->tipo_servicio=$tipo_servicio;
             $servicio->valor_conductor=$costo;
             $servicio->valor_cliente=$tarifa_cliente;
             $servicio->descuento=$descuento;
+            $servicio->valor_banco=$valor_banco;
             $servicio->turno=$turno;
             $servicio->kilometros=$kilometros;
             $servicio->tiempo=$tiempo;
             $servicio->observaciones=$observaciones;
             $servicio->hora_infusion_inicial=$hora_inf_inicial;
             $servicio->hora_infusion_final=$hora_inf_final;
-            $servicio->educador_coordinador=$educadora_coordinadora;
+            $servicio->educador_coordinador=$coordinador;
             $servicio->terapia=$terapia;
             $servicio->programa=$programa;
-            $servicio->estado=1;
+            $servicio->estado=$estado_servicio;
+            $servicio->saldo=$saldo;
+            $servicio->orden_compra=$orden_compra;
+            $servicio->user_id=Auth::user()->id;
+
             $servicio->save();
+
+             //Buscamos el anticipo
+            if($tipo_anticipo==1){
+
+                $anticipo=Anticipos::where('conductor_id',$servicio->id_conductor_pago)->where('estado',0)->get()->first();
+                
+               if($anticipo){
+                    $existe_abono=AnticiposAbonos::where('orden_servicio_id',$servicio->id)->get()->first();
+                    if($existe_abono){
+                        $abono=$existe_abono;
+                    }else{
+                        $abono=new AnticiposAbonos();
+                        $abono->anticipo_id=$anticipo->id;
+                        $abono->orden_servicio_id=$servicio->id;  
+                    }
+                    $abono->valor=$costo;
+                    $abono->save();
+               }
+            }
             
 
 
@@ -571,8 +654,17 @@ class ServiciosController extends Controller
 
            
          if($is_new){
-
-            $servicio->create($request->all());
+            $data=$request->all();
+           
+            unset($data['_token'],
+                $data['is_new'],
+                $data['hora_estimada_salida'],
+                $data['destino2'],$data['destino3'],$data['destino4'],$data['destino5'],
+                $data['horas_adicionales']
+            );
+            
+            $servicio=Servicio::firstOrNew($data);
+            /*$servicio->create($request->all());*/
             $servicio->user_id=Auth::user()->id;
             $servicio->save();
             \Session::flash('flash_message','Servicio agregado exitosamente!.');
@@ -685,8 +777,67 @@ class ServiciosController extends Controller
     }
 
 
-    public function descargar(){
-        $servicios=Servicio::whereIn('estado',array(1,2,3))->orderBy('fecha_servicio','Asc')->get();
+    public function descargar(Request $request){
+        ini_set('max_execution_time', '600');
+        $servicios=Servicio::whereIn('estado',array(1,2,3));
+        $filtros=$request->session()->get('filtros_servicios');
+
+        if(isset($filtros['estado'])){
+            $estado=(int) $filtros['estado'];
+            if($estado!="" || $estado>0){
+                $servicios->where('estado','=',$estado);
+            }
+        }
+        
+        if(isset($filtros['cliente'])){
+            $cliente=(int) $filtros['cliente'];
+            if($cliente!="" || $cliente>0){
+                $servicios->where('id_cliente','=',$cliente);
+            }
+            
+        }
+        if(isset($filtros['conductor'])){
+            $conductor=(int) $filtros['conductor'];
+            if($conductor!="" || $conductor>0){
+                $servicios->where('id_conductor_servicio','=',$conductor);
+            }
+            
+        }
+
+        if(isset($filtros['pasajero'])){
+            
+            $pasajero=$filtros['pasajero'];
+
+            if($pasajero!="" ){
+
+               $servicios ->leftJoin('pasajeros AS p', function($join){
+                    $join->on('ordenes_servicio.id_pasajero', '=', 'p.id');
+                   
+            });
+                 $servicios->where('p.nombres', 'LIKE', '%'.$pasajero.'%')
+                            ->orwhere('p.apellidos', 'LIKE', '%'.$pasajero.'%'); 
+            }
+            
+        }
+
+        if(isset($filtros['fecha_inicial'])){
+            $fecha_inicial=$filtros['fecha_inicial'];
+            if($fecha_inicial!=""){
+               $servicios->where('fecha_servicio','>=',$fecha_inicial); 
+            }
+            
+        }
+
+        if(isset($filtros['fecha_final'])){
+            $fecha_final=$filtros['fecha_final'];
+            if($fecha_final!=""){
+               $servicios->where('fecha_servicio','<=',$fecha_final); 
+            }
+            
+        }
+
+        $servicios=$servicios->orderBy('fecha_servicio','Asc')->get();
+
         $tipo_servicios=TipoServicios::all();
         $fecha=date('Y-m-d');
         $filename = 'consolidado-semanal-'.$fecha.'.xls';

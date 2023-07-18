@@ -103,7 +103,19 @@
                       <?php echo Helper::selectClientes($cotizacion->id_cliente) ?>
                     </select>
             </div>
-            
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Contacto Nombres y/o Razón Social:</strong></label>
+                <input type="text" name="contacto_nombres" value="{{$cotizacion->contacto_nombres}}" class="form-control" placeholder="" maxlength="255" >
+            </div>
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Contacto Teléfono</strong></label>
+                <input type="text" name="contacto_telefono" value="{{$cotizacion->contacto_telefono}}" class="form-control" placeholder="" maxlength="255" >
+            </div>
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Contacto Email</strong></label>
+                <input type="text" name="contacto_email" value="{{$cotizacion->contacto_email}}" class="form-control" placeholder="" maxlength="255" >
+            </div>
+
             <div class="col-md-6 form-group mb-3">
               <label><strong>Forma de Pago / Días:</strong></label>
                <input type="number" name="forma_pago" class="form-control" placeholder="Forma de Pago" value="{{$cotizacion->forma_pago}}" step="15" max="90" min="15" />

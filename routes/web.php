@@ -37,8 +37,6 @@ Route::post('/clientes/save', 'ClientesController@save')->name('customers.save')
 Route::post('/clientes/delete', 'ClientesController@delete')->name('customers.delete');
 Route::get('/clientes/delete/{id}', 'ClientesController@delete')->name('customers.delete.get');
 Route::get('/clientes/importar', 'ClientesController@importar')->name('customers.importar');
-
-
 Route::get('/clientes/register', 'ClientesController@new')->name('signIn');
 
 Route::get('/empleados', 'EmpleadosController@index')->name('employes');
@@ -124,19 +122,30 @@ Route::get('/cotizaciones/delete/detalle/{id}', 'CotizacionesController@deleteDe
 
 Route::get('/cotizaciones/descargar/{id}', 'CotizacionesController@descargar')->name('cotizaciones.descargar');
 
-
-
 Route::get('/anticipos', 'AnticiposController@index')->name('anticipos');
 Route::get('/anticipos/new', 'AnticiposController@new')->name('anticipos.new');
 Route::get('/anticipos/edit/{id}', 'AnticiposController@edit')->name('anticipos.edit');
 Route::post('/anticipos/save', 'AnticiposController@save')->name('anticipos.save');
-Route::post('/anticipos/delete', 'AnticiposController@delete')->name('anticipos.delete');
+Route::post('/anticipos/delete/{id}', 'AnticiposController@delete')->name('anticipos.delete.post');
+Route::get('/anticipos/delete/{id}', 'AnticiposController@delete')->name('anticipos.delete.get');
 Route::get('/anticipos/abonos/{id}', 'AbonosController@index')->name('anticipos.abonos');
-
 
 Route::get('/municipios', 'UtilsController@municipios')->name('utils.municipios');
 Route::get('/conductores/placa/{placa}', 'VehiculosController@getConductoresPlaca')->name('vehiculos.conductores.placa');
 
 Route::post('/general/importar/save', 'ImportadorController@index')->name('general.importar.save');
 
+Route::get('/tarifario', 'TarifarioController@index')->name('tarifario');
+Route::get('/tarifario/new', 'TarifarioController@new')->name('tarifario.new');
+Route::get('/tarifario/edit/{id}', 'TarifarioController@edit')->name('tarifario.edit');
+Route::post('/tarifario/save', 'TarifarioController@save')->name('tarifario.save');
+Route::post('/tarifario/delete', 'TarifarioController@delete')->name('tarifario.delete');
+
+
+Route::get('/sedes', 'SedesController@index')->name('sedes');
+Route::get('/sedes/new', 'SedesController@new')->name('sedes.new');
+Route::get('/sedes/edit/{id}', 'SedesController@edit')->name('sedes.edit');
+Route::post('/sedes/save', 'SedesController@save')->name('sedes.save');
+Route::post('/sedes/delete', 'SedesController@delete')->name('sedes.delete');
+Route::get('/sedes/delete/{id}', 'SedesController@delete')->name('sedes.delete.get');
 

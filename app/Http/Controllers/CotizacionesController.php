@@ -101,6 +101,9 @@ class CotizacionesController extends Controller
             $cotizacion->comentarios=$request->comentarios;
             $cotizacion->finalizada=0;
             $cotizacion->id_user=$request->id_user;
+            $cotizacion->contacto_nombres=$request->contacto_nombres;
+            $cotizacion->contacto_telefono=$request->contacto_telefono;
+            $cotizacion->contacto_email=$request->contacto_email;
 
 
             $file = $request->file('foto');
@@ -124,6 +127,9 @@ class CotizacionesController extends Controller
                 $cd->destino3=$request->get('destino3');
                 $cd->destino4=$request->get('destino4');
                 $cd->destino5=$request->get('destino5');
+                $cd->valor=$request->get('valor_unitario',0);
+                $cd->cantidad=$request->get('cantidad',1);
+                $cd->total=($cd->cantidad*$cd->valor);
                 $cd->save();
             }
 
@@ -156,6 +162,10 @@ class CotizacionesController extends Controller
             $cotizacion->observaciones=$request->observaciones;
             $cotizacion->comentarios=$request->comentarios;
             $cotizacion->finalizada=$request->finalizada;
+            $cotizacion->contacto_nombres=$request->contacto_nombres;
+            $cotizacion->contacto_telefono=$request->contacto_telefono;
+            $cotizacion->contacto_email=$request->contacto_email;
+
 
             $file = $request->file('foto');
 
@@ -181,7 +191,11 @@ class CotizacionesController extends Controller
                 $cd->destino3=$request->get('destino3');
                 $cd->destino4=$request->get('destino4');
                 $cd->destino5=$request->get('destino5');
-
+                $cd->valor=$request->get('valor_unitario',0);
+                $cd->cantidad=$request->get('cantidad',1);
+                $cd->total=($cd->cantidad*$cd->valor);
+                var_dump($cd);
+                die();
                 $cd->save();
             }
 

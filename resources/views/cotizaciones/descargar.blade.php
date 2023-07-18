@@ -447,7 +447,7 @@ td
 </style>
 </head>
 
-<body link="#0563C1" vlink="#954F72">
+<body link="#0563C1" vlink="#954F72" style="text-align: center;">
 <!--[if !excel]>&nbsp;&nbsp;<![endif]-->
 <!--La siguiente información se generó mediante el Asistente para publicar como
 página web de Microsoft Excel.-->
@@ -458,9 +458,9 @@ la información comprendida entre las etiquetas DIV.-->
 EXCEL -->
 <!----------------------------->
 
-<div id="pdfservicio.html_19210" align=center x:publishsource="Excel">
+<div id="pdfservicio.html_19210" align=center x:publishsource="Excel" style="width: 1400px">
 
-<table border=0 cellpadding=0 cellspacing=0 width=100% style='border-collapse:
+<table border=0 cellpadding=0 cellspacing=0 width="auto"  style='border-collapse:
  collapse;table-layout:fixed;'>
  
  <col width=92 style='width:69pt'>
@@ -536,9 +536,9 @@ EXCEL -->
   <td colspan=2 class="tdbreak" width=371 style='border-right:.5pt solid black;border-left:
   none;text-align: center;'>{{$cotizacion->cliente->razon_social}} </td>
   <td colspan=2 class=xl91 style='border-right:.5pt solid black;border-left:
-  none'>{{$cotizacion->cliente->nombres}} {{$cotizacion->cliente->apellidos}}</td>
+  none'>{{$cotizacion->contacto_nombres}} </td>
   <td colspan=2 class=xl91 style='border-right:.5pt solid black;border-left:
-  none'>{{$cotizacion->cliente->celular}}</td>
+  none'>{{$cotizacion->contacto_telefono}}</td>
   <td colspan=2 class=xl89 style='border-left:none'>#{{$cotizacion->id}}</td>
  </tr>
  <tr height=48 style='mso-height-source:userset;height:36.0pt'>
@@ -557,7 +557,7 @@ EXCEL -->
   DE PAGO<span style='mso-spacerun:yes'> </span></td>
  </tr>
  <tr height=20 style='height:15.0pt'>
-  <td colspan=2 height=20 class=xl89 style='height:15.0pt'>{{$cotizacion->cliente->email_contacto}}</td>
+  <td colspan=2 height=20 class=xl89 style='height:15.0pt'>{{$cotizacion->contacto_email}}</td>
   <td colspan=2 class=xl91 style='border-right:.5pt solid black;border-left:
   none'>{{$cotizacion->cliente->direccion->direccion1}}</td>
   <td colspan=2 class=xl91 style='border-right:.5pt solid black;border-left:
@@ -579,19 +579,20 @@ EXCEL -->
   none'>VALOR<span style='mso-spacerun:yes'> </span></td>
  </tr>
 <?php $rutas=$cotizacion->detalle;?>
-
+<?php $item=1;?>
 @foreach ($rutas as $detalle)
 <?php $total+=$detalle->total ?>
 <?php $cantidad_total+=$detalle->cantidad ?>
 <tr height=64 style='mso-height-source:userset;height:48.75pt'>
-  <td height=64 class=xl64 style='height:48.75pt;border-top:none'>1</td>
-  <td colspan=3 class=xl83 width=371 style='border-left:none;width:278pt'>Origen:{{$detalle->origen}}<br/> Destino: {{$detalle->destino}} </td>
+  <td height=64 class=xl64 style='height:48.75pt;border-top:none'>{{$item}}</td>
+  <td colspan=3 class=xl83 width=371 style='border-left:none;width:278pt'><b>Descripción:</b>{{$cotizacion->descripcion}}<br/><br/><b>Origen:</b>{{$detalle->origen}}<br/><b>Destino:</b> {{$detalle->destino}} </td>
   <td colspan=2 class=xl64 style='border-left:none; text-align: center;'>{{$detalle->cantidad}}</td>
   <td colspan=2 class=xl84 style='border-left:none; text-align: center;'>$ {{number_format($detalle->valor)}}</td>
   <td colspan=2 class=xl85 style='border-left:none'><span
   style='mso-spacerun:yes'> </span>$<span
   style='mso-spacerun:yes'> </span>{{number_format($detalle->total)}}</td>
 </tr>
+<?php $item++;?>
 
 @endforeach
 
