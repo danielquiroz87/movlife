@@ -130,7 +130,7 @@
         <!-- ============ Customizer UI Start ============= -->
 
 
-
+        <div id="issuperadmin">{{auth()->user()->superadmin}}</div>
         {{-- common js --}}
         <script src="{{ asset('assets/js/common-bundle-script.js') }}"></script>
         {{-- page specific javascript --}}
@@ -180,7 +180,18 @@
 
         <script type="text/javascript">
             
-
+            $(document).ready(function(){
+                var issuperadmin=$("#issuperadmin").html();
+                if(issuperadmin==1){
+                    
+                }else{
+                    if($(".eliminar").length == 0) {
+                        
+                    }else{
+                        $(".eliminar").hide();
+                    }
+                }
+            })
             $('.departamentos').change(function(){
                id=$(this).val();
                $.get('/municipios',{id:id},function(response){

@@ -149,3 +149,7 @@ Route::post('/sedes/save', 'SedesController@save')->name('sedes.save');
 Route::post('/sedes/delete', 'SedesController@delete')->name('sedes.delete');
 Route::get('/sedes/delete/{id}', 'SedesController@delete')->name('sedes.delete.get');
 
+Route::get('/perfil', 'PerfilController@index')->name('perfil');
+Route::post('/perfil/save', 'PerfilController@save')->name('perfil.save');
+
+
