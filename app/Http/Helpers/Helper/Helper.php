@@ -12,6 +12,9 @@ use App\Models\Vehiculo;
 use App\Models\Servicio;
 use App\Models\VehiculoUsos;
 use App\Models\AnticiposAbonos;
+use App\Models\Sedes;
+use App\Models\FuecRutas;
+
 
 use App\Models\Pasajero;
 use App\Models\Departamentos;
@@ -216,6 +219,27 @@ public static function selectPropietarios($id=0){
 }
 
 
+public static function getSedes(){
+
+	return Sedes::orderBy('nombre', 'Asc')->get();
+}
+
+public static function selectSedes($id=0){
+	$clases=self::getSedes();
+	$option_clase="<option value=''>Seleccione una Sede</option>";
+	foreach ($clases as $clase) { 
+		$name=$clase->nombre.'-';
+		if($id>0){
+			$option_clase.='<option value="'.$clase->id.'" selected="selected">'.$name. '</option>';
+		}
+		else{
+			$option_clase.='<option value="'.$clase->id.'">'.$name.'</option>';
+		}
+	}
+	return $option_clase;
+}
+
+
 public static function getVehiculosMarcas(){
 	return DB::table('vehiculos_marcas')
          -> orderBy('nombre', 'asc')
@@ -299,10 +323,14 @@ public static function getDocumentosConductor($id_conductor){
 				$cargado='NO';
 			}
 			$arr_documentos[$id_conductor][$tipo->id]=array('cargado'=>$cargado,
-															'fecha_vencimiento'=>$existe->fecha_final);
+															'fecha_vencimiento'=>$existe->fecha_final,
+															'numero'=>$existe->numero_documento
+														);
 		}else{
 			$arr_documentos[$id_conductor][$tipo->id]=array('cargado'=>'NO',
-															'fecha_vencimiento'=>'NA');
+															'fecha_vencimiento'=>'NA',
+															'numero'=>''
+														);
 		}
 	}
 
@@ -330,10 +358,12 @@ public static function getDocumentosVehiculo($placa){
 				$cargado='NO';
 			}
 			$arr_documentos[$vehiculo->placa][$tipo->id]=array('cargado'=>$cargado,
-															'fecha_vencimiento'=>$existe->fecha_final);
+															'fecha_vencimiento'=>$existe->fecha_final,
+															'numero'=>$existe->numero_documento);
 		}else{
 			$arr_documentos[$vehiculo->placa][$tipo->id]=array('cargado'=>'NO',
-															'fecha_vencimiento'=>'NA');
+															'fecha_vencimiento'=>'NA',
+															'numero'=>'');
 		}
 	}
 
@@ -442,6 +472,58 @@ public function getCiudad($id){
 	$m=Municipios::find($id);
 	return $m->nombre;
 
+}
+
+
+public static function getRutas(){
+
+	return FuecRutas::orderBy('id', 'Asc')->get();
+}
+
+public function selectRutas($id=0){
+
+	$option="<option value=''>Seleccione</option>";
+	$rutas=self::getRutas();
+
+	foreach ($rutas as $ruta) { 
+
+		$dep_origen=Departamentos::find($ruta->departamento_origen);
+		$dep_destino=Departamentos::find($ruta->departamento_destino);
+
+		$str_ruta=$ruta->id.' - Origen:'.$dep_origen->nombre.' / '.$ruta->origen.', Destino:'.$dep_destino->nombre.' / '.$ruta->destino;
+			
+		if($id>0 && $ruta->id==$id){
+			$option.='<option value="'.$ruta->id.'" selected="selected">'.$str_ruta.'</option>';
+		}
+		else{
+			$option.='<option value="'.$ruta->id.'">'.$str_ruta.'</option>';
+		}
+	}
+	return $option;
+}
+
+
+
+public function selectObjetosContrato($id=0){
+
+	$objetos_contrato= DB::table('fuec_objetos_contrato')
+         -> orderBy('id', 'asc')
+         -> get();
+	
+
+	$option="<option value=''>Seleccione</option>";
+
+	foreach ($objetos_contrato as $objeto) { 
+		
+			
+		if($id>0 && $objeto->id==$id){
+			$option.='<option value="'.$objeto->id.'" selected="selected">'.$objeto->nombre.'</option>';
+		}
+		else{
+			$option.='<option value="'.$objeto->id.'">'.$objeto->nombre.'</option>';
+		}
+	}
+	return $option;
 }
 
 }

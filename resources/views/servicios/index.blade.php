@@ -80,13 +80,27 @@
                   </div>
 
                   <div class="col-md-3 form-group mb-3">
-                    <label><strong>Conductor:</strong></label>
+                    <label><strong>Sedes:</strong></label>
+                         <select name="filtros[uri_sede]" class="form-control">
+                            <?php echo Helper::selectSedes($filtros['uri_sede']) ?>
+                         </select>
+                  </div>
+
+                  <div class="col-md-3 form-group mb-3">
+                    <label><strong>Conductor Servicio:</strong></label>
                          <select name="filtros[conductor]" class="form-control">
                             <option value="">Seleccione</option>
                             <?php echo Helper::selectConductores($filtros['conductor']) ?>
                          </select>
                   </div>
 
+                  <div class="col-md-3 form-group mb-3">
+                    <label><strong>Conductor Pago :</strong></label>
+                         <select name="filtros[conductor_pago]" class="form-control">
+                            <option value="">Seleccione</option>
+                            <?php echo Helper::selectPropietarios($filtros['conductor_pago']) ?>
+                         </select>
+                  </div>
 
                   
 
@@ -145,7 +159,8 @@
                         </a>
                         <a class="text-default mr-2 duplicar" href="{{route('servicios.edit', $servicio->id)}}" title="Duplicar Servicio" >
                         <i class="nav-icon i-Data-Copy font-weight-bold"></i></i></a>
-                        
+
+                       
                         <a class="text-danger mr-2 eliminar" href="{{route('servicios.delete', $servicio->id)}}" title="Eliminar" >
                         <i class="nav-icon i-Close-Window font-weight-bold"></i></i>
                         </a>

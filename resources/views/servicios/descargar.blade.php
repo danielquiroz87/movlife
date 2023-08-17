@@ -1,6 +1,5 @@
 <?php
 $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
-
 ?>
 <table  border="1" style="border-collapse: collapse" >
 <tr>

@@ -25,6 +25,7 @@ use App\Models\Empleado;
 use App\Models\User;
 use App\Models\Direccion;
 use App\Models\Vehiculo;
+use App\Models\Fuec;
 
 use Config;
 use Illuminate\Support\Facades\DB;
@@ -78,6 +79,26 @@ class ServiciosController extends Controller
             
         }else{
              $filtros['conductor']="";
+        }
+
+        if(isset($filtros['conductor_pago'])){
+            $conductor_pago=(int) $filtros['conductor_pago'];
+            if($conductor_pago!="" || $conductor_pago>0){
+                $servicios->where('id_conductor_pago','=',$conductor_pago);
+            }
+            
+        }else{
+             $filtros['conductor_pago']="";
+        }
+
+        if(isset($filtros['uri_sede'])){
+            $uri_sede=(int) $filtros['uri_sede'];
+            if($uri_sede!="" || $uri_sede>0){
+                $servicios->where('uri_sede','=',$uri_sede);
+            }
+            
+        }else{
+             $filtros['uri_sede']="";
         }
 
         if(isset($filtros['pasajero'])){
@@ -162,9 +183,9 @@ class ServiciosController extends Controller
         $j++;
         $error=false;
         $message="";
-
+        
         try {
-
+        
 
             $fecha_solicitud=$importData[1];
             $fecha_solicitud=explode("/",$fecha_solicitud);
@@ -249,7 +270,7 @@ class ServiciosController extends Controller
                 $horas=explode(":",$hora_recogida);
                 if($horas[0]>12){
                     $horas[0]=12+$horas[0];
-                    $hora_recogida=$horas[0].':'.$horas[1].$horas[2];
+                    $hora_recogida=$horas[0].':'.$horas[1].':00';
                 }
             }   
 
@@ -265,7 +286,7 @@ class ServiciosController extends Controller
                 $horas=explode(":",$hora_regreso);
                 if($horas[0]>12){
                     $horas[0]=12+$horas[0];
-                    $hora_regreso=$horas[0].':'.$horas[1].$horas[2];
+                    $hora_regreso=$horas[0].':'.$horas[1].':00';
                 }
             }   
             
@@ -305,7 +326,8 @@ class ServiciosController extends Controller
             $cedula_conductor_principal=trim($cedula_conductor_principal);
 
             $nombres_conductor_servicio=$importData[30];
-            $telefono_conductor=$importData[31];
+            $telefono_conductor=$importData[31]; //Hacer match
+
             $persona_pago=$importData[32];
             $cedula_persona_pago=$importData[33];
             $costo=$importData[34];
@@ -324,7 +346,10 @@ class ServiciosController extends Controller
             if($descuento==""){
                 $descuento=0;
             }
-            $precio_alimentacion=$importData[36];
+            $precio_alimentacion=trim($importData[36]);
+            if($precio_alimentacion==""){
+                $precio_alimentacion=0;
+            }
             $total_con_descuento=$importData[37];
             $tarifa_cliente=$importData[38];
             $tarifa_cliente=trim($tarifa_cliente);
@@ -353,14 +378,28 @@ class ServiciosController extends Controller
             if($str_tipo_anticipo=='DAVIPLATA'){
                 $tipo_anticipo=5;
             }
-           
 
+            $nro_factura=trim($importData[39]);
+
+
+            $nro_pago=trim($importData[41]);
+            $fecha_pago=trim($importData[42]);
+            if($fecha_pago!=""){
+                $fecha_pago=explode("/",$fecha_pago);
+                $fecha_pago=$fecha_pago[2].'-'.$fecha_pago[1].'-'.$fecha_pago[0];
+            }
+            $banco=trim($importData[43]);
             $valor_banco=trim($importData[44]);
-            $valor_banco=trim(str_replace("$","",$valor_banco));
-            $valor_banco=str_replace(".","",$valor_banco);
-            $valor_banco=str_replace(",",".",$valor_banco);
-
-
+            
+            if($valor_banco!=""){
+                
+                $valor_banco=trim(str_replace("$","",$valor_banco));
+                $valor_banco=str_replace(".","",$valor_banco);
+                $valor_banco=str_replace(",",".",$valor_banco);
+            }else{
+                $valor_banco=0;
+            }
+            
             $saldo=trim($importData[45]);
             $saldo=str_replace("$","",$saldo);
             $saldo=str_replace(".","",$saldo);
@@ -446,7 +485,7 @@ class ServiciosController extends Controller
             //echo "hora_recogida=".$hora_recogida.'<br/>';
 
             $cond_pago=Conductor::where('documento',$cedula_persona_pago)->get()->first();
-            $cond_serv=Conductor::where('documento',$cedula_conductor_principal)->get()->first();
+            $cond_serv=Conductor::where('celular',$telefono_conductor)->get()->first();
 
             if(!$cond_pago){
                 $error=true;
@@ -455,8 +494,7 @@ class ServiciosController extends Controller
             }
             if(!$cond_serv){
                 $error=true;
-                throw new \Exception("Error, no se encontró el conductor que prestará el servicio en el sistema. ".
-                    $cedula_conductor_principal);
+                throw new \Exception("Error, no se encontró el conductor que prestará el servicio en el sistema. Teléfono".$telefono_conductor);
                 break;
             }
             if($placa!=""){
@@ -515,10 +553,25 @@ class ServiciosController extends Controller
             $servicio->estado=$estado_servicio;
             $servicio->saldo=$saldo;
             $servicio->orden_compra=$orden_compra;
+            if($nro_factura!=""){
+                $servicio->nro_factura=$nro_factura;
+            }
+            
+            if($nro_pago!=""){
+                $servicio->nro_pago=$nro_pago;
+            }
+            if($fecha_pago!=""){
+                $servicio->fecha_pago=$fecha_pago;
+            }
+            if($banco!=""){
+                $servicio->banco=$banco;
+            }
+            
             $servicio->user_id=Auth::user()->id;
 
             $servicio->save();
 
+            \Session::flash('flash_message','Fila Final Importada!.'.($j+1));
              //Buscamos el anticipo
             if($tipo_anticipo==1){
 
@@ -539,13 +592,14 @@ class ServiciosController extends Controller
             }
             
 
-
+        
         } catch (\Exception $e) {
                 $error=true;
                 $message='Error en la fila '.($j+1).',';
                 $message.=($e->getMessage());
                 break;
         }
+        
         }
         if(!$error){
             DB::commit();
@@ -597,6 +651,85 @@ class ServiciosController extends Controller
                                          ]);
 
     }
+
+    public function fuec($id)
+    {   
+        $servicio=Servicio::find($id);
+        $detalle=OrdenServicioDetalle::where('orden_servicio_id',$servicio->id)->first();
+        $tipo_servicios=TipoServicios::all();
+
+
+        setlocale(LC_TIME, 'es_ES');
+        $monthNum  = date('m',strtotime($servicio->fecha_servicio));
+        $dateObj   = \DateTime::createFromFormat('!m', $monthNum);
+        $mes = strtoupper(strftime('%B', $dateObj->getTimestamp()));
+        $dia=        date('d',strtotime($servicio->fecha_servicio));
+        $year=date('Y',strtotime($servicio->fecha_servicio));
+
+        $documentos=Helper::getDocumentosVehiculo($servicio->vehiculo->placa);
+        $documentos_conductor=Helper::getDocumentosConductor($servicio->conductorServicio->id);
+
+        $existe=Fuec::where('servicio_id',$servicio->id)->get()->first();
+        
+        if($existe){
+            $fuec=$existe;
+        }else{
+            $fuec=new Fuec();
+            $fuec->servicio_id=$servicio->id;
+            $fuec->user_id=Auth::user()->id;
+            $fuec->save();
+        }
+        $consecutivo=$this->getConsecutivoFuec($fuec,$servicio,$year);
+        $data=['servicio'=>$servicio,
+                                             'detalle'=>$detalle,
+                                             'tipo_servicios'=>$tipo_servicios,
+                                              'year'=>$year,
+                                              'mes'=>$mes,
+                                              'dia'=>$dia,
+                                              'documentos'=>$documentos,
+                                              'documentos_conductor'=>$documentos_conductor,
+                                              'consecutivo'=>$consecutivo,
+
+                                         ];
+        $qr=$this->getStrQrFuec($data);
+        $data['qr']=$qr;
+
+        return view('servicios.fuec')->with($data);
+
+    }
+
+
+    public function getStrQrFuec($data){
+        $saltol='
+        ';
+
+        $str='Codigo: '.$data['consecutivo'].$saltol;
+        $str.='Razon Social: Movlife S.A.S'.$saltol;
+        $str.='Empresa Nit: Movlife S.A.S'.$saltol;
+        $str.='Contrato numero: 0974'.$saltol;
+        $str.='Contratante: '.$data['servicio']->cliente->razon_social.$saltol;
+        $str.='Contratante Nit: '.$data['servicio']->cliente->documento.$saltol;
+        $str.='Objeto Contrato: CONTRATO PARA TRANSPORTE DE USUARIOS DEL SERVICIO DE SALUD'.$saltol;
+        $str.='Origen-Destino: Origen: '.$data['servicio']->origen.' / Destino: '.$data['servicio']->destino.' Con retorno a su lugar de origen'.$saltol;
+
+        $str.='Convenio: SPECIAL CAR PLUS TRANSPORTE S.A.S'.$saltol;
+
+        $url='https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl='.urlencode($str).'&choe=UTF-8';
+        $url_final=str_replace("%0A++++++++","%0A", $url);
+        return $url_final;
+
+
+    }
+
+    public function getConsecutivoFuec($fuec,$servicio,$year){
+
+        $consecutivo='352020418';
+        $consecutivo.=$year;
+        $contrato=str_pad($fuec->id,4,'0',STR_PAD_LEFT);
+        $consecutivo.=$contrato.$contrato;
+        return $consecutivo;
+    }
+
     public function save(Request $request)
     { 
       
@@ -802,6 +935,26 @@ class ServiciosController extends Controller
                 $servicios->where('id_conductor_servicio','=',$conductor);
             }
             
+        }
+
+        if(isset($filtros['conductor_pago'])){
+            $conductor_pago=(int) $filtros['conductor_pago'];
+            if($conductor_pago!="" || $conductor_pago>0){
+                $servicios->where('id_conductor_pago','=',$conductor_pago);
+            }
+            
+        }else{
+             $filtros['conductor_pago']="";
+        }
+
+        if(isset($filtros['uri_sede'])){
+            $uri_sede=(int) $filtros['uri_sede'];
+            if($uri_sede!="" || $uri_sede>0){
+                $servicios->where('uri_sede','=',$uri_sede);
+            }
+            
+        }else{
+             $filtros['uri_sede']="";
         }
 
         if(isset($filtros['pasajero'])){

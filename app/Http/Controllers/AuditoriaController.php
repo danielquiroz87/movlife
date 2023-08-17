@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Tarifario;
+use App\Models\Auditoria;
 
 
 use Illuminate\Support\Facades\Validator;
@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use Config;
 
 
-class TarifarioController extends Controller
+class AuditoriaController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -27,25 +27,15 @@ class TarifarioController extends Controller
     }
     public function index(Request $request)
     {   
-        $tarifario=Tarifario::paginate(config::get('global_settings.paginate'));
+        $auditoria=Auditoria::paginate(config::get('global_settings.paginate'));
         $q="";
         if($request->has('q')){
            $q=$request->get('q');
         }
 
-        return view('tarifario.index')->with(['tarifario'=>$tarifario,'q'=>$q]);
+        return view('auditoria.index')->with(['auditoria'=>$auditoria,'q'=>$q]);
     }
-    public function new()
-    { 
-        return view('tarifario.new');
-    }
-
-    public function edit($id)
-    {   
-        $tarifario=Tarifario::find($id);
-        return view('tarifario.edit')->with(['tarifario'=>$tarifario]);
-
-    }
+   
     public function save(Request $request)
     { 
         $is_new=false;
@@ -89,23 +79,7 @@ class TarifarioController extends Controller
         }
 
     }
-
-
-    public function update()
-    { 
-       
-    }
-    public function delete($id){
-        $tarifario=Tarifario::find($id);
-        $tarifario->delete();
-
-        \Session::flash('flash_message','Registro eliminado exitosamente!.');
-
-        return redirect()->back();
-
-
-    }
-   
+    
 
     private function getRepository(){
         return Tarifario::paginate(Config::get('global_settings.paginate'));

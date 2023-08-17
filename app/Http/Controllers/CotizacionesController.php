@@ -261,10 +261,23 @@ class CotizacionesController extends Controller
 
     }
     public function descargar($id){
+        
+        /*
+        $cotizacion=Cotizacion::find($id);
+        $detalle=$cotizacion->detalle();
+        return view('cotizaciones.descargar')->with(['cotizacion'=>$cotizacion]);
+        */
+        
         $cotizacion=Cotizacion::find($id);
         $detalle=$cotizacion->detalle();
 
-        return view('cotizaciones.descargar')->with(['cotizacion'=>$cotizacion]);
+        $filename = 'cotizacion-'.$id.'.xls';
+        header('Content-type: application/vnd.ms-excel; charset=UTF-8');
+        header('Content-Disposition: attachment; filename='.$filename);
+        $tabla=view('cotizaciones.descargar')->with(['cotizacion'=>$cotizacion])->render();
+        echo $tabla;
+        exit();
+        
     }
 
     private function getRepository(){

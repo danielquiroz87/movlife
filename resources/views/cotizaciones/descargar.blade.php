@@ -41,7 +41,8 @@ col
 br
 	{mso-data-placement:same-cell;}
 .style16
-	{mso-number-format:"_-\0022$\0022\\ * \#\,\#\#0_-\;\\-\0022$\0022\\ * \#\,\#\#0_-\;_-\0022$\0022\\ * \0022-\0022_-\;_-\@_-";
+	{
+	mso-number-format:"_-\0022$\0022\\ * \#\,\#\#0_-\;\\-\0022$\0022\\ * \#\,\#\#0_-\;_-\0022$\0022\\ * \0022-\0022_-\;_-\@_-";
 	mso-style-name:"Moneda \[0\]";
 	mso-style-id:7;}
 .style0
@@ -302,14 +303,12 @@ td
 	{mso-style-parent:style16;
 	font-family:"Maiandra GD", sans-serif;
 	mso-font-charset:1;
-	mso-number-format:"_-\0022$\0022\\ * \#\,\#\#0_-\;\\-\0022$\0022\\ * \#\,\#\#0_-\;_-\0022$\0022\\ * \0022-\0022_-\;_-\@_-";
 	vertical-align:middle;
 	border:.5pt solid windowtext;}
 .xl85
 	{mso-style-parent:style0;
 	font-family:"Maiandra GD", sans-serif;
 	mso-font-charset:1;
-	mso-number-format:"_-\0022$\0022\\ * \#\,\#\#0_-\;\\-\0022$\0022\\ * \#\,\#\#0_-\;_-\0022$\0022\\ * \0022-\0022_-\;_-\@_-";
 	text-align:center;
 	vertical-align:middle;
 	border:.5pt solid windowtext;}
@@ -362,7 +361,6 @@ td
 	{mso-style-parent:style0;
 	font-family:"Maiandra GD", sans-serif;
 	mso-font-charset:1;
-	mso-number-format:"_-\0022$\0022\\ * \#\,\#\#0_-\;\\-\0022$\0022\\ * \#\,\#\#0_-\;_-\0022$\0022\\ * \0022-\0022_-\;_-\@_-";
 	text-align:center;
 	border:.5pt solid windowtext;}
 .xl91
@@ -476,7 +474,7 @@ EXCEL -->
   position:absolute;z-index:1;margin-left:16px;margin-top:12px;width:186px;
   height:63px'>
   <img width=140 height=47
-  src="{{asset('images/movlife.png')}}"></span>
+  src="https://app.movlife.co/images/movlife.png"></span>
   
   <span
   style='mso-ignore:vglayout2'>
@@ -587,10 +585,11 @@ EXCEL -->
   <td height=64 class=xl64 style='height:48.75pt;border-top:none'>{{$item}}</td>
   <td colspan=3 class=xl83 width=371 style='border-left:none;width:278pt'><b>Descripción:</b>{{$cotizacion->descripcion}}<br/><br/><b>Origen:</b>{{$detalle->origen}}<br/><b>Destino:</b> {{$detalle->destino}} </td>
   <td colspan=2 class=xl64 style='border-left:none; text-align: center;'>{{$detalle->cantidad}}</td>
-  <td colspan=2 class=xl84 style='border-left:none; text-align: center;'>$ {{number_format($detalle->valor)}}</td>
-  <td colspan=2 class=xl85 style='border-left:none'><span
-  style='mso-spacerun:yes'> </span>$<span
-  style='mso-spacerun:yes'> </span>{{number_format($detalle->total)}}</td>
+  <td colspan=2 class=xl84 style='border-left:none; text-align: center;'>$ {{($detalle->valor)}}</td>
+  <td colspan=2 class=xl85 style='border-left:none'>
+  <span style='mso-spacerun:yes'> </span>$
+  <span style='mso-spacerun:yes'> </span>{{($detalle->total)}}
+</td>
 </tr>
 <?php $item++;?>
 
@@ -601,9 +600,8 @@ EXCEL -->
   height:15.0pt'>TOTAL<span style='mso-spacerun:yes'> </span></td>
   <td colspan=2 class=xl89 style='border-left:none'><?php echo count($rutas) ?></td>
   <td colspan=2 class=xl89 style='border-left:none'>&nbsp;</td>
-  <td colspan=2 class=xl90 style='border-left:none'><?php ?>$ {{number_format($total)}}<span
-  style='mso-spacerun:yes'> </span><span
-  style='mso-spacerun:yes'> </span>
+  <td colspan=2 class=xl90 style='border-left:none'>
+  	<span style='mso-spacerun:yes'>$</span>{{number_format($total)}}
  </td>
  </tr>
 

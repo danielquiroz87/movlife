@@ -8,7 +8,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 use OwenIt\Auditing\Auditable as AuditableTrait;
 
 
-class TipoDocumentos extends  Model implements Auditable
+class Tarifario extends  Model implements Auditable
 {
     use HasFactory;
 
@@ -17,7 +17,9 @@ class TipoDocumentos extends  Model implements Auditable
     protected $guarded = [];
 
 
-    protected $table = 'tipo_documentos';
+    protected $table = 'tarifario';
 
-    protected $fillable = ['nombre','tipo_usuario'];
+    protected $fillable = ['origen',' destino',' tipo_vehiculo','tiempo','kilometros','valor_conductor','valor_cliente','proveedor',' jornada','trayecto','observaciones'];
+
+
 }

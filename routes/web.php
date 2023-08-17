@@ -104,6 +104,7 @@ Route::get('/servicios/descargar', 'ServiciosController@descargar')->name('servi
 Route::get('/servicios/importar', 'ServiciosController@importar')->name('servicios.importar');
 Route::post('/servicios/importar/save', 'ServiciosController@importarsave')->name('servicios.importar.save');
 
+Route::get('/servicios/fuec/{id}', 'ServiciosController@fuec')->name('servicios.fuec');
 
 
 Route::get('/facturas', 'FacturasController@index')->name('facturas');
@@ -140,7 +141,7 @@ Route::get('/tarifario/new', 'TarifarioController@new')->name('tarifario.new');
 Route::get('/tarifario/edit/{id}', 'TarifarioController@edit')->name('tarifario.edit');
 Route::post('/tarifario/save', 'TarifarioController@save')->name('tarifario.save');
 Route::post('/tarifario/delete', 'TarifarioController@delete')->name('tarifario.delete');
-
+Route::get('/tarifario/delete/{id}', 'TarifarioController@delete')->name('tarifario.delete.get');
 
 Route::get('/sedes', 'SedesController@index')->name('sedes');
 Route::get('/sedes/new', 'SedesController@new')->name('sedes.new');
@@ -151,5 +152,17 @@ Route::get('/sedes/delete/{id}', 'SedesController@delete')->name('sedes.delete.g
 
 Route::get('/perfil', 'PerfilController@index')->name('perfil');
 Route::post('/perfil/save', 'PerfilController@save')->name('perfil.save');
+
+Route::get('/auditoria', 'AuditoriaController@index')->name('auditoria');
+
+
+Route::get('/fuec', 'FuecController@index')->name('fuec');
+Route::get('/fuec/new', 'FuecController@new')->name('fuec.new');
+Route::get('/fuec/edit/{id}', 'FuecController@edit')->name('fuec.edit');
+Route::post('/fuec/save', 'FuecController@save')->name('fuec.save');
+Route::get('/fuec/descargar/{id}', 'FuecController@descargar')->name('fuec.descargar');
+
+Route::post('/fuec/delete', 'FuecController@delete')->name('fuec.delete');
+Route::get('/fuec/delete/{id}', 'FuecController@delete')->name('fuec.delete.get');
 
 

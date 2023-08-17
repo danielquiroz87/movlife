@@ -4,11 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
+use OwenIt\Auditing\Auditable as AuditableTrait;
 
 
-class AnticiposAbonos extends  Model
+class AnticiposAbonos extends  Model implements Auditable
 {
     use HasFactory;
+
+    use AuditableTrait;
+
+    protected $guarded = [];
+
 
     protected $table = 'anticipos_abonos';
 

@@ -48,10 +48,12 @@
             <li class="nav-item {{ request()->is('sedes/*') ? 'active' : '' }}" data-item="sedes">
                 <a class="nav-item-hold" href="#">
                     <i class="nav-icon i-Gear"></i>
-                    <span class="nav-text">Configuración</span>
+                    <span class="nav-text">Administración</span>
                 </a>
                 <div class="triangle"></div>
             </li>
+
+           
             @endif
             <li class="nav-item {{ request()->is('customers/*') ? 'active' : '' }}" data-item="informes">
                 <a class="nav-item-hold" href="#">
@@ -144,6 +146,22 @@
                     <span class="item-name">Cotizaciones</span>
                 </a>
             </li>
+
+            <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='tarifario' ? 'open' : '' }}"
+                    href="{{route('tarifario')}}">
+                    <i class="nav-icon i-Car-Wheel"></i>
+                    <span class="item-name">Tarifario</span>
+                </a>
+            </li>
+
+            <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='fuec' ? 'open' : '' }}"
+                    href="{{route('fuec')}}">
+                    <i class="nav-icon i-Car-Wheel"></i>
+                    <span class="item-name">Fuec</span>
+                </a>
+            </li>
        </ul> 
 
 
@@ -220,6 +238,14 @@
                     <span class="item-name">Cotizaciones</span>
                 </a>
             </li>
+
+               <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='tarifario' ? 'open' : '' }}"
+                    href="{{route('tarifario')}}">
+                    <i class="nav-icon i-Car-Wheel"></i>
+                    <span class="item-name">Tarifario</span>
+                </a>
+            </li>
             
         </ul>
 
@@ -285,6 +311,14 @@
                     href="{{route('sedes')}}">
                     <i class="nav-icon i-Car-Wheel"></i>
                     <span class="item-name">Sedes</span>
+                </a>
+            </li>
+
+             <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='auditoria' ? 'open' : '' }}"
+                    href="{{route('auditoria')}}">
+                    <i class="nav-icon i-Car-Wheel"></i>
+                    <span class="item-name">Auditoria</span>
                 </a>
             </li>
             
