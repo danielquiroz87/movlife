@@ -62,7 +62,7 @@ class VehiculosController extends Controller
             }
         }
 
-        $documentos=Documentos::whereIn('id_tipo_documento',[8,9,10,11,12,13,14,15])
+        $documentos=Documentos::whereIn('id_tipo_documento',[8,9,10,11,12,13,14,15,17,21])
                                 ->where('id_registro',$id)->get();
 
         $tipo_documentos=TipoDocumentos::where('tipo_usuario',6)->get();

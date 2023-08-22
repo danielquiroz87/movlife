@@ -119,7 +119,17 @@
                   <option value="13">Buseton</option>
                 </select>
             </div>
-      
+          
+             <div class="col-md-6 form-group mb-3">
+              <label><strong>Tiempo:</strong></label>
+                   <input type="number" name="tiempo" id="tiempo" value="" class="form-control" placeholder="" >
+            </div>
+
+             <div class="col-md-6 form-group mb-3">
+              <label><strong>Kilometros:</strong></label>
+                   <input type="number" name="kilometros" id="kilometros" value="" class="form-control" placeholder="" >
+            </div>
+
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Valor Conductor:</strong></label>
@@ -136,7 +146,7 @@
                    <input type="text" name="proveedor" id="proveedor-input" value="" class="form-control" placeholder=""  required>
             </div>
 
-              <div class="col-md-6 form-group mb-3">
+            <div class="col-md-6 form-group mb-3">
               <label><strong>Cliente:</strong></label>
                   <select name="id_cliente" class="form-control">
                       
@@ -165,10 +175,8 @@
               <label><strong>Trayecto:</strong></label>
                 <select name="trayecto" id="trayecto" class="form-control select-busqueda">
                   <option value="" selected="selected">Seleccione</option>
-                  <option value="1">Sencillo</option>
-                  <option value="2">Redondo</option>
-                  <option value="3">Ida</option>
-                  <option value="3">Ida y Regreso</option>
+                  <option value="1">Ida</option>
+                  <option value="2">Ida y Regreso</option>
 
 
                 </select>

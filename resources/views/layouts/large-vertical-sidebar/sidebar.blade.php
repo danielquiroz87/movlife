@@ -35,6 +35,14 @@
                 <div class="triangle"></div>
             </li>
 
+            <li class="nav-item {{ request()->is('customers/*') ? 'active' : '' }}" data-item="informes">
+                <a class="nav-item-hold" href="#">
+                    <i class="nav-icon i-File-Clipboard-Text--Image"></i>
+                    <span class="nav-text">Informes</span>
+                </a>
+                <div class="triangle"></div>
+            </li>
+
             @if(auth()->user()->superadmin==1)
 
              <li class="nav-item {{ request()->is('customers/*') ? 'active' : '' }}" data-item="formularios">
@@ -55,13 +63,7 @@
 
            
             @endif
-            <li class="nav-item {{ request()->is('customers/*') ? 'active' : '' }}" data-item="informes">
-                <a class="nav-item-hold" href="#">
-                    <i class="nav-icon i-File-Clipboard-Text--Image"></i>
-                    <span class="nav-text">Informes</span>
-                </a>
-                <div class="triangle"></div>
-            </li>
+            
 
          
            
@@ -118,6 +120,15 @@
                     <span class="item-name">Conductores</span>
                 </a>
             </li>
+
+            <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='documentos' ? 'open' : '' }}"
+                    href="{{route('informes.documentos')}}">
+                    <i class="nav-icon i-Car-Wheel"></i>
+                    <span class="item-name">Documentos</span>
+                </a>
+            </li>
+
             
         </ul>
         @endif
@@ -299,6 +310,14 @@
                     href="{{route('cotizaciones')}}">
                     <i class="nav-icon i-Car-Wheel"></i>
                     <span class="item-name">Cotizaciones</span>
+                </a>
+            </li>
+
+            <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='documentos' ? 'open' : '' }}"
+                    href="{{route('informes.documentos')}}">
+                    <i class="nav-icon i-Car-Wheel"></i>
+                    <span class="item-name">Documentos</span>
                 </a>
             </li>
             

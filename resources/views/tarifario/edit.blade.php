@@ -83,14 +83,42 @@
                    <input type="text" name="proveedor" id="proveedor-input" value="{{$tarifario->proveedor}}" class="form-control" placeholder=""  required>
             </div>
 
-             <div class="col-md-6 form-group mb-3">
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Cliente:</strong></label>
+                  <select name="id_cliente" class="form-control">
+                      
+                        <?php echo Helper::selectClientes($tarifario->id_cliente) ?>
+                    
+                    </select>
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
               <label><strong>Jornada:</strong></label>
-                   <input type="text" name="jornada" id="jornada-input" value="{{$tarifario->jornada}}" class="form-control" placeholder=""  required>
+                  <select name="jornada" id="jornada" class="form-control select-busqueda">
+                  <option value="" selected="selected">Seleccione</option>
+                 
+                  <option value="1" selected="selected">1 Hora</option>
+                  <option value="2">2 Horas</option>
+                  <option value="3">3 Horas</option>
+                  <option value="4">4 Horas</option>
+                  <option value="5">5 Horas</option>
+                  <option value="6">Media Jornada</option>
+                  <option value="7">Extendida</option>
+                  <option value="8">Completa</option>
+                </select>
             </div>
 
               <div class="col-md-6 form-group mb-3">
               <label><strong>Trayecto:</strong></label>
-                   <input type="text" name="trayecto" id="Trayecto-input" value="{{$tarifario->trayecto}}" class="form-control" placeholder=""  required>
+                <select name="trayecto" id="trayecto" class="form-control select-busqueda">
+                  <option value="" selected="selected">Seleccione</option>
+                  <option value="1" selected="selected">Sencillo</option>
+                  <option value="2">Redondo</option>
+                  <option value="3">Ida</option>
+                  <option value="3">Ida y Regreso</option>
+
+
+                </select>
             </div>
              <div class="col-md-12 form-group mb-3">
               <label><strong>Observaciones:</strong></label><br/>

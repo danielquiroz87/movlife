@@ -482,11 +482,17 @@ class ServiciosController extends Controller
                
             }
            
-            //echo "hora_recogida=".$hora_recogida.'<br/>';
-
             $cond_pago=Conductor::where('documento',$cedula_persona_pago)->get()->first();
-            $cond_serv=Conductor::where('celular',$telefono_conductor)->get()->first();
+            
+            if($nombres_conductor_servicio!=""){
 
+                $cond_serv=Conductor::where('nombres', 'LIKE', '%'.$nombres_conductor_servicio.'%')
+                        ->orWhere('apellidos', 'LIKE', '%'.$nombres_conductor_servicio.'%')
+                        ->orWhere (DB::raw("CONCAT(`nombres`, ' ', `apellidos`)"), 'LIKE', "%".$nombres_conductor_servicio."%")
+                       ->get()->first();
+               
+            }
+            
             if(!$cond_pago){
                 $error=true;
                 throw new \Exception("Error, El conductor con #$cedula_conductor_principal no se encontró el conductor");

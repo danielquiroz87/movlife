@@ -165,4 +165,5 @@ Route::get('/fuec/descargar/{id}', 'FuecController@descargar')->name('fuec.desca
 Route::post('/fuec/delete', 'FuecController@delete')->name('fuec.delete');
 Route::get('/fuec/delete/{id}', 'FuecController@delete')->name('fuec.delete.get');
 
+Route::get('/informes/documentos', 'InformesController@documentos')->name('informes.documentos');
 

@@ -701,7 +701,26 @@
                </div>
              </div>
 
-              <div class="card ul-card__border-radius">
+            <div class="card ul-card__border-radius">
+              <div class="card-header">
+                <h6 class="card-title mb-0"><a class="collapsed text-default" data-toggle="collapse" href="#accordion-item-runt">RUNT</a></h6>
+              </div>
+              <div class="collapse" id="accordion-item-runt" data-parent="#accordionExample">
+                <div class="card-body">
+                   <div class="row"> 
+
+                 
+
+                  <div class="col-md-6 form-group ">
+                      <label> <strong>Archivo RUNT:</strong></label>
+                      <input type="file" class="form-control" name="documentos[17][cara][1]">
+                  </div>
+                </div>
+                </div>
+              </div>
+          </div>
+
+          <div class="card ul-card__border-radius">
                 <div class="card-header">
                   <h6 class="card-title mb-0"><a class="collapsed text-default" data-toggle="collapse" href="#accordion-item-revision_tecnicomecanica">Revisión Técnico Mecanica</a></h6>
                 </div>
@@ -798,6 +817,37 @@
                  </div>
                </div>
              </div>
+
+
+
+            <div class="card ul-card__border-radius">
+                <div class="card-header">
+                  <h6 class="card-title mb-0"><a class="collapsed text-default" data-toggle="collapse" href="#accordion-item-convenio">Convenio</a></h6>
+                </div>
+                <div class="collapse" id="accordion-item-convenio" data-parent="#accordionExample">
+                  <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 form-group ">
+                          <label> <strong>Fecha Inicial:</strong></label>
+                          <input type="date" class="form-control" placeholder="dd/mm/yyyy"
+                        name="documentos[21][fecha_inicial]" id="documentos_fecha_inicial" 
+                        >
+                        </div>
+
+                      <div class="col-md-3 form-group ">
+                          <label> <strong>Fecha Vencimiento:</strong></label>
+                          <input type="date" name="documentos[21][fecha_final]" class="form-control" placeholder="dd/mm/yyyy">
+                      </div>
+                      <div class="col-md-6 form-group ">
+                       <label> <strong>Foto Frontal:</strong></label>
+                       <input type="file" class="form-control" name="documentos[21][cara][1]"  >
+                     </div>
+                     
+                   </div>
+                 </div>
+               </div>
+             </div>
+
 
              <br/>
                <div class="col-xs-12 col-sm-12 col-md-12 ">

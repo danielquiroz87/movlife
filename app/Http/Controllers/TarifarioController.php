@@ -64,8 +64,7 @@ class TarifarioController extends Controller
 
         if($is_new){
             $tipo=$request->get('tipo_vehiculo');
-            $tarifario->create($request->all());
-            $tarifario->tipo_vehiculo=$tipo;
+            $tarifario=Tarifario::firstOrNew($request->all());
             $tarifario->save();
             \Session::flash('flash_message','Tarifario agregado exitosamente!.');
 
