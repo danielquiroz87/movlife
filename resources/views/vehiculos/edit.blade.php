@@ -75,7 +75,7 @@
                   </div>
                   <div class="col-md-6 form-group mb-3">
                         <label><strong>Modelo</strong></label>
-                        <input type="number" name="modelo" class="form-control" id="modelo" min="1980"  placeholder="" value="{{$vehiculo->modelo}}" required>
+                        <input type="number" name="modelo" class="form-control" id="modelo" min="1980" max="<?php echo (date('Y')+1) ?>"  placeholder="" value="{{$vehiculo->modelo}}" required>
                   </div>
                   
                   <div class="col-md-6 form-group mb-3">
@@ -146,14 +146,14 @@
                       <input type="text" name="cilindraje" class="form-control" id="cilindraje"  placeholder="Cilindraje" value="{{$vehiculo->cilindraje}}">
                 </div>
                 <div class="col-md-6 form-group mb-3">
-                  <label><strong>Departamento:</strong></label>
+                  <label><strong>Departamento Donde Trabaja El Vehículo:</strong></label>
                         <select name="departamento_id" id="departamento"  class="form-control departamentos">
                             <?php echo Helper::selectDepartamentos($vehiculo->departamento_id) ?>
                         </select>
                 </div>
                
                <div class="col-md-6 form-group mb-3">
-                  <label><strong>Ciudad:</strong></label>
+                  <label><strong>Ciudad Donde Trabaja El Vehículo:</strong></label>
                       <select name="ciudad_id" id="ciudad_id"  class="form-control municipios">
                             <?php echo Helper::selectMunicipios($vehiculo->departamento_id,$vehiculo->ciudad_id) ?>
                       </select>
@@ -170,18 +170,18 @@
             
             <div class="col-md-6 form-group mb-3">
               <label class="switch pr-5 switch-success mr-3"><span>Vinculado</span>
-                  <input type="checkbox" name="vinculado" @if($vehiculo->vinculado==1) checked=true @endif  ><span class="slider"></span>
+                  <input type="checkbox" id="vinculado" name="vinculado" @if($vehiculo->vinculado==1) checked=true @endif  ><span class="slider"></span>
               </label>
             </div>
             <div class="col-md-6 form-group mb-3">
                <label class="switch pr-5 switch-success mr-3"><span>Convenio Firmado</span>
-                  <input type="checkbox" name="convenio" @if($vehiculo->convenio_firmado==1) checked=true @endif ><span class="slider"></span>
+                  <input type="checkbox" id="convenio" name="convenio" @if($vehiculo->convenio_firmado==1) checked=true @endif ><span class="slider"></span>
               </label>
             </div>
 
-            <div class="col-md-6 form-group mb-3">
+            <div class="col-md-6 form-group mb-3" id="div_empresa_afiliadora">
                       <label><strong>Empresa Afiliadora</strong></label>
-                      <input type="text" name="empresa_afiliadora" class="form-control" id="empresa_afiliadora"  placeholder="" value="{{$vehiculo->empresa_afiliadora}}">
+                      <input type="text"  name="empresa_afiliadora" class="form-control" id="empresa_afiliadora"  placeholder="" value="{{$vehiculo->empresa_afiliadora}}">
                 </div>
                  
 
@@ -238,13 +238,13 @@
                   </div>
                   <div class="col-md-6 form-group mb-3">
                     <label><strong>Propietario:</strong></label>
-                      <select name="propietario_id" class="form-control">
+                      <select name="propietario_id" class="form-control" disabled="true">
                         <?php echo Helper::selectPropietarios($vehiculo->propietario_id) ?>
                       </select>
                   </div>
 
                   <div class="col-md-6 form-group mb-3">
-                    <label><strong>Conductores:</strong></label>
+                    <label><strong>Seleccionar Conductores:</strong></label>
                       <select name="conductor_id" class="form-control">
                         <?php echo Helper::selectConductores() ?>
                       </select>
@@ -960,9 +960,47 @@ $("#submit").validate({
  }
 });
 
+$('#vinculado').change(function(e){
+    
+        if ($(this).is(':checked')) {
+           $('#empresa_afiliadora').val('Movlife SAS');
+           $('#div_empresa_afiliadora').show();
+           $("#convenio").prop('checked', false);
 
+        }else{
+          $('#div_empresa_afiliadora').hide();
+          $('#empresa_afiliadora').val('');
+        }
+
+})
+
+$('#convenio').change(function(e){
+    
+        if ($(this).is(':checked')) {
+           // Do something...
+           //$('#empresa_afiliadora').val('');
+           $('#div_empresa_afiliadora').show();
+
+        }else{
+           //$('#empresa_afiliadora').val('');
+           $('#div_empresa_afiliadora').hide();
+            $("#vinculado").prop('checked', false);
+        }
+
+})
 
 /*
+
+
+Empresas Afiliadoras
+
+Nit 
+Nombre Empresa
+Representante Legal
+Cedula
+Celular
+Dirección
+
 $( "#submit" ).click(function(e) {
   e.preventDefault();
   if($( "#user-new-form" ).valid()){

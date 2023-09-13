@@ -46,7 +46,7 @@ public static function selectClientes($id=0){
 	$clientes=self::getClientes();
 	$option_clientes="<option value=''>Sin Cliente</option>";
 	foreach ($clientes as $cliente) { 
-		$nombres=$cliente->documento.','.$cliente->razon_social;
+		$nombres=$cliente->razon_social.','.$cliente->documento;
 		if($id>0){
 			if($id==$cliente->id){
 				$option_clientes.='<option value="'.$cliente->id.'" selected="selected">'.$nombres.'</option>';
@@ -66,7 +66,7 @@ public static function selectConductores($id=0){
 	$conductores=self::getConductores();
 	$option_conductores="";
 	foreach ($conductores as $conductor) { 
-		$nombres=$conductor->documento.','.$conductor->nombres.' '.$conductor->apellidos;
+		$nombres=$conductor->nombres.' '.$conductor->apellidos.','.$conductor->documento;
 			if($id>0){
 				if($conductor->id==$id){
 					$option_conductores.='<option value="'.$conductor->id.'" selected="selected">'.$nombres.'</option>';
@@ -207,8 +207,8 @@ public static function selectPropietarios($id=0){
 	$clases=self::getPropietarios();
 	$option_clase="<option value=''>Seleccione un Propietario</option>";
 	foreach ($clases as $clase) { 
-		$name=$clase->documento.','.$clase->nombres.' '.$clase->apellidos;
-		if($id>0){
+		$name=$clase->nombres.' '.$clase->apellidos.','.$clase->documento;
+		if($id>0 && $clase->id==$id ){
 			$option_clase.='<option value="'.$clase->id.'" selected="selected">'.$name. '</option>';
 		}
 		else{
@@ -477,7 +477,9 @@ public function getCiudad($id){
 
 public static function getRutas(){
 
-	return FuecRutas::orderBy('id', 'Asc')->get();
+	return DB::table('rutas')
+         -> orderBy('codigo', 'asc')
+         -> get();
 }
 
 public function selectRutas($id=0){
@@ -487,10 +489,8 @@ public function selectRutas($id=0){
 
 	foreach ($rutas as $ruta) { 
 
-		$dep_origen=Departamentos::find($ruta->departamento_origen);
-		$dep_destino=Departamentos::find($ruta->departamento_destino);
-
-		$str_ruta=$ruta->id.' - Origen:'.$dep_origen->nombre.' / '.$ruta->origen.', Destino:'.$dep_destino->nombre.' / '.$ruta->destino;
+		
+		$str_ruta=$ruta->codigo.'-'.$ruta->origen_destino;
 			
 		if($id>0 && $ruta->id==$id){
 			$option.='<option value="'.$ruta->id.'" selected="selected">'.$str_ruta.'</option>';
@@ -525,5 +525,20 @@ public function selectObjetosContrato($id=0){
 	}
 	return $option;
 }
+
+
+public static function alertaDocumentos($conductores,$placa,$fecha_final){
+	
+	$list_ids=implode(',', $conductores);
+
+	$sql="select `tipo_documento`,tipo_usuario,`fecha_final`,nombres,DATEDIFF(fecha_final,'$fecha_final') as  resta from reporte_all_documentos where tipo_usuario='Conductor' and id_registro in ($list_ids) and `fecha_final`<'$fecha_final' having resta<0";
+
+	$sql.=" union select `tipo_documento`,tipo_usuario,`fecha_final`,nombres, DATEDIFF(fecha_final,'$fecha_final') as  resta from reporte_all_documentos where tipo_usuario='Vehiculo' and nombres = ('$placa') and `fecha_final`<'$fecha_final' having resta<0 ";
+
+	return DB::select($sql);
+
+}
+
+
 
 }

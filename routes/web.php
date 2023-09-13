@@ -37,6 +37,11 @@ Route::post('/clientes/save', 'ClientesController@save')->name('customers.save')
 Route::post('/clientes/delete', 'ClientesController@delete')->name('customers.delete');
 Route::get('/clientes/delete/{id}', 'ClientesController@delete')->name('customers.delete.get');
 Route::get('/clientes/importar', 'ClientesController@importar')->name('customers.importar');
+Route::get('/clientes/contrato/fuec/{id}', 'ClientesController@contrato_fuec')->name('customers.fuec.contract');
+Route::post('/clientes/contrato/fuec/save', 'ClientesController@contrato_fuec_save')->name('customers.contract.fuec.save');
+
+Route::get('/clientes/exportar', 'ClientesController@exportar')->name('customer.export');
+
 Route::get('/clientes/register', 'ClientesController@new')->name('signIn');
 
 Route::get('/empleados', 'EmpleadosController@index')->name('employes');
@@ -136,6 +141,7 @@ Route::get('/conductores/placa/{placa}', 'VehiculosController@getConductoresPlac
 
 Route::post('/general/importar/save', 'ImportadorController@index')->name('general.importar.save');
 
+
 Route::get('/tarifario', 'TarifarioController@index')->name('tarifario');
 Route::get('/tarifario/new', 'TarifarioController@new')->name('tarifario.new');
 Route::get('/tarifario/edit/{id}', 'TarifarioController@edit')->name('tarifario.edit');
@@ -166,4 +172,12 @@ Route::post('/fuec/delete', 'FuecController@delete')->name('fuec.delete');
 Route::get('/fuec/delete/{id}', 'FuecController@delete')->name('fuec.delete.get');
 
 Route::get('/informes/documentos', 'InformesController@documentos')->name('informes.documentos');
+
+
+Route::get('/rutas', 'RutasController@index')->name('rutas');
+Route::get('/rutas/new', 'RutasController@new')->name('rutas.new');
+Route::get('/rutas/edit/{id}', 'RutasController@edit')->name('rutas.edit');
+Route::post('/rutas/save', 'RutasController@save')->name('rutas.save');
+Route::post('/rutas/delete', 'RutasController@delete')->name('rutas.delete');
+Route::get('/rutas/delete/{id}', 'RutasController@delete')->name('rutas.delete.get');
 

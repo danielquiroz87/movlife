@@ -49,9 +49,31 @@
             </div>
             <div class="col-md-6 form-group mb-3">
                   <label><strong>Modelo</strong></label>
-                  <input type="number" name="modelo" class="form-control" id="modelo" min="1900" max="<?php echo date('Y') ?>" placeholder="" required>
+                  <input type="number" name="modelo" class="form-control" id="modelo" min="1900" max="<?php echo (date('Y')+1) ?>" placeholder="" required>
             </div>
 
+              <div class="col-md-6 form-group mb-3">
+              <label><strong>Clase:</strong></label>
+              <select name="id_vehiculo_clase" class="form-control select-busqueda">
+                  <option value="" selected="selected">Seleccione</option>
+                  <option value="1">Automovil</option>
+                  <option value="2">Bus</option>
+                  <option value="3">Buseta</option>
+                  <option value="4">Camioneta</option>
+                  <option value="5">Campero</option>
+                  <option value="6">Chery</option>
+                  <option value="7">Microbus</option>
+                  <option value="8">Moto</option>
+                  <option value="9">Van</option>
+                  <option value="10">MiniVan</option>
+                  <option value="11">Camioneta Doble Cabina</option>
+                  <option value="12">Sedan</option>
+                  <option value="13">Buseton</option>
+
+
+
+                </select>
+              </div>
            
             <div class="col-md-6 form-group mb-3">
               <label><strong>Marca:</strong></label>
@@ -99,30 +121,8 @@
               <div class="col-md-6 form-group mb-3">
                   <label><strong>Linea</strong></label>
                   <input type="text" name="linea" class="form-control" id="linea"  placeholder="Logan" required>
-            </div>
-            <div class="col-md-6 form-group mb-3">
-              <label><strong>Clase:</strong></label>
-              <select name="id_vehiculo_clase" class="form-control select-busqueda">
-                  <option value="" selected="selected">Seleccione</option>
-                  <option value="1">Automovil</option>
-                  <option value="2">Bus</option>
-                  <option value="3">Buseta</option>
-                  <option value="4">Camioneta</option>
-                  <option value="5">Campero</option>
-                  <option value="6">Chery</option>
-                  <option value="7">Microbus</option>
-                  <option value="8">Moto</option>
-                  <option value="9">Van</option>
-                  <option value="10">MiniVan</option>
-                  <option value="11">Camioneta Doble Cabina</option>
-                  <option value="12">Sedan</option>
-                  <option value="13">Buseton</option>
-
-
-
-                </select>
-              </div>
-
+             </div>
+            
               <div class="col-md-6 form-group mb-3">
               <label><strong>Clasificación Vehículo:</strong></label>
               <select name="id_vehiculo_clase" class="form-control select-busqueda">
@@ -168,14 +168,14 @@
                   <input type="text" name="cilindraje" class="form-control" id="cilindraje"  placeholder="Cilindraje" required>
             </div>
            <div class="col-md-6 form-group mb-3">
-              <label><strong>Departamento:</strong></label>
+              <label><strong>Departamento Donde Trabaja El Vehículo:</strong></label>
                     <select name="departamento_id" id="departamento"  class="form-control departamentos">
                         <?php echo Helper::selectDepartamentos() ?>
                     </select>
             </div>
            
            <div class="col-md-6 form-group mb-3">
-              <label><strong>Ciudad:</strong></label>
+              <label><strong>Ciudad Donde Trabaja El Vehículo:</strong></label>
                   <select name="ciudad_id" id="ciudad_id"  class="form-control municipios">
                         <?php echo Helper::selectMunicipios() ?>
                   </select>
@@ -184,7 +184,7 @@
             <div class="col-md-6 form-group mb-3">
               <label><strong>Propietario:</strong></label>
                   <select name="id_propietario" class="form-control">
-                    <option value="1">Propietario Pruebas</option>
+                    <?php echo Helper::selectPropietarios() ?>
                   </select>
             </div>
             

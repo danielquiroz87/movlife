@@ -18,7 +18,7 @@ class Fuec extends  Model implements Auditable
 
     protected $table = 'fuec';
 
-    protected $fillable = ['placa','id_conductor','consecutivo','tipo','id_cliente','contrato','user_id','contrato','fecha_inicial','fecha_final','ruta_id','objeto_contrato_id','responsable_contrato','_token','is_new'];
+    protected $fillable = ['placa','id_conductor','consecutivo','tipo','id_cliente','contrato','user_id','contrato','fecha_inicial','fecha_final','ruta_id','objeto_contrato_id','creado_por','_token','is_new','id_conductor_2','id_conductor_3'];
 
 
      public function cliente(){
@@ -29,12 +29,24 @@ class Fuec extends  Model implements Auditable
     	return $this->hasOne('App\Models\Conductor','id','id_conductor');
     }
 
+    public function conductor2(){
+        return $this->hasOne('App\Models\Conductor','id','id_conductor_2');
+    }
+
+    public function conductor3(){
+        return $this->hasOne('App\Models\Conductor','id','id_conductor_3');
+    }
+
     public function vehiculo(){
         return $this->hasOne('App\Models\Vehiculo','placa','placa');
     }
 
-      public function ruta(){
-        return $this->hasOne('App\Models\FuecRutas','id','ruta_id');
+    public function ruta(){
+        return $this->hasOne('App\Models\Rutas','id','ruta_id');
+    }
+
+    public function objeto_contrato(){
+        return $this->hasOne('App\Models\FuecObjetosContrato','id','objeto_contrato_id');
     }
 
   

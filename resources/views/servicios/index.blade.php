@@ -109,7 +109,7 @@
                     <button class="btn btn-success">Filtrar</button>
                   </div>
               </div>
-                </form>
+            </form>
 
              <table id="hidden_column_table" class="display table table-striped table-bordered dataTable dtr-inline" style="width: 100%;" role="grid" aria-describedby="hidden_column_table_info">
                   <thead>

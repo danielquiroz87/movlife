@@ -161,6 +161,19 @@
                   <input type="number" name="numero_hijos" class="form-control" placeholder="" min="0" max="20" maxlength="20"  value="{{$conductor->hojavida->numero_hijos}}">
                 </div>
                 
+             
+               <div class="col-md-6 form-group mb-3">
+                 <label> <strong>Nombre Contacto:</strong></label>
+                 <input type="text" name="nombre_contacto" value="{{$conductor->nombre_contacto}}" class="form-control" placeholder=""
+                 value="" maxlength="200" >
+               </div>
+
+               <div class="col-md-6 form-group mb-3">
+                 <label> <strong>Teléfono Contacto:</strong></label>
+                 <input type="number" name="telefono_contacto" class="form-control" placeholder=""  
+                 value="{{$conductor->telefono_contacto}}" maxlength="20" >
+               </div>
+               <!--
                 <div class="col-md-6 form-group mb-3">
                   <label><strong>Email:</strong></label>
                   <input type="email" name="email" class="form-control" placeholder="example@email.com"
@@ -168,21 +181,10 @@
                 </div>
                 <div class="col-md-6 form-group mb-3">
                  <label> <strong>Nuevo Password:</strong></label>
-                 <input type="password" name="password" class="form-control" placeholder=""
+                 <input type="password" name="password" class="form-control" 
                  value="" autocomplete="off" maxlength="20" >
-               </div>
-               <div class="col-md-6 form-group mb-3">
-                 <label> <strong>Nombre Contacto:</strong></label>
-                 <input type="text" name="nombre_contacto" class="form-control" placeholder=""
-                 value="" maxlength="200" >
-               </div>
-
-               <div class="col-md-6 form-group mb-3">
-                 <label> <strong>Teléfono Contacto:</strong></label>
-                 <input type="number" name="telefono_contacto" class="form-control" placeholder=""
-                 value="" maxlength="20" >
-               </div>
-
+                </div>
+                !-->
                <div class="col-xs-12 col-sm-12 col-md-12 ">
                 <button id="submit" type="submit" class="btn btn-primary">Enviar</button>
                 <a href="{{ route('conductores') }}" class="btn btn-danger">Cancelar</a>
@@ -488,24 +490,7 @@
           </div>
 
   
-           <div class="card ul-card__border-radius">
-              <div class="card-header">
-                <h6 class="card-title mb-0"><a class="collapsed text-default" data-toggle="collapse" href="#accordion-item-runt">RUNT</a></h6>
-              </div>
-              <div class="collapse" id="accordion-item-runt" data-parent="#accordionExample">
-                <div class="card-body">
-                   <div class="row"> 
-
-                 
-
-                  <div class="col-md-6 form-group ">
-                      <label> <strong>Archivo RUNT:</strong></label>
-                      <input type="file" class="form-control" name="documentos[17][cara][1]">
-                  </div>
-                </div>
-                </div>
-              </div>
-          </div>
+   
 
           <div class="card ul-card__border-radius">
               <div class="card-header">

@@ -322,7 +322,7 @@ class VehiculosController extends Controller
     public function getConductoresPlaca($placa){
 
         $vehiculo=Vehiculo::where('placa','=',$placa)->get()->first();
-        $response="";
+        $response="<option value=''>Seleccione un Conductor</option>";
 
         if($vehiculo){
 
@@ -332,11 +332,11 @@ class VehiculosController extends Controller
             if($rowsconductores){
                 foreach($rowsconductores as $row){
                     $conductor=Conductor::find($row->conductor_id);
-                    $arr_conductores[]=array('id'=>$conductor->id,'nombres'=>$conductor->nombres.' '.$conductor->apellidos,'documento'=>$row->documento);
+                    $arr_conductores[]=array('id'=>$conductor->id,'nombres'=>$conductor->nombres.' '.$conductor->apellidos,'documento'=>$conductor->documento);
                 }
 
                 foreach ($arr_conductores as $conductor) { 
-                    $nombres=$conductor['documento'].','.$conductor['nombres'];
+                    $nombres=$conductor['nombres'].','.$conductor['documento'];
                     $response.='<option value="'.$conductor['id'].'">'.$nombres.'</option>';
                 }
             }

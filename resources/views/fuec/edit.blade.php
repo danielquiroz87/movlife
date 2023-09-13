@@ -12,6 +12,21 @@
 
 <div class="row">
 
+
+   @if ($message = Session::get('flash_message'))
+    <div class="alert alert-success alert-block">
+        <button type="button" class="close" data-dismiss="alert">×</button> 
+            <strong>{{ $message }}</strong>
+    </div>
+  @endif
+  @if ($message = Session::get('flash_bad_message'))
+    <div class="alert alert-danger alert-block">
+        <button type="button" class="close" data-dismiss="alert">×</button> 
+            <strong>{!! nl2br($message)!!}</strong>
+    </div>
+  @endif
+
+
     @if ($errors->any())
         <div class="alert alert-danger">
             <strong>Error!</strong>
@@ -46,17 +61,26 @@
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Conductor:</strong></label>
-                  <select name="id_conductor" id="conductor_servicio" class="form-control">
+                  <select name="id_conductor" id="conductor_servicio" class="form-control conductor_servicio">
                         <?php echo Helper::selectConductores($fuec->id_conductor) ?>
 
                   </select>
             </div>
 
-            <div class="col-md-6 form-group mb-3">
-                  <label><strong>Consecutivo</strong></label>
-                  <input type="text" name="consecutivo" class="form-control" id="consecutivo" placeholder="Consecutivo" required value="{{$fuec->consecutivo}}">
+             <div class="col-md-6 form-group mb-3">
+              <label><strong>Conductor 2:</strong></label>
+                  <select name="id_conductor_2" id="conductor_servicio_2" class="form-control conductor_servicio">
+                        <?php echo Helper::selectConductores($fuec->id_conductor_2) ?>
+
+                  </select>
             </div>
 
+             <div class="col-md-6 form-group mb-3">
+              <label><strong>Conductor 3:</strong></label>
+                  <select name="id_conductor_3" id="conductor_servicio_3" class="form-control conductor_servicio">
+                        <?php echo Helper::selectConductores($fuec->id_conductor_3) ?>
+                  </select>
+            </div>
 
            <div class="col-md-6 form-group mb-3">
               <label><strong>Tipo:</strong></label>
@@ -76,14 +100,7 @@
                    
             </div>
 
-            <div class="col-md-6 form-group mb-3">
-                  <label><strong>Contrato</strong></label>
-                  <input type="text" name="contrato" class="form-control" id="contrato" placeholder="Consecutivo" required value="{{$fuec->contrato}}">
-            </div>
-              <div class="col-md-12 form-group mb-3">
-                  <label><strong>Responsable Contrato</strong></label>
-                  <input type="text" name="responsable_contrato" class="form-control" id="responsable_contrato" placeholder="Responsable Contrato" required value="{{$fuec->responsable_contrato}}">
-            </div>
+             
           
           <div class="col-md-6 form-group mb-3">
               <label><strong>Fecha Inicial:</strong></label>
@@ -98,7 +115,7 @@
           <div class="col-md-12 form-group mb-3">
               <label><strong>Objeto Contrato:</strong></label>
                     <select class="form-control" name="objeto_contrato_id">
-                        <?php echo Helper::selectObjetosContrato($fuec->id) ?>
+                        <?php echo Helper::selectObjetosContrato($fuec->objeto_contrato_id) ?>
                     </select>
           </div>
           <div class="col-md-12 form-group mb-3">
@@ -140,12 +157,12 @@
 <script>
 
 
-  $("#placa").blur(function(){
+$("#placa").blur(function(){
     var placa=$(this).val();
     $.get('/conductores/placa/'+placa,function(html){
-      $("#conductor_servicio").html(html);
+      $(".conductor_servicio").html(html);
     })
-  })
+})
 
 
 // just for the demos, avoids form submit

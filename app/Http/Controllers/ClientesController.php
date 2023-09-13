@@ -7,7 +7,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Cliente;
 use App\Models\User;
 use App\Models\Direccion;
+use App\Models\FuecContrato;
+use App\Exports\ClientesExport;
+
 use Config;
+use Excel;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
@@ -59,7 +63,60 @@ class ClientesController extends Controller
     { 
         return view('clientes.new');
     }
-     public function edit($id)
+    
+    public function contrato_fuec(Request $request,$id)
+    { 
+        
+        $cliente=Cliente::find($id);
+        if(!$cliente){
+            \Session::flash('flash_message','Cliente no existe!.');
+            return redirect()->back();
+        }
+        $existe=FuecContrato::where('id_cliente',$id)->get()->first();
+        if(!$existe){
+
+            $fuec_contrato=new FuecContrato();
+            $fuec_contrato->id_cliente=$id;
+            $fuec_contrato->save();
+
+            $fuec_contrato->contrato=$fuec_contrato->id;
+            $fuec_contrato->save();
+
+        }else{
+            $fuec_contrato=$existe;
+            
+            $fuec_contrato->contrato=$fuec_contrato->id;
+            $fuec_contrato->save();
+        }
+
+        return view('clientes.contrato_fuec')->with(['contrato'=>$fuec_contrato]);
+    }
+
+    public function contrato_fuec_save(Request $request){
+
+        $existe=FuecContrato::find($request->get('id'));
+
+        if(!$existe){
+            \Session::flash('flash_message','Contrato no existe!.');
+            return redirect()->back();
+        }else{
+            $fuec_contrato=$existe;
+        }
+        
+        $fuec_contrato->contrato=$request->get('contrato');
+        $fuec_contrato->responsable_nombres=$request->get('responsable_nombres');
+        $fuec_contrato->responsable_documento=$request->get('responsable_documento');
+        $fuec_contrato->responsable_telefono=$request->get('responsable_telefono');
+        $fuec_contrato->responsable_direccion=$request->get('responsable_direccion');
+        $fuec_contrato->save();
+        
+        \Session::flash('flash_message','Contrato actualizado exitosamente!.');
+
+        return redirect()->route('customers');
+    }
+
+
+    public function edit($id)
     {   
         $cliente=Cliente::find($id);
         $direccion=Direccion::where('tipo_usuario',1)->where('parent_id',$cliente->id)->get()->first();
@@ -187,6 +244,11 @@ class ClientesController extends Controller
         
      return view('clientes.importar');
 
+    }
+
+    public function exportar() 
+    {
+        return Excel::download(new ClientesExport(), 'clientes_movlife.csv',\Maatwebsite\Excel\Excel::CSV);
     }
 
     public function delete($id){

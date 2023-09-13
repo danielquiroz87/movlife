@@ -28,4 +28,7 @@ class Vehiculo extends  Model implements Auditable
     public function marca(){
     	return $this->hasOne('App\Models\VehiculoMarca','id','id_vehiculo_marca');
     }
+    public function propietario(){
+        return $this->hasOne('App\Models\Propietario','id','propietario_id');
+    }
 }

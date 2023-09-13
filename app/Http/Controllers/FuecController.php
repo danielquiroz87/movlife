@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Helpers\Helper\Helper;
 
 use App\Models\Fuec;
+use App\Models\FuecContrato;
+use App\Models\Vehiculo;
 
 
 use Illuminate\Support\Facades\Validator;
@@ -15,6 +17,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Config;
 
+use Illuminate\Support\Facades\Auth;
 
 class FuecController extends Controller
 {
@@ -29,10 +32,16 @@ class FuecController extends Controller
     }
     public function index(Request $request)
     {   
-        $fuecs=Fuec::paginate(config::get('global_settings.paginate'));
+        $fuecs=Fuec::orderBy('created_at', 'Desc');
+        $fuecs=$fuecs->paginate(Config::get('global_settings.paginate'));
+       
         $q="";
         if($request->has('q')){
            $q=$request->get('q');
+
+            $fuecs=Fuec::where('placa','LIKE', '%'.$q.'%')->orderBy('created_at', 'Desc');
+            $fuecs=$fuecs->paginate(Config::get('global_settings.paginate'));                           
+
         }
 
         return view('fuec.index')->with(['fuecs'=>$fuecs,'q'=>$q]);
@@ -45,7 +54,13 @@ class FuecController extends Controller
      public function edit($id)
     {   
         $fuec=Fuec::find($id);
-        return view('fuec.edit')->with(['fuec'=>$fuec]);
+        $contrato=FuecContrato::where('id_cliente',$fuec->id_cliente)->get()->first();
+        if($contrato){
+
+        }else{
+            $contrato=new FuecContrato();
+        }
+        return view('fuec.edit')->with(['fuec'=>$fuec,'contrato'=>$contrato]);
 
     }
     public function delete($id){
@@ -72,12 +87,53 @@ class FuecController extends Controller
                 $fuec=Fuec::find($id);
             }
         }
-       
 
+        $conductor_2=$request->get('id_conductor_2',0);
+        $conductor_3=$request->get('id_conductor_3',0);
+
+        if(empty($conductor_2)){
+            $conductor_2=0;
+        }
+        if(empty($conductor_3)){
+            $conductor_3=0;
+        }
+        $conductores=array($request->get('id_conductor'),
+                            $conductor_2,
+                            $conductor_3
+                        );
+
+        $placa=$request->get('placa');
+        $fecha_final=$request->get('fecha_final');
+
+        
+
+        $doc_vencidos=Helper::alertaDocumentos($conductores,$placa,$fecha_final);
+        
+        $total_vencidos=0;//count($doc_vencidos);
+
+        if($total_vencidos>0){
+            $flash_message='Alerta: No es posible guardar el registro, algunos documentos se encuentran vencidos.<br/>';
+            $str_doc="";
+            foreach ($doc_vencidos as $key => $doc) {
+                $str_doc.='Tipo Documento:'.$doc->tipo_documento.',Fecha Vencimiento:'.$doc->fecha_final.''.',<br/>';
+            }
+            $flash_message.=$str_doc;
+
+             \Session::flash('flash_bad_message',$flash_message);
+
+              return redirect(url()->previous())
+                    ->withInput();
+
+
+        }
+        
         if($is_new){
              $fuec=Fuec::firstOrNew($request->all());
+             $fuec->consecutivo=$fuec->id;
+             $fuec->creado_por=Auth::user()->name;
+             $fuec->user_id=Auth::user()->id;
              $fuec->save();
-            \Session::flash('flash_message','Tarifario agregado exitosamente!.');
+            \Session::flash('flash_message','Fuec agregado exitosamente!.');
 
              return redirect()->route('fuec');
 
@@ -85,7 +141,7 @@ class FuecController extends Controller
 
             $fuec->update($request->all());
 
-            \Session::flash('flash_message','Tarifario actualizado exitosamente!.');
+            \Session::flash('flash_message','Fuec actualizado exitosamente!.');
 
              return redirect()->route('fuec');
 
@@ -101,7 +157,7 @@ class FuecController extends Controller
 
         $fuec=Fuec::find($id);
         $monthNum  = date('m',strtotime($fuec->fecha_inicial));
-        $monthNum2  = date('m',strtotime($fuec->fecha_inicial));
+        $monthNum2  = date('m',strtotime($fuec->fecha_final));
         $monthNum3  = date('m',strtotime($fuec->created_at));
 
 
@@ -132,17 +188,31 @@ class FuecController extends Controller
 
         $documentos=Helper::getDocumentosVehiculo($fuec->placa);
         $documentos_conductor=Helper::getDocumentosConductor($fuec->id_conductor);
+        $documentos_conductor2=Helper::getDocumentosConductor($fuec->id_conductor_2);
+        $documentos_conductor3=Helper::getDocumentosConductor($fuec->id_conductor_3);
 
-       
-        $consecutivo=$this->getConsecutivoFuec($fuec,'2018');
+
+        $documentos_conductor=array_merge($documentos_conductor,$documentos_conductor2);
+        $documentos_conductor=array_merge($documentos_conductor,$documentos_conductor3);
+
+        
+        $contrato=FuecContrato::where('id_cliente',$fuec->id_cliente)->get()->first();
+        $consecutivo=$this->getConsecutivoFuec($fuec,$contrato,$year_3);
+        $vehiculo=Vehiculo::where('placa',$fuec->placa)->get()->first();
+
+
+
         $data=['fuec'=>$fuec,  
               'fechas'=>$fechas,
               'hora'=>strtoupper($hora),
               'documentos'=>$documentos,
               'documentos_conductor'=>$documentos_conductor,
               'consecutivo'=>$consecutivo,
+              'contrato'=>$contrato,
+              'vehiculo'=>$vehiculo
 
-                                         ];
+        ];
+        
         $qr=$this->getStrQrFuec($data);
         $data['qr']=$qr;
 
@@ -154,20 +224,16 @@ class FuecController extends Controller
     public function getStrQrFuec($data){
         $saltol='
         ';
-        $ruta='Origen: '.$data['fuec']->ruta->getDepartamentoOrigen->nombre.' - '.$data['fuec']->ruta->origen;
-        $ruta.=' Destino: '.$data['fuec']->ruta->getDepartamentoDestino->nombre.' - '.$data['fuec']->ruta->destino;
-        $ruta.=' Con retorno a su lugar de origen';
-
+        $ruta='Origen: '.$data['fuec']->ruta->origen_destino;
         $str='Codigo: '.$data['consecutivo'].$saltol;
         $str.='Razon Social: Movlife S.A.S'.$saltol;
         $str.='Empresa Nit: Movlife S.A.S'.$saltol;
-        $str.='Contrato numero: 0974'.$saltol;
+        $str.='Contrato numero: '.$data['contrato']->contrato.$saltol;
         $str.='Contratante: '.$data['fuec']->cliente->razon_social.$saltol;
         $str.='Contratante Nit: '.$data['fuec']->cliente->documento.$saltol;
-        $str.='Objeto Contrato: CONTRATO PARA TRANSPORTE DE USUARIOS DEL SERVICIO DE SALUD'.$saltol;
+        $str.='Objeto Contrato: '.$data['fuec']->objeto_contrato->nombre.$saltol;
         $str.='Origen-Destino: '.$ruta.$saltol;
-        $str.='Convenio: SPECIAL CAR PLUS TRANSPORTE S.A.S'.$saltol;
-
+        $str.='Convenio: '.$data['vehiculo']->empresa_afiliadora.$saltol;
         $url='https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl='.urlencode($str).'&choe=UTF-8';
         $url_final=str_replace("%0A++++++++","%0A", $url);
         return $url_final;
@@ -175,11 +241,11 @@ class FuecController extends Controller
 
     }
 
-    public function getConsecutivoFuec($fuec,$year){
+    public function getConsecutivoFuec($fuec,$contrato,$year){
 
         $consecutivo='352020418';
         $consecutivo.=$year;
-        $contrato=str_pad($fuec->contrato,4,'0',STR_PAD_LEFT);
+        $contrato=str_pad($contrato->contrato,4,'0',STR_PAD_LEFT);
         $str_consecutivo=str_pad($fuec->id,4,'0',STR_PAD_LEFT);
         $consecutivo.=$contrato.$str_consecutivo;
         return $consecutivo;
