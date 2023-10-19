@@ -26,9 +26,11 @@
           <div class="col-md-12">
             <h1>Vehiculos</h1>
             <div class="d-sm-flex mb-3" data-view="print">
+                @if(auth()->user()->superadmin==1 )
                   <span class="m-auto"></span>
                    <a class="btn btn-success" href="{{route('vehiculos.importar')}}" target="_blank" >Importar</a>&nbsp;&nbsp;
                     <a class="btn btn-primary" href="{{route('vehiculos.new')}}">Nuevo</a>
+                @endif
             </div>
           </div>
   </div>
@@ -65,7 +67,16 @@
                       <td>{{$vehiculo->activo}}</td>
                       <td>ok</td>
                       <td>
+
+                      @if(session::get('is_employe')==true || auth()->user()->superadmin==1  )
                       	<a href="{{route('vehiculos.edit', $vehiculo->id)}}" title="Editar"> <i class="nav-icon i-Pen-2 font-weight-bold"></i></a>
+
+                          <a href="{{route('alistamiento', ['q'=>$vehiculo->placa])}}" title="Alistamiento"> <i class="nav-icon i-Car-Wheel font-weight-bold"></i></a>
+
+                      @endif
+                      @if(session::get('is_driver')==true)
+                        <a href="{{route('alistamiento.new', $vehiculo->id)}}" title="Alistamiento"> <i class="nav-icon i-Car-Wheel font-weight-bold"></i></a>
+                      @endif
                       	<a href="{{route('vehiculos.delete.get', $vehiculo->id)}}" title="Eliminar" class="eliminar"><i class="nav-icon i-Close-Window font-weight-bold"></i></a>
                       </td>
                     </tr>
@@ -81,7 +92,9 @@
 
                 <div class="d-flex justify-content-center">
    				    <div class="">
-   				    	<?php echo $vehiculos->appends(['q' => $q])->links(); ?>
+   				    
+                <?php echo $vehiculos->appends(['q' => $q])->links(); ?>
+               
    				    </div>
 
 				</div>

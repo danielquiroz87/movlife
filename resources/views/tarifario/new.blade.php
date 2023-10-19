@@ -100,36 +100,22 @@
                    <input type="text" name="destino" id="destination-input" value="" class="form-control" placeholder=""  required>
             </div>
 
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Kilometros:</strong></label>
+                   <input type="text" name="kilometros" id="kilometros" value="" readonly="true"  class="form-control" placeholder="" >
+            </div>
+
+             <div class="col-md-6 form-group mb-3">
+              <label><strong>Tiempo:</strong></label>
+                   <input type="text" name="tiempo" id="tiempo" value="" readonly="true" class="form-control" placeholder="" >
+            </div>
+
              <div class="col-md-12 form-group mb-3">
               <label><strong>Tipo Vehiculo:</strong></label>
                 <select name="tipo_vehiculo" id="tipo_vehiculo" class="form-control select-busqueda">
-                  <option value="" selected="selected">Seleccione</option>
-                  <option value="1">Automovil</option>
-                  <option value="2">Bus</option>
-                  <option value="3">Buseta</option>
-                  <option value="4">Camioneta</option>
-                  <option value="5">Campero</option>
-                  <option value="6">Chery</option>
-                  <option value="7">Microbus</option>
-                  <option value="8">Moto</option>
-                  <option value="9">Van</option>
-                  <option value="10">MiniVan</option>
-                  <option value="11">Camioneta Doble Cabina</option>
-                  <option value="12">Sedan</option>
-                  <option value="13">Buseton</option>
+                  <?php echo Helper::selectClaseVehiculos() ?>
                 </select>
             </div>
-          
-             <div class="col-md-6 form-group mb-3">
-              <label><strong>Tiempo:</strong></label>
-                   <input type="number" name="tiempo" id="tiempo" value="" class="form-control" placeholder="" >
-            </div>
-
-             <div class="col-md-6 form-group mb-3">
-              <label><strong>Kilometros:</strong></label>
-                   <input type="number" name="kilometros" id="kilometros" value="" class="form-control" placeholder="" >
-            </div>
-
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Valor Conductor:</strong></label>
@@ -159,7 +145,6 @@
               <label><strong>Jornada:</strong></label>
                   <select name="jornada" id="jornada" class="form-control select-busqueda">
                   <option value="" selected="selected">Seleccione</option>
-                 
                   <option value="1">1 Hora</option>
                   <option value="2">2 Horas</option>
                   <option value="3">3 Horas</option>
@@ -171,14 +156,13 @@
                 </select>
             </div>
 
-              <div class="col-md-6 form-group mb-3">
+            <div class="col-md-6 form-group mb-3">
               <label><strong>Trayecto:</strong></label>
                 <select name="trayecto" id="trayecto" class="form-control select-busqueda">
                   <option value="" selected="selected">Seleccione</option>
                   <option value="1">Ida</option>
                   <option value="2">Ida y Regreso</option>
-
-
+                  <option value="3">Regreso</option>
                 </select>
             </div>
              <div class="col-md-12 form-group mb-3">
@@ -187,7 +171,7 @@
             </div>
             <div class="col-xs-6 col-sm-12 col-md-12 ">
                 <button id="submit" type="submit" class="btn btn-primary">Enviar</button>
-                <a href="{{ route('cotizaciones') }}" class="btn btn-danger">Cancelar</a>
+                <a href="{{ route('tarifario') }}" class="btn btn-danger">Cancelar</a>
             </div>
         </div>
 
@@ -213,9 +197,9 @@
                 </div>
             </div>
 
-    <div id="map">
-      
-    </div>
+                <div id="map">
+                  
+                </div>
 
 
           </div>
@@ -226,17 +210,10 @@
 @section('bottom-js')
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.js"></script>
-
-<script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCP9sxMbXwsUb0_DnlL4lQxP54BYBXyD_M&callback=initMap&libraries=places&v=weekly"
-      async
-    ></script>
-
-
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDgnsQUqdsRu0bweRhx7Ji5r2Jknm7ncMo&callback=initMap&libraries=places&v=weekly" async>
+</script>
 
 <script type="text/javascript">
-
-
 
 
 class AutocompleteDirectionsHandler {
@@ -246,6 +223,9 @@ class AutocompleteDirectionsHandler {
   travelMode;
   directionsService;
   directionsRenderer;
+  totalDistance;
+  totalDuration;
+  
   constructor(map) {
     this.map = map;
     this.originPlaceId = "";
@@ -325,11 +305,31 @@ class AutocompleteDirectionsHandler {
       (response, status) => {
         if (status === "OK") {
           me.directionsRenderer.setDirections(response);
+
+          var totalDistance = 0;
+          var totalDuration = 0;
+
+          var legs = response.routes[0].legs;
+          for(var i=0; i<legs.length; ++i) {
+              totalDistance += legs[i].distance.value;
+              totalDuration += legs[i].duration.value;
+          }
+          me.totalDistance=totalDistance;
+          me.totalDuration=totalDuration;
+          this.setDataInputs(me,legs);
+
         } else {
           window.alert("Directions request failed due to " + status);
         }
       }
     );
+  }
+  setDataInputs(data,legs){
+    console.log("distance",legs[0].distance.text);
+    $('#kilometros').val(legs[0].distance.text);
+    $('#tiempo').val(legs[0].duration.text);
+
+    
   }
 }
 
@@ -359,7 +359,7 @@ $('#tarifario-new-form').validate({
   rules: {
         origen : { required:true },
         destino : { required:true },
-        valor_conductor: {required:true}
+        valor_conductor: {required:true},
         valor_cliente: {required:true}
     },messages: {
                 

@@ -19,7 +19,7 @@ class Cotizacion extends  Model implements Auditable
 
     protected $table = 'cotizacion';
 
-    protected $fillable = ['id_cliente','forma_pago','fecha_cotizacion','fecha_vencimiento','fecha_servicio','hora_recogida','hora_salida','tiempo_adicional','horas_tiempo_adicional','direccion_recogida','direccion_destino','valor','cantidad','total','finalizada','observaciones','comentarios','foto_vehiculo','id_user','contacto_nombres','contacto_telefono','contacto_email'];
+    protected $fillable = ['id_cliente','forma_pago','fecha_cotizacion','fecha_vencimiento','fecha_servicio','hora_recogida','hora_salida','tiempo_adicional','horas_tiempo_adicional','direccion_recogida','direccion_destino','valor','cantidad','total','finalizada','observaciones','comentarios','foto_vehiculo','id_user','contacto_nombres','contacto_telefono','contacto_email','jornada','tipo_vehiculo'];
 
 
     public function cliente(){

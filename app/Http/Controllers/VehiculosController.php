@@ -18,6 +18,7 @@ use Config;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class VehiculosController extends Controller
 {
@@ -32,20 +33,52 @@ class VehiculosController extends Controller
     }
     public function index(Request $request)
     {   
-        $vehiculos=$this->getRepository();
-
+        
+        $vehiculos=Vehiculo::where('id','>', 0);
+      
         $q="";
         if($request->has('q')){
+            
             if($request->get('q')!=""){
+
                 $search=$request->get('q');
                 $q=$search;
                 $vehiculos=Vehiculo::where('placa','LIKE', '%'.$search.'%');
-                $vehiculos=$vehiculos->paginate(Config::get('global_settings.paginate'));                           
+               
             }
+                                          
         }
+
+        
+         if(session('is_driver')){
+
+                $conductor=session('driver');
+                $vehiculos_ids = DB::table('vehiculos')
+                ->join('vehiculos_conductores','vehiculos_conductores.vehiculo_id', '=', 'vehiculos.id')
+                ->where('vehiculos_conductores.conductor_id',$conductor->id);
+                
+                if($request->get('q')!=""){
+                    $search=$request->get('q');
+                    $vehiculos_ids=$vehiculos_ids->where('placa','LIKE', '%'.$search.'%');
+                }
+                $vehiculos_ids=$vehiculos_ids->select('vehiculos.id as id')->get();
+
+                $arr_ids=[];
+
+                foreach ($vehiculos_ids as $key => $id) {
+                    ($arr_ids[$id->id]=$id->id);
+                }
+
+                $vehiculos=Vehiculo::whereIn('id',$arr_ids);
+
+        }
+
+
+        $vehiculos=$vehiculos->paginate(Config::get('global_settings.paginate'));
 
         return view('vehiculos.index')->with(['vehiculos'=>$vehiculos,'q'=>$q]);
     }
+
     public function new()
     { 
         return view('vehiculos.new');
@@ -209,7 +242,7 @@ class VehiculosController extends Controller
                 'modelo' => 'required|max:4|min:4',
                 'color' => 'required|max:20|min:3',
                 'pasajeros' => 'required|max:10|min:1',
-                //'departamento_id' => 'required|max:2|min:1',
+                'propietario_id' => 'required',
                 //'ciudad_id' => 'required|max:2|min:1',
             ]);   
 
@@ -222,6 +255,8 @@ class VehiculosController extends Controller
                 'modelo' => 'required|max:4|min:4',
                 'color' => 'required|max:20|min:3',
                 'pasajeros' => 'required|max:10|min:1',
+                'propietario_id' => 'required',
+
                 //'departamento_id' => 'required|max:2|min:1',
                 //'ciudad_id' => 'required|max:2|min:1',
             ]);   
@@ -254,11 +289,16 @@ class VehiculosController extends Controller
         $vehiculo->vinculado=$request->get('vinculado')?1:0;
         $vehiculo->convenio_firmado=$request->get('convenio')?1:0;
         $vehiculo->empresa_afiliadora=$request->get('empresa_afiliadora',NULL);
-           
+        $vehiculo->propietario_id=$request->get('propietario_id',NULL);
+        $vehiculo->fecha_convenio=$request->get('fecha_convenio',NULL);
+        
+        if($vehiculo->convenio_firmado==0){
+           $vehiculo->fecha_convenio=NULL;
+        }   
          if($is_new){
 
            $vehiculo->activo=1; 
-           $vehiculo->propietario_id=1;
+           //$vehiculo->propietario_id=1;
            $vehiculo->save();
 
             //$user->create($request->all());
@@ -322,7 +362,7 @@ class VehiculosController extends Controller
     public function getConductoresPlaca($placa){
 
         $vehiculo=Vehiculo::where('placa','=',$placa)->get()->first();
-        $response="<option value=''>Seleccione un Conductor</option>";
+        $response="<option value=''>Seleccione Un Conductor</option>";
 
         if($vehiculo){
 

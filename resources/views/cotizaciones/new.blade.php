@@ -156,18 +156,50 @@
               <label><strong>Destino:</strong></label>
                    <input type="text" name="destino" id="destination-input" value="" class="form-control" placeholder=""  required>
             </div>
-           
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Kilometros:</strong></label>
+                   <input type="text" name="kilometros" id="kilometros" value="" class="form-control" readonly="true" >
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Tiempo:</strong></label>
+                   <input type="text" name="tiempo" id="tiempo" value="" class="form-control" placeholder="" readonly="true" >
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Tipo Vehiculo:</strong></label>
+                <select name="tipo_vehiculo" id="tipo_vehiculo" class="form-control select-busqueda">
+                  <?php echo Helper::selectClaseVehiculos() ?>
+                </select>
+            </div>
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Jornada:</strong></label>
+                  <select name="jornada" id="jornada" class="form-control select-busqueda">
+                  <option value="" selected="selected">Seleccione</option>
+                  <option value="1">1 Hora</option>
+                  <option value="2">2 Horas</option>
+                  <option value="3">3 Horas</option>
+                  <option value="4">4 Horas</option>
+                  <option value="5">5 Horas</option>
+                  <option value="6">Media Jornada</option>
+                  <option value="7">Extendida</option>
+                  <option value="8">Completa</option>
+                </select>
+            </div>
             <div class="opciones_viaje col-md-6 form-group mb-3 ">
+              <label>Trayecto</label>
               <label class="radio radio-outline-warning">
-                <input type="radio" name="tipo_viaje" value="1"><span>Solo Ida</span><span class="checkmark"></span>
+                <input type="radio" name="tipo_viaje" class="matchTarifa" value="1"><span>Solo Ida</span><span class="checkmark"></span>
               </label>
               <label class="radio radio-outline-success">
-                    <input type="radio" name="tipo_viaje" value="2"><span>Ida y Regreso</span><span class="checkmark"></span>
+                    <input type="radio" name="tipo_viaje" class="matchTarifa" value="2"><span>Ida y Regreso</span><span class="checkmark"></span>
               </label>
               <label class="radio radio-outline-danger">
-                  <input type="radio" name="tipo_viaje" value="3"><span>Regreso</span><span class="checkmark"></span>
+                  <input type="radio" name="tipo_viaje" class="matchTarifa" value="3"><span>Regreso</span><span class="checkmark"></span>
               </label>
             </div>
+
 
             <div class="opciones_disponibilidad col-md-6 form-group mb-3 ">
               <label class="checkbox checkbox-outline-primary">
@@ -195,9 +227,29 @@
                    <input type="number" name="total" value="0" id="total" class="form-control" placeholder="0" maxlength="11" required>
             </div>
 
+            
+             <div class="chk_guardartarifa col-md-6 form-group mb-3 ">
+              <label class="checkbox checkbox-outline-primary">
+                    <input type="checkbox" name="guardar_tarifa" id="guardar_tarifa" value="1" ><span>Guardar Tarifa</span><span class="checkmark"></span>
+                </label>
+             </div>
+  
             <div class="col-md-12 form-group mb-3">
               <label><strong>Foto Vehiculo:</strong></label>
                    <input type="file" name="foto" value="" id="foto" class="form-control" >
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Estado:</strong></label>
+                  <select name="estado" id="estado" class="form-control">
+                  <option value="" selected="selected">Seleccione</option>
+                  <option value="1">Aprobada</option>
+                  <option value="2">Pendiente</option>
+                  <option value="3">Modificada</option>
+                  <option value="4">Cancelada</option>
+                  <option value="5">Rechazada</option>
+                  
+                </select>
             </div>
             
              <div class="col-md-12 form-group mb-3">
@@ -253,14 +305,44 @@
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.js"></script>
 
-<script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCP9sxMbXwsUb0_DnlL4lQxP54BYBXyD_M&callback=initMap&libraries=places&v=weekly"
-      async
-    ></script>
-
-
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDgnsQUqdsRu0bweRhx7Ji5r2Jknm7ncMo&callback=initMap&libraries=places&v=weekly" async>
+</script>
 
 <script type="text/javascript">
+
+matchTarifa=false;
+
+function buscarTarifa(){
+    var data=$('#cotizacion-new-form').serializeArray();
+    $.post('/cotizaciones/match/tarifa',data,function(response){
+      $('#valor_unitario').val(response.data.vcliente);
+      if(response.data.id==0){
+        matchTarifa=true;
+        $('.chk_guardartarifa').show('200');
+      }else{
+        $('.chk_guardartarifa').hide('200');
+      }
+    })
+}
+$('#valor_unitario').blur(function(){
+  if(!matchTarifa){
+    buscarTarifa();
+  }
+});
+
+$('.matchTarifa').change(function(){
+  matchTarifa=false;
+  buscarTarifa();
+});
+$('#origin-input').blur(function(){
+  matchTarifa=false;
+  buscarTarifa();
+});
+$('#destination-input').blur(function(){
+  matchTarifa=false;
+  buscarTarifa();
+});
+
 
 function totalizar(){
   var cantidad=$("#cantidad").val();
@@ -297,6 +379,9 @@ class AutocompleteDirectionsHandler {
   travelMode;
   directionsService;
   directionsRenderer;
+  totalDistance;
+  totalDuration;
+
   constructor(map) {
     this.map = map;
     this.originPlaceId = "";
@@ -356,7 +441,6 @@ class AutocompleteDirectionsHandler {
       } else {
         this.destinationPlaceId = place.place_id;
       }
-
       this.route();
     });
   }
@@ -376,11 +460,31 @@ class AutocompleteDirectionsHandler {
       (response, status) => {
         if (status === "OK") {
           me.directionsRenderer.setDirections(response);
+          var totalDistance = 0;
+          var totalDuration = 0;
+
+          var legs = response.routes[0].legs;
+          console.log(response.routes[0])
+          for(var i=0; i<legs.length; ++i) {
+              totalDistance += legs[i].distance.value;
+              totalDuration += legs[i].duration.value;
+          }
+          me.totalDistance=totalDistance;
+          me.totalDuration=totalDuration;
+          this.setDataInputs(me,legs);
+          
         } else {
           window.alert("Directions request failed due to " + status);
         }
       }
     );
+
+   
+  }
+  setDataInputs(data,legs){
+    $('#kilometros').val(legs[0].distance.text);
+    $('#tiempo').val(legs[0].duration.text)
+    
   }
 }
 
@@ -393,6 +497,8 @@ class AutocompleteDirectionsHandler {
   });
 
   new AutocompleteDirectionsHandler(map);
+
+
 }
 
 </script>

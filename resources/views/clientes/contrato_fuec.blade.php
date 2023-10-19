@@ -42,6 +42,12 @@
                    <input type="text" name="contrato"  class="form-control" placeholder="000000" maxlength="11" required value="{{$contrato->contrato}}">
             </div>
             <div class="col-md-6 form-group mb-3">
+              <label><strong>Objeto Contrato:</strong></label>
+                    <select class="form-control" name="objeto_contrato_id">
+                        <?php echo Helper::selectObjetosContrato($contrato->objeto_contrato_id) ?>
+                    </select>
+            </div>
+            <div class="col-md-6 form-group mb-3">
               <label><strong>Documento / Nit Responsable :</strong></label>
                    <input type="text" name="responsable_documento"  class="form-control" placeholder="000000" maxlength="11" required value="{{$contrato->responsable_documento}}">
             </div>
@@ -60,7 +66,7 @@
            
             <div class="col-md-6 form-group mb-3">
               <label><strong>Dirección:</strong></label>
-                   <input type="text" name="responsable_direccion" class="form-control" placeholder="" maxlength="20" required value="{{$contrato->responsable_direccion}}">
+                   <input type="text" name="responsable_direccion" class="form-control" placeholder="" required value="{{$contrato->responsable_direccion}}">
             </div>
            
             <div class="col-xs-12 col-sm-12 col-md-12 ">

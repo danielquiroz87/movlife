@@ -80,7 +80,7 @@ class PropietariosVehiculosController extends Controller
                 'apellidos' => 'required|max:255',
                 'razon_social'=>'required|max:255',
                 'documento'=>'required|unique:propietarios,documento|max:20',
-                'celular'=>'required',
+                //'celular'=>'required',
                 
                 #'email'=>'required|email|max:255',
                 #'password'=>'required|max:20',

@@ -183,21 +183,32 @@
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Propietario:</strong></label>
-                  <select name="id_propietario" class="form-control">
+                  <select name="propietario_id" class="form-control">
                     <?php echo Helper::selectPropietarios() ?>
                   </select>
             </div>
             
             <div class="col-md-6 form-group mb-3">
               <label class="switch pr-5 switch-success mr-3"><span>Vinculado</span>
-                  <input type="checkbox" name="Vinculado" ><span class="slider"></span>
+                  <input type="checkbox" name="Vinculado" id="vinculado" ><span class="slider"></span>
               </label>
             </div>
              <div class="col-md-6 form-group mb-3">
                <label class="switch pr-5 switch-success mr-3"><span>Convenio Firmado</span>
-                  <input type="checkbox" name="convenio" ><span class="slider"></span>
+                  <input type="checkbox" name="convenio" id="convenio" ><span class="slider"></span>
               </label>
             </div>
+
+            <div class="col-md-6 form-group mb-3" id="div_empresa_afiliadora">
+                      <label><strong>Empresa Afiliadora</strong></label>
+                      <input type="text"  name="empresa_afiliadora" class="form-control" id="empresa_afiliadora"  placeholder="" value="">
+            </div>
+
+             <div class="col-md-6 form-group mb-3" id="div_fecha_convenio">
+                      <label><strong>Fecha Convenio</strong></label>
+                      <input type="date"  name="fecha_convenio" class="form-control" id="fecha_convenio"  placeholder="" value="">
+            </div>
+                 
 
             <div class="col-xs-12 col-sm-12 col-md-12 ">
                 <button id="submit" type="submit" class="btn btn-primary">Enviar</button>
@@ -228,6 +239,42 @@
 
 <script>
 
+$('#vinculado').change(function(e){
+
+  
+    if ($(this).is(':checked')) {
+
+       $('#empresa_afiliadora').val('Movlife SAS');
+       $('#div_empresa_afiliadora').show();
+       $("#convenio").prop('checked', false);
+       $('#div_fecha_convenio').hide();
+
+
+    }else{
+
+      $("#convenio").prop('checked', false);
+      $('#div_empresa_afiliadora').hide();
+      $('#div_fecha_convenio').hide();
+      $('#empresa_afiliadora').val('');
+    }
+
+})
+
+$('#convenio').change(function(e){
+    
+   
+    if ($(this).is(':checked')) {
+      $('#div_empresa_afiliadora').show();
+      $('#div_fecha_convenio').show();
+
+    }else{
+
+      $('#div_empresa_afiliadora').hide();
+      $('#div_fecha_convenio').hide();
+      $("#vinculado").prop('checked', false);
+    }
+
+})
 
 
 // just for the demos, avoids form submit
@@ -244,6 +291,7 @@ $('#user-new-form').validate({
         departamento_id:{ required:true },
         ciudad_id: { required:true },
         password:{ required:true },
+        propietario_id: {required:true}
         
     },messages: {
                 

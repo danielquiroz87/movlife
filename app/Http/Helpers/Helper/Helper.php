@@ -64,7 +64,7 @@ public static function selectClientes($id=0){
 
 public static function selectConductores($id=0){
 	$conductores=self::getConductores();
-	$option_conductores="";
+	$option_conductores="<option value=''>Seleccione Un Conductor</option>";
 	foreach ($conductores as $conductor) { 
 		$nombres=$conductor->nombres.' '.$conductor->apellidos.','.$conductor->documento;
 			if($id>0){
@@ -364,6 +364,39 @@ public static function getDocumentosVehiculo($placa){
 			$arr_documentos[$vehiculo->placa][$tipo->id]=array('cargado'=>'NO',
 															'fecha_vencimiento'=>'NA',
 															'numero'=>'');
+		}
+	}
+
+	return ($arr_documentos);
+
+}
+
+public static function getDocumentosObligatorios($placa){
+
+	$vehiculo=Vehiculo::where('placa',$placa)->get()->first();
+
+	$tipo_documentos=TipoDocumentos::where('tipo_usuario',6)->whereIn('id',[9,10,13,14])->get();
+	$arr_documentos=array();
+
+	$faltantes=0;
+
+	foreach ($tipo_documentos as $tipo) {
+		
+		$existe=Documentos::where('id_registro',$vehiculo->id)
+							->where('id_tipo_documento',$tipo->id)->get()->first();
+
+		if($existe){
+			if($existe->cara_frontal!="" || $existe->cara_trasera!="" ){
+				$cargado='SI';
+			}else{
+				$cargado='NO';
+			}
+			/*$arr_documentos[$vehiculo->placa][$tipo->id]=array('cargado'=>$cargado,
+															'fecha_vencimiento'=>$existe->fecha_final,
+															'numero'=>$existe->numero_documento);
+															*/
+		}else{
+			$arr_documentos[]=array('nombre'=>$tipo->nombre);
 		}
 	}
 

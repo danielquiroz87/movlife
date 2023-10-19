@@ -8,6 +8,7 @@ use App\Models\Cotizacion;
 use App\Models\User;
 use App\Models\Direccion;
 use App\Models\CotizacionDetalle;
+use App\Models\Tarifario;
 
 
 use Illuminate\Support\Facades\Validator;
@@ -25,12 +26,12 @@ class CotizacionesController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        //$this->middleware('auth');
     }
     public function index(Request $request)
     {   
         $cotizaciones=Cotizacion::paginate(25);
-    
+
 
         return view('cotizaciones.index')->with(['cotizaciones'=>$cotizaciones]);
     }
@@ -38,7 +39,7 @@ class CotizacionesController extends Controller
     { 
         return view('cotizaciones.new');
     }
-     public function edit($id)
+    public function edit($id)
     {   
         $cotizacion=Cotizacion::find($id);
         $direcciones=CotizacionDetalle::where('cotizacion_id','=',$cotizacion->id)->get();    
@@ -47,7 +48,7 @@ class CotizacionesController extends Controller
     }
     public function save(Request $request)
     { 
-      
+
         $is_new=false;
         $user=false;
         if($request->input('is_new') && $request->input('id')==0){
@@ -62,11 +63,11 @@ class CotizacionesController extends Controller
         if($is_new){
             $v = Validator::make($request->all(), []);   
 
-          
+
         }else{
 
             $v = Validator::make($request->all(), []);   
-          
+
 
         }
         
@@ -76,8 +77,8 @@ class CotizacionesController extends Controller
             return redirect()->back()->withErrors($v->errors());
         }
 
-       
-         if($is_new){
+
+        if($is_new){
 
             $cotizacion->id_cliente=$request->id_cliente;
             $cotizacion->descripcion=$request->descripcion;
@@ -104,6 +105,9 @@ class CotizacionesController extends Controller
             $cotizacion->contacto_nombres=$request->contacto_nombres;
             $cotizacion->contacto_telefono=$request->contacto_telefono;
             $cotizacion->contacto_email=$request->contacto_email;
+            $cotizacion->jornada=$request->jornada;
+            $cotizacion->tipo_vehiculo=$request->tipo_vehiculo;
+            $cotizacion->estado=$request->estado;
 
 
             $file = $request->file('foto');
@@ -117,36 +121,71 @@ class CotizacionesController extends Controller
             $cotizacion->save();
 
 
-             if($request->get('origen')!=""){
+            if($request->get('origen')!=""){
 
-                $cd=new CotizacionDetalle();
-                $cd->cotizacion_id=$cotizacion->id;
-                $cd->origen=$request->get('origen');
-                $cd->destino=$request->get('destino');
-                $cd->destino2=$request->get('destino2');
-                $cd->destino3=$request->get('destino3');
-                $cd->destino4=$request->get('destino4');
-                $cd->destino5=$request->get('destino5');
-                $cd->valor=$request->get('valor_unitario',0);
-                $cd->cantidad=$request->get('cantidad',1);
-                $cd->total=($cd->cantidad*$cd->valor);
-                $cd->save();
+                $existe=CotizacionDetalle::where('origen',$request->origen)
+                                            ->where('destino',$request->destino)
+                                            ->where('cotizacion_id',$cotizacion->id)
+                                            ->get()->first();
+                if(!$existe){
+                    $cd=new CotizacionDetalle();
+                    $cd->cotizacion_id=$cotizacion->id;
+                    $cd->origen=$request->get('origen');
+                    $cd->destino=$request->get('destino');
+                    $cd->destino2=$request->get('destino2');
+                    $cd->destino3=$request->get('destino3');
+                    $cd->destino4=$request->get('destino4');
+                    $cd->destino5=$request->get('destino5');
+                    $cd->valor=$request->get('valor_unitario',0);
+                    $cd->cantidad=$request->get('cantidad',1);
+                    $cd->total=($cd->cantidad*$cd->valor);
+                    $cd->save();
+                }
+
+
+                //Guardar Tarifa
+                $guardaT=$request->get('guardar_tarifa');
+                
+                if($guardaT && (int) $guardaT==1){
+
+                    $tarifario=new Tarifario();
+                    $tipo=$request->get('tipo_vehiculo');
+                    $origen=$request->get('origen');
+                    $destino=$request->get('destino');
+                    $jornada=$request->get('jornada');
+                   
+                    $tarifario->tipo_vehiculo=$request->get('tipo_vehiculo');
+                    $tarifario->origen=$request->get('origen');
+                    $tarifario->destino=$request->get('destino');
+                    $tarifario->jornada=$request->get('jornada');
+                    $tarifario->kilometros=$request->get('kilometros');
+                    $tarifario->tiempo=$request->get('tiempo');
+                    $tarifario->valor_conductor=$request->get('valor_unitario');
+                    $tarifario->valor_cliente=$request->get('valor_unitario');
+                    $tarifario->jornada=$request->get('jornada');
+                    $tarifario->trayecto=$request->get('tipo_viaje');
+                    $tarifario->id_cliente=$request->get('id_cliente');
+                    $tarifario->save();
+
+                    \Session::flash('flash_message','Tarifa Guardada Exitosamente!.');
+
+                }
+
+
+          
             }
-
             
-
-
             //$user->create($request->all());
             \Session::flash('flash_message','Cotización agregada exitosamente!.');
 
-             return redirect()->route('cotizaciones.edit',['id'=>$cotizacion->id]);
+            return redirect()->route('cotizaciones.edit',['id'=>$cotizacion->id]);
 
-         }else{
+        }else{
 
             $cotizacion->id_cliente=$request->id_cliente;
             $cotizacion->descripcion=$request->descripcion;
             $cotizacion->forma_pago=$request->forma_pago;
- 
+
             $cotizacion->fecha_cotizacion=$request->fecha_cotizacion;
             $cotizacion->fecha_vencimiento=$request->fecha_vencimiento;
             $cotizacion->fecha_servicio=$request->fecha_servicio;
@@ -165,6 +204,9 @@ class CotizacionesController extends Controller
             $cotizacion->contacto_nombres=$request->contacto_nombres;
             $cotizacion->contacto_telefono=$request->contacto_telefono;
             $cotizacion->contacto_email=$request->contacto_email;
+            $cotizacion->jornada=$request->jornada;
+            $cotizacion->tipo_vehiculo=$request->tipo_vehiculo;
+            $cotizacion->estado=$request->estado;
 
 
             $file = $request->file('foto');
@@ -183,33 +225,66 @@ class CotizacionesController extends Controller
 
             if($request->get('origen')!=""){
 
-                $cd=new CotizacionDetalle();
-                $cd->cotizacion_id=$cotizacion->id;
-                $cd->origen=$request->get('origen');
-                $cd->destino=$request->get('destino');
-                $cd->destino2=$request->get('destino2');
-                $cd->destino3=$request->get('destino3');
-                $cd->destino4=$request->get('destino4');
-                $cd->destino5=$request->get('destino5');
-                $cd->valor=$request->get('valor_unitario',0);
-                $cd->cantidad=$request->get('cantidad',1);
-                $cd->total=($cd->cantidad*$cd->valor);
-                var_dump($cd);
-                die();
-                $cd->save();
+
+                 $existe=CotizacionDetalle::where('origen',$request->origen)
+                                            ->where('destino',$request->destino)
+                                            ->get()->first();
+                if(!$existe){
+
+                    $cd=new CotizacionDetalle();
+                    $cd->cotizacion_id=$cotizacion->id;
+                    $cd->origen=$request->get('origen');
+                    $cd->destino=$request->get('destino');
+                    $cd->destino2=$request->get('destino2');
+                    $cd->destino3=$request->get('destino3');
+                    $cd->destino4=$request->get('destino4');
+                    $cd->destino5=$request->get('destino5');
+                    $cd->valor=$request->get('valor_unitario',0);
+                    $cd->cantidad=$request->get('cantidad',1);
+                    $cd->total=($cd->cantidad*$cd->valor);
+                    $cd->save();
+                }
             }
 
             \Session::flash('flash_message','Cotización actualizada exitosamente!.');
 
             return redirect()->back();
 
-         }
+        }
 
 
     }
     public function saveItem(Cotizacion $cotizacion,Request $request){
 
         if($request->get('origen')!=""){
+
+
+            //Guardar Tarifa
+            $guardaT=$request->get('guardar_tarifa');
+            if($guardaT && (int) $guardaT==1){
+
+            $tarifario=new Tarifario();
+            $tipo=$request->get('tipo_vehiculo');
+            $origen=$request->get('origen');
+            $destino=$request->get('destino');
+            $jornada=$request->get('jornada');
+           
+            $tarifario->tipo_vehiculo=$request->get('tipo_vehiculo');
+            $tarifario->origen=$request->get('origen');
+            $tarifario->destino=$request->get('destino');
+            $tarifario->jornada=$request->get('jornada');
+            $tarifario->kilometros=$request->get('kilometros');
+            $tarifario->tiempo=$request->get('tiempo');
+            $tarifario->valor_conductor=$request->get('valor_unitario');
+            $tarifario->valor_cliente=$request->get('valor_unitario');
+            $tarifario->jornada=$request->get('jornada');
+            $tarifario->trayecto=$request->get('tipo_viaje');
+            $tarifario->id_cliente=$request->get('id_cliente');
+            $tarifario->save();
+
+            \Session::flash('flash_message','Tarifa Guardada Exitosamente!.');
+
+            }
 
             $cd=new CotizacionDetalle();
             $cotizacion=Cotizacion::find($request->get('id'));
@@ -225,10 +300,10 @@ class CotizacionesController extends Controller
             $cd->total=($cd->cantidad*$cd->valor);
             $cd->save();
 
-        \Session::flash('flash_message','Cotización actualizada exitosamente!.');
+            \Session::flash('flash_message','Cotización actualizada exitosamente!.');
 
         }
-       
+
         return response()->json([
             'code' => '200',
             'message' => 'Cotización actualizada exitosamente!.',
@@ -237,7 +312,7 @@ class CotizacionesController extends Controller
 
     public function update()
     { 
-       
+
     }
     public function delete($id){
         $cotizacion=Cotizacion::find($id);
@@ -261,7 +336,7 @@ class CotizacionesController extends Controller
 
     }
     public function descargar($id){
-        
+
         /*
         $cotizacion=Cotizacion::find($id);
         $detalle=$cotizacion->detalle();
@@ -279,6 +354,97 @@ class CotizacionesController extends Controller
         exit();
         
     }
+
+    public function matchTarifa(Request $request){
+      
+        $id_cliente=$request->get('id_cliente');
+        $tipo_vehiculo=$request->get('tipo_vehiculo');
+        $origen= $request->get('origen');
+        $origen= $this->eliminar_tildes($origen);
+        $destino=$request->get('destino');
+        $destino=$this->eliminar_tildes($destino);
+        $kilometros=$request->get('kilometros');
+        $tiempo=$request->get('tiempo');
+        $jornada=$request->get('jornada');
+        $tipo_viaje=$request->get('tipo_viaje');
+
+        $eTarifa=Tarifario::where('id_cliente',$id_cliente)
+        ->where('tipo_vehiculo',$tipo_vehiculo)
+        ->where('origen','LIKE', '%'.$origen.'%')
+        ->where('destino','LIKE', '%'.$destino.'%')
+        ->where('kilometros',$kilometros)
+        //->where('tiempo',$tiempo)
+        ->where('jornada',$jornada)
+        ->where('trayecto',$tipo_viaje)->get()->first();
+
+
+       
+        if($eTarifa){
+            return response()->json([
+                'code' => '200',
+                'data' => ['vconductor'=>$eTarifa->valor_conductor,
+                'vcliente'=>$eTarifa->valor_cliente,
+                'id'=>$eTarifa->id]
+            ]);
+        }else{
+            return response()->json([
+                'code' => '200',
+                'data' => ['vconductor'=>0,
+                'vcliente'=>0,
+                'id'=>0]
+            ]);
+        }
+
+    }
+
+    function eliminar_tildes($cadena){
+     //$cadena= preg_replace("/[^a-zA-Z0-9\_\-]+/", "", $cadena);
+    //Codificamos la cadena en formato utf8 en caso de que nos de errores
+    $unwanted_array = array(    'Š'=>'S', 'š'=>'s', 'Ž'=>'Z', 'ž'=>'z', 'À'=>'A', 'Á'=>'A', 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'A', 'Å'=>'A', 'Æ'=>'A', 'Ç'=>'C', 'È'=>'E', 'É'=>'E',
+                                'Ê'=>'E', 'Ë'=>'E', 'Ì'=>'I', 'Í'=>'I', 'Î'=>'I', 'Ï'=>'I', 'Ñ'=>'N', 'Ò'=>'O', 'Ó'=>'O', 'Ô'=>'O', 'Õ'=>'O', 'Ö'=>'O', 'Ø'=>'O', 'Ù'=>'U',
+                                'Ú'=>'U', 'Û'=>'U', 'Ü'=>'U', 'Ý'=>'Y', 'Þ'=>'B', 'ß'=>'Ss', 'à'=>'a', 'á'=>'a', 'â'=>'a', 'ã'=>'a', 'ä'=>'a', 'å'=>'a', 'æ'=>'a', 'ç'=>'c',
+                                'è'=>'e', 'é'=>'e', 'ê'=>'e', 'ë'=>'e', 'ì'=>'i', 'í'=>'i', 'î'=>'i', 'ï'=>'i', 'ð'=>'o', 'ñ'=>'n', 'ò'=>'o', 'ó'=>'o', 'ô'=>'o', 'õ'=>'o',
+                                'ö'=>'o', 'ø'=>'o', 'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ý'=>'y', 'þ'=>'b', 'ÿ'=>'y' );
+
+    $cadena = strtr( $cadena, $unwanted_array );
+
+    $cadena = utf8_encode($cadena);
+
+    //Ahora reemplazamos las letras
+    $cadena = str_replace(
+        array('á', 'à', 'ä', 'â', 'ª', 'Á', 'À', 'Â', 'Ä'),
+        array('a', 'a', 'a', 'a', 'a', 'A', 'A', 'A', 'A'),
+        $cadena
+    );
+
+    $cadena = str_replace(
+        array('é', 'è', 'ë', 'ê', 'É', 'È', 'Ê', 'Ë'),
+        array('e', 'e', 'e', 'e', 'E', 'E', 'E', 'E'),
+        $cadena );
+
+    $cadena = str_replace(
+        array('í', 'ì', 'ï', 'î', 'Í', 'Ì', 'Ï', 'Î'),
+        array('i', 'i', 'i', 'i', 'I', 'I', 'I', 'I'),
+        $cadena );
+
+    $cadena = str_replace(
+        array('ó', 'ò', 'ö', 'ô', 'Ó', 'Ò', 'Ö', 'Ô'),
+        array('o', 'o', 'o', 'o', 'O', 'O', 'O', 'O'),
+        $cadena );
+
+    $cadena = str_replace(
+        array('ú', 'ù', 'ü', 'û', 'Ú', 'Ù', 'Û', 'Ü'),
+        array('u', 'u', 'u', 'u', 'U', 'U', 'U', 'U'),
+        $cadena );
+
+    $cadena = str_replace(
+        array('ñ', 'Ñ', 'ç', 'Ç'),
+        array('n', 'N', 'c', 'C'),
+        $cadena
+    );
+
+    return ($cadena);
+}
 
     private function getRepository(){
         return Cotizacion::paginate(25);

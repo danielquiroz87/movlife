@@ -1,13 +1,18 @@
 <div class="side-content-wrap">
     <div class="sidebar-left open rtl-ps-none" data-perfect-scrollbar data-suppress-scroll-x="true">
         <ul class="navigation-left">
-            <li class="nav-item {{ request()->is('dashboard/*') ? 'active' : '' }}" data-item="dashboard">
-                <a class="nav-item-hold" href="#">
-                    <i class="nav-icon i-Bar-Chart"></i>
-                    <span class="nav-text">Dashboard</span>
-                </a>
-                <div class="triangle"></div>
-            </li>
+            
+             @if(session::get('is_employe')==true || auth()->user()->superadmin==1  )
+
+                <li class="nav-item {{ request()->is('dashboard/*') ? 'active' : '' }}" data-item="dashboard">
+                    <a class="nav-item-hold" href="#">
+                        <i class="nav-icon i-Bar-Chart"></i>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                    <div class="triangle"></div>
+                </li>
+            
+            @endif
 
             @if(auth()->user()->superadmin==1)
 
@@ -19,6 +24,9 @@
                 <div class="triangle"></div>
             </li>
             @endif
+            
+           
+
             <li class="nav-item {{ request()->is('customers/*') ? 'active' : '' }}" data-item="operaciones">
                 <a class="nav-item-hold" href="#">
                     <i class="nav-icon i-Split-Horizontal-2-Window"></i>
@@ -26,6 +34,9 @@
                 </a>
                 <div class="triangle"></div>
             </li>
+
+             @if(session::get('is_employe')==true || auth()->user()->superadmin==1  )
+
 
               <li class="nav-item {{ request()->is('customers/*') ? 'active' : '' }}" data-item="contabilidad">
                 <a class="nav-item-hold" href="#">
@@ -42,6 +53,7 @@
                 </a>
                 <div class="triangle"></div>
             </li>
+            @endif
 
             @if(auth()->user()->superadmin==1)
 
@@ -141,6 +153,9 @@
                 </a>
             </li>
            
+
+        @if(session::get('is_employe')==true || auth()->user()->superadmin==1  )
+
             <li class="nav-item ">
                 <a class="{{ Route::currentRouteName()=='servicios' ? 'open' : '' }}"
                     href="{{route('servicios')}}">
@@ -173,8 +188,19 @@
                     <span class="item-name">Fuec</span>
                 </a>
             </li>
+
+            <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='rutas' ? 'open' : '' }}"
+                    href="{{route('rutas')}}">
+                    <i class="nav-icon i-Car-Wheel"></i>
+                    <span class="item-name">Rutas Fuec</span>
+                </a>
+            </li>
+            @endif
+
        </ul> 
 
+        @if(session::get('is_employe')==true || auth()->user()->superadmin==1  )
 
        <ul class="childNav" data-parent="contabilidad">
             <li class="nav-item ">
@@ -250,7 +276,7 @@
                 </a>
             </li>
 
-               <li class="nav-item ">
+            <li class="nav-item ">
                 <a class="{{ Route::currentRouteName()=='tarifario' ? 'open' : '' }}"
                     href="{{route('tarifario')}}">
                     <i class="nav-icon i-Car-Wheel"></i>
@@ -322,7 +348,9 @@
             </li>
             
         </ul>
+        @endif
 
+        @if(auth()->user()->superadmin==1)
 
          <ul class="childNav" data-parent="sedes">
             <li class="nav-item ">
@@ -340,7 +368,9 @@
                     <span class="item-name">Auditoria</span>
                 </a>
             </li>
-            
+           
+        @endif
+
         </ul>
       
     </div>

@@ -127,6 +127,9 @@ Route::post('/cotizaciones/delete/{id}', 'CotizacionesController@delete')->name(
 Route::get('/cotizaciones/delete/detalle/{id}', 'CotizacionesController@deleteDetalle')->name('cotizaciones.delete.detalle');
 
 Route::get('/cotizaciones/descargar/{id}', 'CotizacionesController@descargar')->name('cotizaciones.descargar');
+Route::post('/cotizaciones/match/tarifa', 'CotizacionesController@matchTarifa')->name('cotizaciones.matchtarifa');
+
+
 
 Route::get('/anticipos', 'AnticiposController@index')->name('anticipos');
 Route::get('/anticipos/new', 'AnticiposController@new')->name('anticipos.new');
@@ -167,6 +170,8 @@ Route::get('/fuec/new', 'FuecController@new')->name('fuec.new');
 Route::get('/fuec/edit/{id}', 'FuecController@edit')->name('fuec.edit');
 Route::post('/fuec/save', 'FuecController@save')->name('fuec.save');
 Route::get('/fuec/descargar/{id}', 'FuecController@descargar')->name('fuec.descargar');
+Route::get('/fuec/duplicar/{id}', 'FuecController@duplicar')->name('fuec.duplicar');
+Route::get('/fuec/contrato/{id}', 'FuecController@getContratoCliente')->name('fuec.contrato');
 
 Route::post('/fuec/delete', 'FuecController@delete')->name('fuec.delete');
 Route::get('/fuec/delete/{id}', 'FuecController@delete')->name('fuec.delete.get');
@@ -180,4 +185,13 @@ Route::get('/rutas/edit/{id}', 'RutasController@edit')->name('rutas.edit');
 Route::post('/rutas/save', 'RutasController@save')->name('rutas.save');
 Route::post('/rutas/delete', 'RutasController@delete')->name('rutas.delete');
 Route::get('/rutas/delete/{id}', 'RutasController@delete')->name('rutas.delete.get');
+
+
+Route::get('/alistamiento', 'AlistamientoVehiculosController@index')->name('alistamiento');
+Route::get('/alistamiento/new/{id}', 'AlistamientoVehiculosController@new')->name('alistamiento.new');
+Route::get('/alistamiento/edit/{id}', 'AlistamientoVehiculosController@edit')->name('alistamiento.edit');
+Route::get('/alistamiento/descargar/{id}', 'AlistamientoVehiculosController@descargar')->name('alistamiento.descargar');
+
+Route::post('/alistamiento/save', 'AlistamientoVehiculosController@save')->name('alistamiento.save');
+Route::post('/alistamiento/save/revision', 'AlistamientoVehiculosController@save_revision')->name('alistamiento.save.revision');
 

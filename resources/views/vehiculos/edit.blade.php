@@ -182,7 +182,12 @@
             <div class="col-md-6 form-group mb-3" id="div_empresa_afiliadora">
                       <label><strong>Empresa Afiliadora</strong></label>
                       <input type="text"  name="empresa_afiliadora" class="form-control" id="empresa_afiliadora"  placeholder="" value="{{$vehiculo->empresa_afiliadora}}">
-                </div>
+            </div>
+
+             <div class="col-md-6 form-group mb-3" id="div_fecha_convenio">
+                      <label><strong>Fecha Convenio</strong></label>
+                      <input type="date"  name="fecha_convenio" class="form-control" id="fecha_convenio"  placeholder="" value="{{$vehiculo->fecha_convenio}}">
+            </div>
                  
 
                <div class="col-xs-12 col-sm-12 col-md-12 ">
@@ -940,7 +945,9 @@ $('#user-new-form').validate({
     documento:{ required:true },
     departamento_id:{ required:true },
     ciudad_id: { required:true },
+    propietario_id: {required:true},
     password:{ required:false },
+    
 
   },messages: {
 
@@ -961,31 +968,39 @@ $("#submit").validate({
 });
 
 $('#vinculado').change(function(e){
-    
-        if ($(this).is(':checked')) {
-           $('#empresa_afiliadora').val('Movlife SAS');
-           $('#div_empresa_afiliadora').show();
-           $("#convenio").prop('checked', false);
 
-        }else{
-          $('#div_empresa_afiliadora').hide();
-          $('#empresa_afiliadora').val('');
-        }
+  
+    if ($(this).is(':checked')) {
+
+       $('#empresa_afiliadora').val('Movlife SAS');
+       $('#div_empresa_afiliadora').show();
+       $("#convenio").prop('checked', false);
+       $('#div_fecha_convenio').hide();
+
+
+    }else{
+
+      $("#convenio").prop('checked', false);
+      $('#div_empresa_afiliadora').hide();
+      $('#div_fecha_convenio').hide();
+      $('#empresa_afiliadora').val('');
+    }
 
 })
 
 $('#convenio').change(function(e){
     
-        if ($(this).is(':checked')) {
-           // Do something...
-           //$('#empresa_afiliadora').val('');
-           $('#div_empresa_afiliadora').show();
+   
+    if ($(this).is(':checked')) {
+      $('#div_empresa_afiliadora').show();
+      $('#div_fecha_convenio').show();
 
-        }else{
-           //$('#empresa_afiliadora').val('');
-           $('#div_empresa_afiliadora').hide();
-            $("#vinculado").prop('checked', false);
-        }
+    }else{
+
+      $('#div_empresa_afiliadora').hide();
+      $('#div_fecha_convenio').hide();
+      $("#vinculado").prop('checked', false);
+    }
 
 })
 

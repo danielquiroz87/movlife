@@ -173,7 +173,7 @@
                  <input type="number" name="telefono_contacto" class="form-control" placeholder=""  
                  value="{{$conductor->telefono_contacto}}" maxlength="20" >
                </div>
-               <!--
+               
                 <div class="col-md-6 form-group mb-3">
                   <label><strong>Email:</strong></label>
                   <input type="email" name="email" class="form-control" placeholder="example@email.com"
@@ -181,10 +181,10 @@
                 </div>
                 <div class="col-md-6 form-group mb-3">
                  <label> <strong>Nuevo Password:</strong></label>
-                 <input type="password" name="password" class="form-control" 
+                 <input type="text" name="password" class="form-control" 
                  value="" autocomplete="off" maxlength="20" >
                 </div>
-                !-->
+              
                <div class="col-xs-12 col-sm-12 col-md-12 ">
                 <button id="submit" type="submit" class="btn btn-primary">Enviar</button>
                 <a href="{{ route('conductores') }}" class="btn btn-danger">Cancelar</a>

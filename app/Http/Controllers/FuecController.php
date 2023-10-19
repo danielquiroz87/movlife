@@ -60,18 +60,42 @@ class FuecController extends Controller
         }else{
             $contrato=new FuecContrato();
         }
-        return view('fuec.edit')->with(['fuec'=>$fuec,'contrato'=>$contrato]);
+        return view('fuec.edit')->with(['fuec'=>$fuec,'contrato'=>$contrato,'duplicado'=>false]);
+
+    }
+    public function duplicar($id)
+    {   
+        $fuec_original=Fuec::find($id);
+        $contrato=FuecContrato::where('id_cliente',$fuec_original->id_cliente)->get()->first();
+        if($contrato){
+
+        }else{
+            $contrato=new FuecContrato();
+        }
+        $fuec=new Fuec();
+        $fuec->placa=$fuec_original->placa;
+        $fuec->id_conductor=$fuec_original->id_conductor;
+        //$fuec->id_conductor_2=$fuec_original->id_conductor_2;
+        //$fuec->id_conductor_3=$fuec_original->id_conductor_3;
+        $fuec->consecutivo=$fuec_original->consecutivo;
+        $fuec->id_cliente=$fuec_original->id_cliente;
+        $fuec->tipo=$fuec_original->tipo;
+        $fuec->fecha_inicial=$fuec_original->fecha_inicial;
+        $fuec->fecha_final=$fuec_original->fecha_final;
+        $fuec->ruta_id=$fuec_original->ruta_id;
+        $fuec->objeto_contrato_id=$fuec_original->objeto_contrato_id;
+        $fuec->fecha_inicial="";
+        $fuec->fecha_final="";
+
+
+        return view('fuec.edit')->with(['fuec'=>$fuec,'contrato'=>$contrato,'duplicado'=>true]);
 
     }
     public function delete($id){
         $fuec=Fuec::find($id);
         $fuec->delete();
-
         \Session::flash('flash_message','Registro eliminado exitosamente!.');
-
          return redirect()->route('fuec');
-
-
     }
     public function save(Request $request)
     { 
@@ -105,11 +129,31 @@ class FuecController extends Controller
         $placa=$request->get('placa');
         $fecha_final=$request->get('fecha_final');
 
-        
-
         $doc_vencidos=Helper::alertaDocumentos($conductores,$placa,$fecha_final);
+
+        $fecha_alerta=date('Y-m-d',strtotime('+10 days',strtotime(date('Y-m-d'))));
+
+        $doc_vencidos_alerta=Helper::alertaDocumentos($conductores,$placa,$fecha_alerta);
+        //$total_vencidos=0;
+        $total_vencidos=count($doc_vencidos);
+
+        $faltantes=Helper::getDocumentosObligatorios($placa);
         
-        $total_vencidos=0;//count($doc_vencidos);
+        if(count($faltantes)>0){
+
+            $flash_message='Alerta: No es posible guardar el registro, algunos documentos aun no se han subido al sistema.<br/>';
+            $str_doc="";
+            foreach ($faltantes as $key => $doc) {
+                $str_doc.='Tipo Documento:'.$doc['nombre'].',<br/>';
+            }
+            $flash_message.=$str_doc;
+
+             \Session::flash('flash_bad_message',$flash_message);
+
+              return redirect(url()->previous())
+                    ->withInput();
+
+        }
 
         if($total_vencidos>0){
             $flash_message='Alerta: No es posible guardar el registro, algunos documentos se encuentran vencidos.<br/>';
@@ -126,7 +170,20 @@ class FuecController extends Controller
 
 
         }
-        
+
+        if(count($doc_vencidos_alerta)>0){
+            $flash_message='Alerta: Algunos documentos del vehiculo: '.$placa.', y o conductor, se encuentran próximos a vencer.<br/><br/>';
+            $str_doc="";
+            foreach ($doc_vencidos_alerta as $key => $doc) {
+                $str_doc.='Tipo Documento:'.$doc->tipo_documento.',Fecha Vencimiento:'.$doc->fecha_final.''.',<br/>';
+            }
+            $flash_message.=$str_doc;
+
+             \Session::flash('flash_alert_message',$flash_message);
+        }
+
+        $contrato=FuecContrato::where('id_cliente',$request->get('id_cliente'))->get()->first();
+
         if($is_new){
              $fuec=Fuec::firstOrNew($request->all());
              $fuec->consecutivo=$fuec->id;
@@ -140,7 +197,9 @@ class FuecController extends Controller
         }else{
 
             $fuec->update($request->all());
-
+            $fuec->consecutivo=$fuec->id;
+            $fuec->contrato=$contrato->contrato;
+            $fuec->save();
             \Session::flash('flash_message','Fuec actualizado exitosamente!.');
 
              return redirect()->route('fuec');
@@ -164,7 +223,6 @@ class FuecController extends Controller
         $dateObj   = \DateTime::createFromFormat('!m', $monthNum);
         $dateObj2   = \DateTime::createFromFormat('!m', $monthNum2);
         $dateObj3   = \DateTime::createFromFormat('!m', $monthNum3);
-
         
         $mes_1 = strtoupper(strftime('%B', $dateObj->getTimestamp()));
         $dia_1=        date('d',strtotime($fuec->fecha_inicial));
@@ -174,12 +232,9 @@ class FuecController extends Controller
         $dia_2=        date('d',strtotime($fuec->fecha_final));
         $year_2=date('Y',strtotime($fuec->fecha_final));
 
-
-
         $mes_3 = strtoupper(strftime('%B', $dateObj3->getTimestamp()));
         $dia_3=        date('d',strtotime($fuec->created_at));
         $year_3=date('Y',strtotime($fuec->created_at));
-
 
         $fechas[0]=['mes'=>$mes_1,'dia'=>$dia_1,'year'=>$year_1];
         $fechas[1]=['mes'=>$mes_2,'dia'=>$dia_2,'year'=>$year_2];
@@ -195,8 +250,30 @@ class FuecController extends Controller
         $documentos_conductor=array_merge($documentos_conductor,$documentos_conductor2);
         $documentos_conductor=array_merge($documentos_conductor,$documentos_conductor3);
 
+        $contrato=FuecContrato::where('id_cliente',$fuec->id_cliente)->where('tipo',$fuec->tipo)->get()->first();
+
+        if($contrato){
         
-        $contrato=FuecContrato::where('id_cliente',$fuec->id_cliente)->get()->first();
+        }
+        else{
+
+            $contrato_new=new FuecContrato();
+            $contrato_new->id_cliente=$fuec->id_cliente;
+            $contrato_new->responsable_documento=$fuec->cliente->documento;
+            $contrato_new->responsable_nombres=$fuec->cliente->nombres.' '.$fuec->cliente->apellidos;
+            $contrato_new->responsable_telefono=$fuec->cliente->celular;
+            $contrato_new->responsable_direccion=$fuec->cliente->direccion->direccion1;
+            $contrato_new->objeto_contrato_id=$fuec->objeto_contrato_id;
+            $contrato_new->tipo=$fuec->tipo;
+            $contrato_new->save();
+
+            $contrato_new->contrato=$contrato_new->id;
+            $contrato_new->save();
+
+            $contrato=$contrato_new;
+
+        }
+
         $consecutivo=$this->getConsecutivoFuec($fuec,$contrato,$year_3);
         $vehiculo=Vehiculo::where('placa',$fuec->placa)->get()->first();
 
@@ -249,6 +326,14 @@ class FuecController extends Controller
         $str_consecutivo=str_pad($fuec->id,4,'0',STR_PAD_LEFT);
         $consecutivo.=$contrato.$str_consecutivo;
         return $consecutivo;
+    }
+
+    public function getContratoCliente($id){
+
+        $contrato=FuecContrato::where('id_cliente',$id)->get()->first();
+        return response()->json([
+            'data'=>$contrato
+        ]);
     }
     
 

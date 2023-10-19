@@ -12,6 +12,7 @@
 
 <div class="row">
 
+<div class="col-md-8">
 
    @if ($message = Session::get('flash_message'))
     <div class="alert alert-success alert-block">
@@ -25,7 +26,7 @@
             <strong>{!! nl2br($message)!!}</strong>
     </div>
   @endif
-
+</div>
 
     @if ($errors->any())
         <div class="alert alert-danger">
@@ -50,6 +51,7 @@
     {{ csrf_field() }}
       <input type="hidden" name="id" value="{{$fuec->id}}">
       <input type="hidden" name="is_new" value="false">
+      <input type="hidden" name="duplicado" id="duplicado" value="{{$duplicado}}">
 
         <div class="row">
            
@@ -94,7 +96,7 @@
           
            <div class="col-md-6 form-group mb-3">
               <label><strong>Cliente:</strong></label>
-                    <select class="form-control clientes" name="id_cliente">
+                    <select class="form-control clientes" name="id_cliente" id="id_cliente">
                       <?php echo Helper::selectClientes($fuec->id_cliente) ?>
                     </select>
                    
@@ -114,16 +116,17 @@
 
           <div class="col-md-12 form-group mb-3">
               <label><strong>Objeto Contrato:</strong></label>
-                    <select class="form-control" name="objeto_contrato_id">
-                        <?php echo Helper::selectObjetosContrato($fuec->objeto_contrato_id) ?>
+                    <select class="form-control" name="objeto_contrato_id" id="objeto_contrato_id" >
+                        <?php echo Helper::selectObjetosContrato($contrato->objeto_contrato_id) ?>
                     </select>
           </div>
           <div class="col-md-12 form-group mb-3">
               <label><strong>Rutas:</strong></label>
-                    <select class="form-control" name="ruta_id">
+                    <select class="form-control" name="ruta_id" id="ruta_id">
                         <?php echo Helper::selectRutas($fuec->ruta_id) ?>
                     </select>
           </div>
+
 
           
            
@@ -155,13 +158,55 @@
 
 
 <script>
+  var id_conductor="";
+  var id_conductor_2="";
+  var id_conductor_3="";
 
+  $(document).ready(function(){
+
+     id_conductor=$('#conductor_servicio').val();
+     id_conductor_2=$('#conductor_servicio_2').val();
+     id_conductor_3=$('#conductor_servicio_3').val();
+     getConductores();
+
+  });
+
+ $('#ruta_id').select2({
+   theme: 'bootstrap-5'
+ });
+
+ function getConductores(duplicado){
+
+  var placa=$('#placa').val();
+
+  $.get('/conductores/placa/'+placa,function(html){
+
+     $('.conductor_servicio').html(html);
+     $('#conductor_servicio').val(id_conductor);
+     $('#conductor_servicio_2').val(id_conductor_2);
+     $('#conductor_servicio_3').val(id_conductor_3);
+       
+    })
+ }
+
+$('#id_cliente').change(function(){
+   var id=$(this).val();
+   var strurl='/fuec/contrato/'+id;
+   $.get(strurl,{},function(response){
+     $('#objeto_contrato_id').val('');
+     if(response.data.objeto_contrato_id){
+       $('#objeto_contrato_id').val(response.data.objeto_contrato_id);
+     }else{
+      
+     }
+     console.log(response.data.objeto_contrato_id);
+   })
+
+ })
+ 
 
 $("#placa").blur(function(){
-    var placa=$(this).val();
-    $.get('/conductores/placa/'+placa,function(html){
-      $(".conductor_servicio").html(html);
-    })
+    getConductores();
 })
 
 

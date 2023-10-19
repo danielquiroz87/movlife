@@ -28,8 +28,10 @@
             <h1>Rutas</h1>
             <div class="d-sm-flex mb-3" data-view="print">
                   <span class="m-auto"></span>
-                  
+
+                @if(auth()->user()->superadmin==1 || auth()->user()->email=='catalina.forero@movlife.co'  )
                     <a class="btn btn-primary" href="{{route('rutas.new')}}">Nuevo</a>
+                @endif
             </div>
           </div>
   </div>
@@ -59,7 +61,11 @@
                       <td>{{$ruta->origen_destino}}</td>
                       
                       <td>
-                      	<a class="text-success mr-2" href="{{route('rutas.edit', $ruta->id)}}" title="Editar"><i class="nav-icon i-Pen-2 font-weight-bold"></i></a>
+                      	@if(auth()->user()->superadmin==1 || auth()->user()->email=='catalina.forero@movlife.co'  )
+
+                        <a class="text-success mr-2" href="{{route('rutas.edit', $ruta->id)}}" title="Editar"><i class="nav-icon i-Pen-2 font-weight-bold"></i></a>
+
+                        @endif
                       	<a class="text-danger mr-2 eliminar" href="{{route('rutas.delete.get', $ruta->id)}}" title="Eliminar" ><i class="nav-icon i-Close-Window"></i></a>
                       </td>
                     </tr>

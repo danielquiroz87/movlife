@@ -9,12 +9,17 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>Administrador Movlife</title>
         <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700,800,900" rel="stylesheet">
+        
+        <!-- Styles Select2 -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />            <!-- Or for RTL support -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.rtl.min.css" />
+
         @yield('before-css')
         {{-- theme css --}}
 
 
         
-
         @if (Session::get('layout') == 'vertical')
         <link rel="stylesheet" href="{{ asset('assets/fonts/fontawesome-free-5.10.1-web/css/all.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/styles/vendor/metisMenu.min.css') }}">
@@ -33,6 +38,7 @@
             }
         
     </style>
+
 
     </head>
 
@@ -177,6 +183,12 @@
         --}}
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+        <!-- Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
+
+
 
         <script type="text/javascript">
             

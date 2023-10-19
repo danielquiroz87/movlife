@@ -6,6 +6,10 @@
   
 /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
+.chk_guardartarifa{
+  display: none;
+}
+
 #map {
   height: 100%;
 }
@@ -158,12 +162,20 @@
           
             <div class="col-md-6 form-group mb-3">
               <label><strong>Origen:</strong></label>
-                   <input type="text" name="origen" id="origin-input" class="form-control" placeholder=""  >
+                @if(isset($direcciones[0]))
+                    <input type="text" name="origen" id="origin-input" class="form-control matchTarifa" placeholder="" value="{{$direcciones[0]->origen}}"  >
+                @else
+                    <input type="text" name="origen" id="origin-input" class="form-control" placeholder=""  >
+                @endif
             </div>
 
             <div class="col-md-6 form-group mb-3">
-              <label><strong>Destino1:</strong></label>
-                   <input type="text" name="destino" id="destination-input" class="form-control" placeholder="" >
+              <label><strong>Destino:</strong></label>
+                @if(isset($direcciones[0]))
+                   <input type="text" name="destino" id="destination-input" class="form-control matchTarifa" placeholder="" value="{{$direcciones[0]->destino}}" >
+                @else
+                  <input type="text" name="destino" id="destination-input" class="form-control" placeholder="" >
+                @endif
             </div>
 
              <div class="col-md-6 form-group mb-3">
@@ -187,6 +199,36 @@
             </div>
 
             <div class="col-md-6 form-group mb-3">
+              <label><strong>Kilometros:</strong></label>
+                   <input type="text" name="kilometros" id="kilometros" value="" class="form-control" readonly="true"  >
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Tiempo:</strong></label>
+                   <input type="text" name="tiempo" id="tiempo" value="" class="form-control" placeholder="" readonly="true" >
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Tipo Vehiculo:</strong></label>
+                <select name="tipo_vehiculo" id="tipo_vehiculo" class="form-control select-busqueda matchTarifa">
+                  <?php echo Helper::selectClaseVehiculos($cotizacion->tipo_vehiculo) ?>
+                </select>
+            </div>
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Jornada:</strong></label>
+                  <select name="jornada" id="jornada" class="form-control select-busqueda matchTarifa">
+                  <option value="1" @if($cotizacion->jornada==1) selected="selected" @endif>1 Hora</option>
+                  <option value="2" @if($cotizacion->jornada==2) selected="selected" @endif>2 Horas</option>
+                  <option value="3" @if($cotizacion->jornada==3) selected="selected" @endif>3 Horas</option>
+                  <option value="4" @if($cotizacion->jornada==4) selected="selected" @endif>4 Horas</option>
+                  <option value="5" @if($cotizacion->jornada==5) selected="selected" @endif>5 Horas</option>
+                  <option value="6" @if($cotizacion->jornada==6) selected="selected" @endif>Media Jornada</option>
+                  <option value="7" @if($cotizacion->jornada==7) selected="selected" @endif>Extendida</option>
+                  <option value="8" @if($cotizacion->jornada==8) selected="selected" @endif>Completa</option>
+                </select>
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
               <label><strong>Cantidad:</strong></label>
                    <input type="number" name="cantidad" id="cantidad" value="{{$cotizacion->cantidad}}" class="form-control" placeholder="" maxlength="100" required>
             </div>
@@ -202,19 +244,27 @@
                    <input type="number" name="total" id="total" value="{{$cotizacion->total}}" class="form-control" placeholder="0" maxlength="11" disabled="disabled" required>
             </div>
 
+         
+
             <div class="opciones_viaje col-md-6 form-group mb-3 ">
               <label class="radio radio-outline-warning">
-                <input type="radio" name="tipo_viaje" value="1" @if($cotizacion->tipo_viaje==1) checked="checked" @endif ><span>Solo Ida</span><span class="checkmark"></span>
+                <input type="radio" name="tipo_viaje" class="matchTarifa" value="1" @if($cotizacion->tipo_viaje==1) checked="checked" @endif ><span>Solo Ida</span><span class="checkmark"></span>
               </label>
               <label class="radio radio-outline-success">
-                    <input type="radio" name="tipo_viaje" value="2" @if($cotizacion->tipo_viaje==2 ) checked="checked" @endif ><span>Ida y Regreso</span><span class="checkmark"></span>
+                    <input type="radio" name="tipo_viaje" class="matchTarifa" value="2" @if($cotizacion->tipo_viaje==2 ) checked="checked" @endif ><span>Ida y Regreso</span><span class="checkmark"></span>
               </label>
               <label class="radio radio-outline-danger">
-                  <input type="radio" name="tipo_viaje" value="3" @if($cotizacion->tipo_viaje==3 ) checked="checked" @endif><span>Regreso</span><span class="checkmark"></span>
+                  <input type="radio" name="tipo_viaje" class="matchTarifa" value="3" @if($cotizacion->tipo_viaje==3 ) checked="checked" @endif><span>Regreso</span><span class="checkmark"></span>
               </label>
             </div>
 
 
+            
+            <div class="chk_guardartarifa col-md-6 form-group mb-3 ">
+              <label class="checkbox checkbox-outline-primary">
+                    <input type="checkbox" name="guardar_tarifa" id="guardar_tarifa" value="1" ><span>Guardar Tarifa</span><span class="checkmark"></span>
+                </label>
+            </div>
             
 
           @if($cotizacion->finalizada==0)
@@ -225,11 +275,15 @@
           
           @endif
 
-          <div class="opciones_disponibilidad col-md-6 form-group mb-3 ">
+
+
+
+            <div class="opciones_disponibilidad col-md-6 form-group mb-3 ">
               <label class="checkbox checkbox-outline-primary">
                     <input type="checkbox" name="tiempo_adicional" id="tiempo_adicional" value="1"  @if($cotizacion->tiempo_adicional==1 )  checked="checked"  @endif><span>Disponibilidad de Tiempo Adicional</span><span class="checkmark"></span>
                 </label>
             </div>
+
 
             <div class="col-md-12 form-group mb-3" id="div-tiempo-adicional" >
               <label><strong> Horas de Espera Adicional</strong></label>
@@ -273,8 +327,20 @@
             </table>
             </div>
              
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Estado:</strong></label>
+                  <select name="estado" id="estado" class="form-control">
+                  <option value="" selected="selected">Seleccione</option>
+                  <option value="1" @if($cotizacion->estado==1) selected="selected" @endif>Aprobada</option>
+                  <option value="2" @if($cotizacion->estado==2) selected="selected" @endif>Pendiente</option>
+                  <option value="3" @if($cotizacion->estado==3) selected="selected" @endif>Modificada</option>
+                  <option value="4" @if($cotizacion->estado==4) selected="selected" @endif>Cancelada</option>
+                  <option value="5" @if($cotizacion->estado==5) selected="selected" @endif>Rechazada</option>
+                  
+                </select>
+            </div>
             
-            <div class="col-md-12 form-group mb-3">
+            <div class="col-md-6 form-group mb-3">
               <label><strong>Foto Vehiculo:</strong></label>
                   @if($cotizacion->foto_vehiculo!="")
                   <img src="{{asset($cotizacion->foto_vehiculo)}}" style="max-width: 200px;margin:10px" >
@@ -335,13 +401,205 @@
 @section('bottom-js')
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.js"></script>
-<script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCP9sxMbXwsUb0_DnlL4lQxP54BYBXyD_M&callback=initMap&libraries=places&v=weekly"
-      async
-    ></script>
 
 
-<script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDgnsQUqdsRu0bweRhx7Ji5r2Jknm7ncMo&callback=initMap&libraries=places&v=weekly" async>
+</script>
+
+
+<script type="text/javascript">
+
+matchTarifa=false;
+function buscarTarifa(){
+    var data=$('#cotizacion-new-form').serializeArray();
+    $.post('/cotizaciones/match/tarifa',data,function(response){
+      $('#valor_unitario').val(response.data.vcliente);
+      if(response.data.id==0){
+        matchTarifa=true;
+        $('.chk_guardartarifa').show('200');
+      }else{
+        $('.chk_guardartarifa').hide('200');
+      }
+    })
+}
+$('#valor_unitario').blur(function(){
+  if(!matchTarifa){
+    buscarTarifa();
+  }
+});
+
+$('.matchTarifa').change(function(){
+  matchTarifa=false;
+  buscarTarifa();
+});
+$('#origin-input').blur(function(){
+  matchTarifa=false;
+  buscarTarifa();
+});
+$('#destination-input').blur(function(){
+  matchTarifa=false;
+  buscarTarifa();
+});
+
+renderMap=false;
+handlerMap=false;
+
+class AutocompleteDirectionsHandler {
+  map;
+  originPlaceId;
+  destinationPlaceId;
+  travelMode;
+  directionsService;
+  directionsRenderer;
+  totalDistance;
+  totalDuration;
+  geocoderOrigin;
+  geocoderDest;
+
+  constructor(map) {
+    this.map = map;
+    this.originPlaceId = "";
+    this.destinationPlaceId = "";
+    this.travelMode = google.maps.TravelMode.DRIVING;
+    this.directionsService = new google.maps.DirectionsService();
+    this.directionsRenderer = new google.maps.DirectionsRenderer();
+    this.directionsRenderer.setMap(map);
+
+    const originInput = document.getElementById("origin-input");
+    const destinationInput = document.getElementById("destination-input");
+    const modeSelector = document.getElementById("mode-selector");
+    const originAutocomplete = new google.maps.places.Autocomplete(originInput);
+    this.geocoderOrigin = new google.maps.Geocoder();
+    this.geocoderDest = new google.maps.Geocoder();
+
+
+
+    // Specify just the place data fields that you need.
+    originAutocomplete.setFields(["place_id"]);
+
+    const destinationAutocomplete = new google.maps.places.Autocomplete(
+      destinationInput
+    );
+
+    // Specify just the place data fields that you need.
+    destinationAutocomplete.setFields(["place_id"]);
+    
+    this.setupClickListener(
+      "changemode-driving",
+      google.maps.TravelMode.DRIVING
+    );
+    this.setupPlaceChangedListener(originAutocomplete, "ORIG");
+    this.setupPlaceChangedListener(destinationAutocomplete, "DEST");
+    //this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
+    //this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(destinationInput);
+    this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(modeSelector);
+  }
+  // Sets a listener on a radio button to change the filter type on Places
+  // Autocomplete.
+  setupClickListener(id, mode) {
+    const radioButton = document.getElementById(id);
+
+    radioButton.addEventListener("click", () => {
+      this.travelMode = mode;
+      this.route();
+    });
+  }
+  setupPlaceChangedListener(autocomplete, mode) {
+    autocomplete.bindTo("bounds", this.map);
+    autocomplete.addListener("place_changed", () => {
+      const place = autocomplete.getPlace();
+
+      if (!place.place_id) {
+        window.alert("Please select an option from the dropdown list.");
+        return;
+      }
+
+      if (mode === "ORIG") {
+        this.originPlaceId = place.place_id;
+      } else {
+        this.destinationPlaceId = place.place_id;
+      }
+      this.route();
+    });
+  }
+  route() {
+    const me = this;
+    
+    if (!this.originPlaceId || !this.destinationPlaceId) {
+       
+        const originInput = document.getElementById("origin-input");
+        const destinationInput = document.getElementById("destination-input");
+       
+        this.geocoderOrigin.geocode( { 'address': originInput.value}, function(results, status) {
+        
+          if (status == google.maps.GeocoderStatus.OK) {
+            me.originPlaceId=results[0].place_id;
+            //me.route();
+          } 
+        });
+
+        this.geocoderDest.geocode( { 'address': destinationInput.value}, function(results, status) {
+          if (status == google.maps.GeocoderStatus.OK) {
+            me.destinationPlaceId=results[0].place_id;
+             me.route();
+          } 
+        });
+        //this.setupPlaceChangedListener(originAutocomplete, "ORIG");
+        //this.setupPlaceChangedListener(destinationAutocomplete, "DEST");
+    }
+
+
+    this.directionsService.route(
+      {
+        origin: { placeId: this.originPlaceId },
+        destination: { placeId: this.destinationPlaceId },
+        travelMode: this.travelMode,
+      },
+      (response, status) => {
+        if (status === "OK") {
+          me.directionsRenderer.setDirections(response);
+
+          var totalDistance = 0;
+          var totalDuration = 0;
+
+          var legs = response.routes[0].legs;
+          for(var i=0; i<legs.length; ++i) {
+              totalDistance += legs[i].distance.value;
+              totalDuration += legs[i].duration.value;
+          }
+          me.totalDistance=totalDistance;
+          me.totalDuration=totalDuration;
+          this.setDataInputs(me,legs);
+
+        } else {
+          window.alert("Directions request failed due to " + status);
+        }
+      }
+    );
+  }
+  setDataInputs(data,legs){
+    console.log("distance",legs[0].distance.text);
+    $('#kilometros').val(legs[0].distance.text);
+    $('#tiempo').val(legs[0].duration.text);
+
+    
+  }
+}
+
+
+ function initMap() {
+   map = new google.maps.Map(document.getElementById("map"), {
+    mapTypeControl: false,
+    center: { lat: 4.60971, lng: -74.08175 },
+    zoom: 13,
+  });
+  handlerMap=new AutocompleteDirectionsHandler(map);
+     setTimeout(function () {
+        handlerMap.route();
+      }, 1000);
+  //handlerMap.route();
+}
+
 
 
 // just for the demos, avoids form submit
@@ -464,112 +722,5 @@ $("#submit-guardar").validate({
 
 
 
-<script type="text/javascript">
 
-class AutocompleteDirectionsHandler {
-  map;
-  originPlaceId;
-  destinationPlaceId;
-  travelMode;
-  directionsService;
-  directionsRenderer;
-  constructor(map) {
-    this.map = map;
-    this.originPlaceId = "";
-    this.destinationPlaceId = "";
-    this.travelMode = google.maps.TravelMode.DRIVING;
-    this.directionsService = new google.maps.DirectionsService();
-    this.directionsRenderer = new google.maps.DirectionsRenderer();
-    this.directionsRenderer.setMap(map);
-
-    const originInput = document.getElementById("origin-input");
-    const destinationInput = document.getElementById("destination-input");
-    const modeSelector = document.getElementById("mode-selector");
-    const originAutocomplete = new google.maps.places.Autocomplete(originInput);
-
-    // Specify just the place data fields that you need.
-    originAutocomplete.setFields(["place_id"]);
-
-    const destinationAutocomplete = new google.maps.places.Autocomplete(
-      destinationInput
-    );
-
-    // Specify just the place data fields that you need.
-    destinationAutocomplete.setFields(["place_id"]);
-    
-    this.setupClickListener(
-      "changemode-driving",
-      google.maps.TravelMode.DRIVING
-    );
-    this.setupPlaceChangedListener(originAutocomplete, "ORIG");
-    this.setupPlaceChangedListener(destinationAutocomplete, "DEST");
-    //this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
-    //this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(destinationInput);
-    this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(modeSelector);
-  }
-  // Sets a listener on a radio button to change the filter type on Places
-  // Autocomplete.
-  setupClickListener(id, mode) {
-    const radioButton = document.getElementById(id);
-
-    radioButton.addEventListener("click", () => {
-      this.travelMode = mode;
-      this.route();
-    });
-  }
-  setupPlaceChangedListener(autocomplete, mode) {
-    autocomplete.bindTo("bounds", this.map);
-    autocomplete.addListener("place_changed", () => {
-      const place = autocomplete.getPlace();
-
-      if (!place.place_id) {
-        window.alert("Please select an option from the dropdown list.");
-        return;
-      }
-
-      if (mode === "ORIG") {
-        this.originPlaceId = place.place_id;
-      } else {
-        this.destinationPlaceId = place.place_id;
-      }
-
-      this.route();
-    });
-  }
-  route() {
-    if (!this.originPlaceId || !this.destinationPlaceId) {
-      return;
-    }
-
-    const me = this;
-
-    this.directionsService.route(
-      {
-        origin: { placeId: this.originPlaceId },
-        destination: { placeId: this.destinationPlaceId },
-        travelMode: this.travelMode,
-      },
-      (response, status) => {
-        if (status === "OK") {
-          me.directionsRenderer.setDirections(response);
-        } else {
-          window.alert("Directions request failed due to " + status);
-        }
-      }
-    );
-  }
-}
-
-
- function initMap() {
-  const map = new google.maps.Map(document.getElementById("map"), {
-    mapTypeControl: false,
-    center: { lat: 4.60971, lng: -74.08175 },
-    zoom: 13,
-  });
-
-  new AutocompleteDirectionsHandler(map);
-}
-
-</script>
 @endsection

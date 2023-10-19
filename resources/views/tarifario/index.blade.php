@@ -117,7 +117,7 @@
  		Swal
 	    .fire({
 	        title: "Eliminar",
-	        text: "Está seguro de eliminar este Pasajero?",
+	        text: "Está seguro de eliminar este Registro?",
 	        icon: 'warning',
 	        showCancelButton: true,
 	        confirmButtonText: "Sí, eliminar",

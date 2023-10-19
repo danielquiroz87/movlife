@@ -19,7 +19,7 @@ class FuecContrato extends  Model implements Auditable
     protected $table = 'fuec_contratos';
 
     protected $fillable = ['id_cliente','contrato','responsable_documento','responsable_nombres',
-                        'responsable_telefono','responsable_direccion'];
+                        'responsable_telefono','responsable_direccion','objeto_contrato_id','tipo'];
 
 
     public function cliente(){

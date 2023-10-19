@@ -259,7 +259,9 @@ class ConductoresController extends Controller
             if($request->get('email')!=""){
                 
                 $user=User::where('email',$conductor->email_contacto)->get()->first();
-
+                if(!$user){
+                    $user=new User();
+                }
                 //Si el password es diferente de vacio lo cambiamos
                 if($request->get('password')!=""){
                     $user->name=$request->get('nombres');

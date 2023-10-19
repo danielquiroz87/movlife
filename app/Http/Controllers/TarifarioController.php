@@ -31,6 +31,11 @@ class TarifarioController extends Controller
         $q="";
         if($request->has('q')){
            $q=$request->get('q');
+           $tarifario=Tarifario::where('origen','LIKE', '%'.$q.'%')
+                                ->orWhere('destino','LIKE', '%'.$q.'%');
+
+
+           $tarifario=$tarifario->paginate(config::get('global_settings.paginate'));      
         }
 
         return view('tarifario.index')->with(['tarifario'=>$tarifario,'q'=>$q]);
@@ -64,7 +69,9 @@ class TarifarioController extends Controller
 
         if($is_new){
             $tipo=$request->get('tipo_vehiculo');
-            $tarifario=Tarifario::firstOrNew($request->all());
+            $tarifario=Tarifario::create($request->all());
+            $tarifario->destino=$request->get('destino');
+            $tarifario->jornada=$request->get('jornada');
             $tarifario->save();
             \Session::flash('flash_message','Tarifario agregado exitosamente!.');
 

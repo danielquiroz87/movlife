@@ -84,7 +84,6 @@ class ClientesController extends Controller
 
         }else{
             $fuec_contrato=$existe;
-            
             $fuec_contrato->contrato=$fuec_contrato->id;
             $fuec_contrato->save();
         }
@@ -104,6 +103,8 @@ class ClientesController extends Controller
         }
         
         $fuec_contrato->contrato=$request->get('contrato');
+        $fuec_contrato->objeto_contrato_id=$request->get('objeto_contrato_id');
+
         $fuec_contrato->responsable_nombres=$request->get('responsable_nombres');
         $fuec_contrato->responsable_documento=$request->get('responsable_documento');
         $fuec_contrato->responsable_telefono=$request->get('responsable_telefono');

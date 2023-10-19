@@ -1,6 +1,8 @@
 @extends('layouts.master')
 
 @section('main-content')
+
+
   <div class="breadcrumb">
       <ul>
           <li><a href="/">Inicio</a></li>
@@ -40,7 +42,7 @@
 </div>
 <div class="row">
 
-<div class="col-md-8 mb-4">
+<div class="col-md-10 mb-2">
       <div class="card text-left">
           <div class="card-body">
                 <h3 class="card-title mb3">Nuevo Fuec</h3>
@@ -93,7 +95,7 @@
           
            <div class="col-md-6 form-group mb-3">
               <label><strong>Cliente:</strong></label>
-                    <select class="form-control clientes" name="id_cliente">
+                    <select class="form-control clientes" name="id_cliente" id="id_cliente"  data-url="/fuec/contrato/"  >
                       <?php echo Helper::selectClientes() ?>
                     </select>
                    
@@ -112,13 +114,13 @@
 
           <div class="col-md-12 form-group mb-3">
               <label><strong>Objeto Contrato:</strong></label>
-                    <select class="form-control" name="objeto_contrato_id">
+                    <select class="form-control" name="objeto_contrato_id" id="objeto_contrato_id">
                         <?php echo Helper::selectObjetosContrato() ?>
                     </select>
           </div>
-          <div class="col-md-12 form-group mb-3">
+          <div class="col-md-12 form-group mb-3" >
               <label><strong>Rutas:</strong></label>
-                    <select class="form-control" name="ruta_id">
+                    <select class="form-control" name="ruta_id" id="ruta_id" >
                         <?php echo Helper::selectRutas() ?>
                     </select>
           </div>
@@ -154,7 +156,29 @@
 
 <script>
 
+ $('#ruta_id').select2({
+   theme: 'bootstrap-5'
+ });
 
+ $('#list-rutas').change(function(){
+   $('#ruta_id').val($(this).val());
+ })
+
+ $('#id_cliente').change(function(){
+   var id=$(this).val();
+   var strurl='/fuec/contrato/'+id;
+   $.get(strurl,{},function(response){
+     $('#objeto_contrato_id').val('');
+     if(response.data.objeto_contrato_id){
+       $('#objeto_contrato_id').val(response.data.objeto_contrato_id);
+     }else{
+      
+     }
+     console.log(response.data.objeto_contrato_id);
+   })
+
+ })
+ 
   $("#placa").blur(function(){
     var placa=$(this).val();
     $.get('/conductores/placa/'+placa,function(html){

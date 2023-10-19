@@ -23,6 +23,13 @@
     </div>
   @endif
 
+  @if ($message = Session::get('flash_alert_message'))
+    <div class="alert alert-warning alert-block">
+        <button type="button" class="close" data-dismiss="alert">×</button> 
+            <strong>{!! nl2br($message)!!}</strong>
+    </div>
+  @endif
+
   <div class="row">
           <div class="col-md-12">
             <h1>Fuecs</h1>
@@ -45,15 +52,13 @@
                   <thead>
                     <tr>
                       <th>Id</th>
-                      <th>Consecutivo</th>
                       <th>Tipo</th>
                       <th>Placa</th>
                       <th>Conductor</th>
                       <th>Cliente</th>
-                      <th>Contrato</th>
+                      <th>Ruta</th>
                       <th>Fecha Inicial</th>
                       <th>Fecha Final</th>
-                      <th>Ruta</th>
                       <th>Acciones</th>
                     </tr>
                   </thead>
@@ -61,7 +66,6 @@
                   	@foreach ($fuecs as $fuec)
                     <tr>
                       <td>{{$fuec->id}}</td>
-                      <td>{{$fuec->consecutivo}}</td>
                       <td>
                         @if($fuec->tipo==1) Normal @else Ocasional @endif
                        
@@ -70,12 +74,16 @@
                       <td>{{$fuec->conductor->nombres}} {{$fuec->conductor->apellidos}}</td>
 
                       <td>{{$fuec->cliente->razon_social}}</td>
-                      <td>{{$fuec->contrato}}</td>
+                      <td>
+                        {!! Str::limit($fuec->ruta->origen_destino, 200, ' ...') !!}
+                      </td>
                       <td>{{$fuec->fecha_inicial}}</td>
                       <td>{{$fuec->fecha_final}}</td>
-                      <td>{{$fuec->ruta_id}}</td>
+                    
                       <td>
                       	<a class="text-success mr-2" href="{{route('fuec.edit', $fuec->id)}}" title="Editar"><i class="nav-icon i-Pen-2 font-weight-bold"></i></a>
+
+                        <a class="text-default mr-2" href="{{route('fuec.duplicar', $fuec->id)}}" title="Duplicar Fuec"><i class="nav-icon i-Data-Copy font-weight-bold"></i></a>
 
                          <a class="text-default mr-2 fuec" href="{{route('fuec.descargar', $fuec->id)}}" title="Descargar Fuec" target="_blank" >
                         <i class="nav-icon  i-File-Horizontal-Text font-weight-bold"></i></i></a>

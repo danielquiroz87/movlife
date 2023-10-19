@@ -19,7 +19,7 @@ class Vehiculo extends  Model implements Auditable
 
     protected $table = 'vehiculos';
 
-    protected $fillable = ['placa','codigo_interno','modelo','linea','id_vehiculo_clase','id_vehiculo_marca','id_vehiculo_tipo_combustible','id_vehiculo_uso','servicio','capacidad_pasajeros','color','numero_chasis','numero_motor','cilindraje','departamento_id','ciudad_id','vinculado','convenio_firmado','propietario_id','activo','empresa_afiliadora'];
+    protected $fillable = ['placa','codigo_interno','modelo','linea','id_vehiculo_clase','id_vehiculo_marca','id_vehiculo_tipo_combustible','id_vehiculo_uso','servicio','capacidad_pasajeros','color','numero_chasis','numero_motor','cilindraje','departamento_id','ciudad_id','vinculado','convenio_firmado','propietario_id','activo','empresa_afiliadora','fecha_convenio'];
 
 
     public function clase(){
