@@ -98,7 +98,7 @@ table th{
 	<tbody>
 	<tr>
 	<td style="text-align: left;width: 300px"><span style="margin:5px">FECHA INICIAL</span></td><td>DIA<br/>{{$fechas[0]['dia']}}</td>
-	<td>MES<br/>{{$fechas[0]['mes']}}</td><td>AÑO<br/>{{$fechas[1]['year']}}</td>
+	<td>MES<br/>{{$fechas[0]['mes']}}</td><td>AÑO<br/>{{$fechas[0]['year']}}</td>
 	</tr>
 	<tr>
 	<td style="text-align: left;width: 300px"><span style="margin:5px">FECHA VENCIMIENTO</span></td><td>DIA<br/>{{$fechas[1]['dia']}}</td><td>MES<br/>{{$fechas[1]['mes']}}</td><td>AÑO<br/>{{$fechas[1]['year']}}</td>

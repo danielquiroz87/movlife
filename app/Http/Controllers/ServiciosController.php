@@ -9,6 +9,7 @@ use App\Models\Servicio;
 use App\Models\Cliente;
 use App\Models\Pasajero;
 use App\Models\Municipios;
+use App\Models\PreServicio;
 
 
 use App\Models\OrdenServicioDetalle;
@@ -37,6 +38,12 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Helpers\Helper\Helper;
 
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+
+
 class ServiciosController extends Controller
 {
     /**
@@ -44,10 +51,280 @@ class ServiciosController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Request $request)
     {
-        $this->middleware('auth');
+       $name=$request->route()->getName();
+       if($name=='web.preservicio' || $name=='web.preservicios.save' ){
+
+       }
+       else{
+            $this->middleware('auth');
+       }
     }
+
+    public function testEmail(Request $request,$id){
+
+        $servicio=Servicio::find($id);
+
+        $body = view('servicios.email',compact('servicio'))->render();
+
+        $mail = new PHPMailer(true);
+
+        try {
+        //Server settings
+        $mail->SMTPDebug = false;                      //Enable verbose debug output
+        $mail->isSMTP();                                            //Send using SMTP
+        $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
+        $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+        $mail->Username   = 'danykyroz@gmail.com';                     //SMTP username
+        $mail->Password   = 'uevp blus zygo yols';                               //SMTP password
+        $mail->SMTPSecure = 'tls';            //Enable implicit TLS encryption
+        $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+
+        //Recipients
+        $mail->setFrom('danykyroz@gmail.com', 'Movlife');
+        if($servicio->pasajero->email_contacto!=""){
+            $mail->addAddress($servicio->pasajero->email_contacto, $servicio->pasajero->nombres); 
+        }
+        if($servicio->cliente->email!=""){
+            $mail->addCC($servicio->cliente->email);
+        }
+        $mail->addBCC('daniel.quiroz@epayco.com');
+        $mail->isHTML(true);                                 
+        $mail->Subject = 'Nuevo Servicio Movlife #'.$servicio->id;
+        $mail->Body    = $body;
+     
+        $mail->send();
+        echo 'Message has been sent';
+
+        } catch (Exception $e) {
+            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        }
+
+        die();
+    }
+
+
+     public function sendEmail($id){
+
+        $servicio=Servicio::find($id);
+
+        $body = view('servicios.email',compact('servicio'))->render();
+        
+        $mail = new PHPMailer(true);
+
+        try {
+        //Server settings
+        $mail->SMTPDebug = false;                      //Enable verbose debug output
+        $mail->isSMTP();                                            //Send using SMTP
+        $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
+        $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+        $mail->Username   = 'danykyroz@gmail.com';                     //SMTP username
+        $mail->Password   = 'uevp blus zygo yols';                               //SMTP password
+        $mail->SMTPSecure = 'tls';            //Enable implicit TLS encryption
+        $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+
+        //Recipients
+        $mail->setFrom('danykyroz@gmail.com', 'Movlife');
+        if($servicio->pasajero->email_contacto!=""){
+            $mail->addAddress($servicio->pasajero->email_contacto, $servicio->pasajero->nombres); 
+        }
+        if($servicio->cliente->email!=""){
+            $mail->addCC($servicio->cliente->email);
+        }
+        $mail->addBCC('daniel.quiroz@epayco.com');
+        $mail->isHTML(true);                                 
+        $mail->Subject = 'Nuevo Servicio Movlife #'.$servicio->id;
+        $mail->Body    = $body;
+     
+        $mail->send();
+        $response='Message has been sent';
+
+        } catch (Exception $e) {
+            $response= "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        }
+
+        return $response;
+    }
+
+
+     public function listar_preservicios(Request $request){
+        $servicios=PreServicio::whereIn('estado',array(1,2,3));
+        $filtros=$request->get('filtros');
+
+        if(isset($filtros['estado'])){
+            $estado=(int) $filtros['estado'];
+            if($estado!="" || $estado>0){
+                $servicios->where('estado','=',$estado);
+            }
+        }
+        else{
+            $filtros['estado']="";
+        }
+        if(isset($filtros['cliente'])){
+            $cliente=(int) $filtros['cliente'];
+            if($cliente!="" || $cliente>0){
+                $servicios->where('id_cliente','=',$cliente);
+            }
+            
+        }else{
+             $filtros['cliente']="";
+        }
+        
+        if(isset($filtros['uri_sede'])){
+            $uri_sede=(int) $filtros['uri_sede'];
+            if($uri_sede!="" || $uri_sede>0){
+                $servicios->where('uri_sede','=',$uri_sede);
+            }
+            
+        }else{
+             $filtros['uri_sede']="";
+        }
+
+        if(isset($filtros['fecha_inicial'])){
+            $fecha_inicial=$filtros['fecha_inicial'];
+            if($fecha_inicial!=""){
+               $servicios->where('fecha_servicio','>=',$fecha_inicial); 
+            }
+            
+        }else{
+            $filtros['fecha_inicial']=date('Y-m-01');
+        }
+        if(isset($filtros['fecha_final'])){
+            $fecha_final=$filtros['fecha_final'];
+            if($fecha_final!=""){
+               $servicios->where('fecha_servicio','<=',$fecha_final); 
+            }
+            
+        }else{
+            $filtros['fecha_final']=date('Y-m-d');
+        }
+        $request->session()->put('filtros_servicios', $filtros);
+
+        $servicios=$servicios->paginate(Config::get('global_settings.paginate'));
+        //$servicios=$servicios->paginate(2);
+
+        return view('servicios.preservicios_index')->with(['servicios'=>$servicios,'filtros'=>$filtros]);
+
+
+
+
+        return view('servicios.listar_preservicios');
+    }
+
+    public function preservicio(Request $request){
+        
+        $sedes=Sedes::all();
+
+        return view('servicios.preservicio')->with(['sedes'=>$sedes]);
+    }
+
+    public function fromPreservicio(Request $request,$id){
+        
+        $preservicio=PreServicio::find($id);
+        
+        $cotizacion=new Cotizacion();
+        $cotizacion->id_cliente=$preservicio->id_cliente;
+        $cotizacion->fecha_servicio=$preservicio->fecha_servicio;
+        $cotizacion->hora_recogida=$preservicio->hora_recogida;
+        $cotizacion->hora_salida=$preservicio->hora_regreso;
+        $cotizacion->direccion_recogida=$preservicio->origen;
+        $cotizacion->direccion_destino=$preservicio->destino;
+
+        $dt=new CotizacionDetalle();
+        $dt->origen=$preservicio->origen;
+        $dt->destino=$preservicio->destino;
+
+        $servicio=new Servicio();
+        $servicio->id_cliente=$preservicio->id_cliente;
+        $servicio->fecha_solicitud=$preservicio->fecha_solicitud;
+        $servicio->fecha_servicio=$preservicio->fecha_servicio;
+        $servicio->hora_recogida=$preservicio->hora_recogida;
+        $servicio->hora_regreso=$preservicio->hora_regreso;
+        $servicio->id_pasajero=$preservicio->pasajero_id;
+
+        $servicio->barrio=$preservicio->barrio;
+        $servicio->origen=$preservicio->origen;
+        $servicio->destino=$preservicio->destino;
+        $servicio->tipo_viaje=$preservicio->tipo_viaje;
+        $servicio->tipo_servicio=$preservicio->tipo_servicio;
+        $servicio->uri_sede=$preservicio->uri_sede;
+        $servicio->observaciones=$preservicio->observaciones;
+        $servicio->estado=1;
+
+        $sedes=Sedes::all();
+
+
+        return view('servicios.new')->with(['servicio'=>$servicio,'cotizacion'=>$cotizacion,'detalle'=>$dt,'sedes'=>$sedes]);
+    }
+
+    public function preserviciosave(Request $request){
+
+        try{
+
+
+       $preservicio=new PreServicio();
+       $documento=$request->get('cliente_documento');
+       $documento_pasajero= $request->get('pasajero_documento');
+
+       $existe_cliente=Cliente::where('documento',$documento)->get()->first();
+       if($existe_cliente){
+            $preservicio->id_cliente=$existe_cliente->id;
+            $preservicio->cliente_documento=$existe_cliente->documento;
+            $preservicio->cliente_nombres=$existe_cliente->nombres;
+            $preservicio->cliente_apellidos=$existe_cliente->apellidos;
+            $preservicio->cliente_email=$existe_cliente->email_contacto;
+            $preservicio->cliente_celular=$existe_cliente->celular;
+
+       }else{
+            $preservicio->cliente_documento=$request->get('cliente_documento');
+            $preservicio->cliente_nombres=$request->get('cliente_nombres');
+            $preservicio->cliente_apellidos=$request->get('cliente_apellidos');
+            $preservicio->cliente_email=$request->get('cliente_email');
+            $preservicio->cliente_celular=$request->get('cliente_celular');
+       }
+       $existe_pasajero=Pasajero::where('documento',$documento_pasajero)->get()->first();
+       if($existe_pasajero){
+
+            $preservicio->pasajero_id=$existe_pasajero->id;
+            $preservicio->pasajero_documento=$existe_pasajero->documento;
+            $preservicio->pasajero_nombres=$existe_pasajero->nombres;
+            $preservicio->pasajero_apellidos=$existe_pasajero->apellidos;
+            $preservicio->pasajero_email=$existe_pasajero->email_contacto;
+            $preservicio->pasajero_celular=$existe_pasajero->celular;
+
+       }else{
+
+            $preservicio->pasajero_documento=$request->get('pasajero_documento');
+            $preservicio->pasajero_nombres=$request->get('pasajero_nombres');
+            $preservicio->pasajero_apellidos=$request->get('pasajero_apellidos');
+            $preservicio->pasajero_email=$request->get('pasajero_email');
+            $preservicio->pasajero_celular=$request->get('pasajero_celular');
+       } 
+
+       $preservicio->fecha_solicitud=$request->get('fecha_solicitud');
+       $preservicio->fecha_servicio=$request->get('fecha_servicio');
+       $preservicio->hora_recogida=$request->get('hora_recogida');
+       $preservicio->origen=$request->get('origen');
+       $preservicio->destino=$request->get('destino');
+       $preservicio->tipo_viaje=$request->get('tipo_viaje');
+       $preservicio->tipo_servicio=$request->get('tipo_servicio');
+       $preservicio->uri_sede=$request->get('uri_sede');
+       $preservicio->observaciones=$request->get('observaciones');
+       $preservicio->estado=1;
+       $preservicio->save();
+
+        \Session::flash('flash_message','Servicio enviado exitosamente!.');
+
+       }catch(Exception $ex){
+            \Session::flash('bad_message','Error al tratar de guardar el servicio!.');
+       }
+
+        return redirect()->route('web.preservicio');
+
+    }
+
+
     public function index(Request $request)
     {   
         $servicios=Servicio::whereIn('estado',array(1,2,3));
@@ -623,7 +900,11 @@ class ServiciosController extends Controller
     public function new()
     { 
         $dt=new CotizacionDetalle();
-        return view('servicios.new')->with(['detalle'=>$dt,'cotizacion'=>false]);
+        $servicio=false;
+        $sedes=Sedes::all();
+
+
+        return view('servicios.new')->with(['servicio'=>$servicio,'detalle'=>$dt,'cotizacion'=>false,'sedes'=>$sedes]);
     }
 
     public function fromAddress($id,Request $request){
@@ -807,6 +1088,8 @@ class ServiciosController extends Controller
             $servicio->user_id=Auth::user()->id;
             $servicio->save();
             \Session::flash('flash_message','Servicio agregado exitosamente!.');
+            
+            $this->sendEmail($servicio->id);
 
              return redirect()->route('servicios');
 
@@ -886,7 +1169,9 @@ class ServiciosController extends Controller
                 $servicio->saldo=$servicio->valor_conductor;
                 $servicio->save();
             }
-           
+            
+            $this->sendEmail($servicio->id);
+
             \Session::flash('flash_message','Servicio actualizado exitosamente!.');
 
              return redirect()->route('servicios');

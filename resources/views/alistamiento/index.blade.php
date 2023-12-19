@@ -29,7 +29,11 @@
   <div class="row">
           <div class="col-md-12">
             <h1>Alistamientos</h1>
-         
+            <div class="d-sm-flex mb-3" data-view="print">
+                  <span class="m-auto"></span>
+                   
+                    
+            </div>
           </div>
   </div>
 

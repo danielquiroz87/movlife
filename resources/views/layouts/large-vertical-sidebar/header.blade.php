@@ -158,6 +158,7 @@
         <!-- Notificaiton End -->
 
         <!-- User avatar dropdown -->
+        
         <div class="dropdown">
             <div class="user col align-self-end">
                 <img src="{{asset('assets/images/faces/1.jpg')}}" id="userDropdown" alt="" data-toggle="dropdown"
@@ -172,6 +173,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
 </div>

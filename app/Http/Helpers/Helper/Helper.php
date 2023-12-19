@@ -1,4 +1,5 @@
 <?php
+/*Clase de utilidades, llenado de selects y otros datos para dashboard y alertas en informes*/
 
 namespace App\Http\Helpers\Helper;
 

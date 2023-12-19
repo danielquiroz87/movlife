@@ -1,6 +1,13 @@
 @extends('layouts.master')
-
 @section('main-content')
+<?php
+if(isset($servicio)){
+  $servicio=$servicio;
+}else{
+  $servicio=false;
+}
+
+?>
 
 <style type="text/css">
   
@@ -126,20 +133,69 @@
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Pasajero:</strong></label>
+                 
+                  @if($servicio && $servicio->id_pasajero!="")
+                  <select name="id_pasajero" class="form-control">
+                    <?php echo Helper::selectPasajeros($servicio->id_pasajero) ?>
+                  </select>
+                  @else
                   <select name="id_pasajero" class="form-control">
                     <?php echo Helper::selectPasajeros() ?>
                   </select>
+                  @endif
             </div>
-
+            @if ($cotizacion)
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Fecha Servicio:</strong></label>
+                   <input type="date" name="fecha_servicio" value="{{$cotizacion->fecha_servicio}}" class="form-control" placeholder="" maxlength="20" required>
+            </div>
+            @else
             <div class="col-md-6 form-group mb-3">
               <label><strong>Fecha Servicio:</strong></label>
                    <input type="date" name="fecha_servicio" value="" class="form-control" placeholder="" maxlength="20" required>
             </div>
+            @endif
 
+            @if($servicio)
+            <div class="col-md-12 form-group mb-3">
+              <label><strong>URI SEDE: </strong></label>
+                   <select name="uri_sede" class="form-control">
+
+                    @foreach($sedes as $sede)
+                      <option value="{{$sede->id}}" @if($servicio->uri_sede==$sede->id) selected="selected" @else @endif>{{$sede->nombre}}</option>
+                    @endforeach
+                   </select>
+            </div>
+            @else
+
+            <div class="col-md-12 form-group mb-3">
+              <label><strong>URI SEDE: </strong></label>
+                   <select name="uri_sede" class="form-control">
+                    @foreach($sedes as $sede)
+                      <option value="{{$sede->id}}">{{$sede->nombre}}</option>
+                    @endforeach
+                   </select>
+            </div>
+
+            @endif
+
+
+            @if ($cotizacion)
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Hora Recogida (Desde):</strong></label>
-                   <input type="time" name="hora_recogida" value="10:00:00" class="form-control" max="23:59:59" min="00:00:00"  required >
+                   <input type="time" name="hora_recogida" value="{{$cotizacion->hora_recogida}}" class="form-control" max="23:59:59" min="00:00:00"  required >
+            </div>
+
+             <div class="col-md-6 form-group mb-3">
+              <label><strong>Hora Estimada Salida (Hasta):</strong></label>
+                   <input type="time" name="hora_regreso" value="{{$cotizacion->hora_salida}}" class="form-control" max="23:59:59" min="00:00:00"   >
+            </div>
+            @else
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Hora Recogida (Desde):</strong></label>
+                   <input type="time" name="hora_recogida" value="" class="form-control" max="23:59:59" min="00:00:00"  required >
             </div>
 
              <div class="col-md-6 form-group mb-3">
@@ -147,23 +203,41 @@
                    <input type="time" name="hora_estimada_salida" value="10:00:00" class="form-control" max="23:59:59" min="00:00:00"   >
             </div>
 
+            @endif
 
+            @if($servicio)
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Tipo Servicio:</strong></label>
+                  <select name="tipo_servicio" class="form-control">
+                     <?php echo Helper::selectTipoServicios($servicio->tipo_servicio) ?>
+                  </select>
+            </div>
+            @else
             <div class="col-md-6 form-group mb-3">
               <label><strong>Tipo Servicio:</strong></label>
                   <select name="tipo_servicio" class="form-control">
                      <?php echo Helper::selectTipoServicios() ?>
                   </select>
             </div>
+            @endif
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Semana:</strong></label>
                    <input type="number" name="valor_cliente" value="" class="form-control" min="1" max="5">
             </div>
 
-               <div class="col-md-6 form-group mb-3">
+            @if($servicio)
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Barrio:</strong></label>
+                   <input type="text" name="barrio" id="barrio" class="form-control" placeholder="" maxlength="600" value="{{$servicio->barrio}}" >
+            </div>
+            @else
+             <div class="col-md-6 form-group mb-3">
               <label><strong>Barrio:</strong></label>
                    <input type="text" name="barrio" id="barrio" class="form-control" placeholder="" maxlength="600" value="" >
             </div>
+            @endif
 
           
              <div class="col-md-6 form-group mb-3">
@@ -198,16 +272,16 @@
 
             <div class="opciones_viaje col-md-6 form-group mb-3 ">
               <label class="radio radio-outline-warning">
-                <input type="radio" name="tipo_viaje" value="1" ><span>Solo Ida</span><span class="checkmark"></span>
+                <input type="radio" name="tipo_viaje" value="1" <?php if(isset($servicio->tipo_viaje) && $servicio->tipo_viaje==1): ?> checked="true" <?php endif;?> ><span>Solo Ida</span><span class="checkmark"></span>
               </label>
               <label class="radio radio-outline-success">
-                    <input type="radio" name="tipo_viaje" value="2"><span>Ida y Regreso</span><span class="checkmark"></span>
+                    <input type="radio" name="tipo_viaje" value="2" <?php if(isset($servicio->tipo_viaje) && $servicio->tipo_viaje==2): ?> checked="true" <?php endif;?>><span>Ida y Regreso</span><span class="checkmark"></span>
               </label>
               <label class="radio radio-outline-danger">
-                  <input type="radio" name="tipo_viaje" value="3"><span>Regreso</span><span class="checkmark"></span>
+                  <input type="radio" name="tipo_viaje" value="3" <?php if(isset($servicio->tipo_viaje) && $servicio->tipo_viaje==3): ?> checked="true" <?php endif;?>><span>Regreso</span><span class="checkmark"></span>
               </label>
                  <label class="radio radio-outline-danger">
-                  <input type="radio" name="tipo_viaje" value="4"><span>Multidestino</span><span class="checkmark"></span>
+                  <input type="radio" name="tipo_viaje" value="4" <?php if(isset($servicio->tipo_viaje) && $servicio->tipo_viaje==4): ?> checked="true" <?php endif;?>><span>Multidestino</span><span class="checkmark"></span>
               </label>
             </div>
 
@@ -300,9 +374,9 @@
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.js"></script>
 
 <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCP9sxMbXwsUb0_DnlL4lQxP54BYBXyD_M&callback=initMap&libraries=places&v=weekly"
-      async
-    ></script>
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDgnsQUqdsRu0bweRhx7Ji5r2Jknm7ncMo&callback=initMap&libraries=places&v=weekly"
+      async>
+</script>
 
 
 

@@ -1,3 +1,4 @@
+
 <div class="side-content-wrap">
     <div class="sidebar-left open rtl-ps-none" data-perfect-scrollbar data-suppress-scroll-x="true">
         <ul class="navigation-left">
@@ -156,6 +157,13 @@
 
         @if(session::get('is_employe')==true || auth()->user()->superadmin==1  )
 
+             <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='servicios' ? 'open' : '' }}"
+                    href="{{route('preservicios')}}">
+                    <i class="nav-icon i-Car-Wheel"></i>
+                    <span class="item-name">Pre-Servicios</span>
+                </a>
+            </li>
             <li class="nav-item ">
                 <a class="{{ Route::currentRouteName()=='servicios' ? 'open' : '' }}"
                     href="{{route('servicios')}}">

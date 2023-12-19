@@ -110,7 +110,7 @@ class AlistamientoVehiculosController extends Controller
 
         }
 
-        $fecha_inicio='2023-09-01';
+        $fecha_inicio='2023-10-15';
         $str_fecha=strtotime($fecha_inicio);
         $hoy=date('Y-m-d');
         $str_to_hoy=strtotime($hoy);
@@ -155,6 +155,7 @@ class AlistamientoVehiculosController extends Controller
         
         $al->fecha=$fecha;
         $al->aprobado=0;
+        $al->kilometros=$request->get('kilometros',0);
         $al->observaciones_conductor=$request->get('observaciones_conductor');
         $al->save();
 
@@ -189,6 +190,7 @@ class AlistamientoVehiculosController extends Controller
         $al=VehiculoAlistamientoDiario::find($id);
        
         $al->aprobado=$request->get('aprobado');
+        $al->kilometros=$request->get('kilometros',0);
         $al->observaciones_movlife=$request->get('observaciones_movlife');
         $al->revisado_por=Auth::user()->id;
         $al->save();

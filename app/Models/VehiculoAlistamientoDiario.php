@@ -18,7 +18,7 @@ class VehiculoAlistamientoDiario extends  Model implements Auditable
 
     protected $table = 'vehiculo_alistamiento_diario';
 
-    protected $fillable = ['vehiculo_id','conductor_id','aprobado','observaciones_conductor','observaciones_movlife','revisado_por'];
+    protected $fillable = ['vehiculo_id','conductor_id','aprobado','observaciones_conductor','observaciones_movlife','revisado_por','kilometros'];
 
     public function conductor(){
     	return $this->hasOne('App\Models\Conductor','id','conductor_id');

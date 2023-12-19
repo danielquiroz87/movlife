@@ -25,6 +25,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('/user/logout', 'ClientesController@logout')->name('user.logout');
+Route::get('/web/solicitar/servicio', 'ServiciosController@preservicio')->name('web.preservicio');
+Route::post('/web/preservicio/save', 'ServiciosController@preserviciosave')->name('web.preservicios.save');
+
 
 Auth::routes();
 Route::get('/', 'HomeController@index')->name('index');
@@ -97,9 +100,13 @@ Route::get('/vehiculos/delete/conductor/{id}', 'VehiculosController@deleteConduc
 Route::get('/vehiculos/importar', 'VehiculosController@importar')->name('vehiculos.importar');
 
 
+Route::get('/preservicios', 'ServiciosController@listar_preservicios')->name('preservicios');
+
 Route::get('/servicios', 'ServiciosController@index')->name('servicios');
 Route::get('/servicios/new', 'ServiciosController@new')->name('servicios.new');
 Route::get('/servicios/new/fromaddress/{id}', 'ServiciosController@fromAddress')->name('servicios.new.fromaddress');
+
+Route::get('/servicios/from/preservicio/{id}', 'ServiciosController@fromPreservicio')->name('servicios.from.preservicio');
 
 Route::get('/servicios/edit/{id}', 'ServiciosController@edit')->name('servicios.edit');
 Route::post('/servicios/save', 'ServiciosController@save')->name('servicios.save');
@@ -108,8 +115,8 @@ Route::post('/servicios/delete/{id}', 'ServiciosController@delete')->name('servi
 Route::get('/servicios/descargar', 'ServiciosController@descargar')->name('servicios.descargar');
 Route::get('/servicios/importar', 'ServiciosController@importar')->name('servicios.importar');
 Route::post('/servicios/importar/save', 'ServiciosController@importarsave')->name('servicios.importar.save');
-
 Route::get('/servicios/fuec/{id}', 'ServiciosController@fuec')->name('servicios.fuec');
+Route::get('/servicios/test/email/{id}', 'ServiciosController@testEmail')->name('servicios.test.email');
 
 
 Route::get('/facturas', 'FacturasController@index')->name('facturas');

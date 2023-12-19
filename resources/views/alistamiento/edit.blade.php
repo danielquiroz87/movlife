@@ -42,11 +42,16 @@
       <input type="hidden" name="is_new" value="false">
       <input type="hidden" name="revisado_por" value="{{auth()->user()->id}}">
 
-
-        <div class="col-md-6 form-group mb-3">
+         <div class="row">
+            <div class="col-md-6 form-group mb-3">
               <label><strong>Fecha</strong></label>
                    <input type="date" name="fecha" value="{{$al->fecha}}"  class="form-control" placeholder="dd/mm/yyyy" disabled="true" >
             </div>
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Kilometros</strong></label>
+                   <input type="number" name="kilometros" value="{{$al->kilometros}}"  class="form-control" placeholder="0"  >
+            </div>
+        </div>
         <div class="row">
 
           <?php foreach($categorias as $key=>$categoria):?>
@@ -135,15 +140,11 @@ $.validator.messages.required = 'Este campo es requerido';
 $.validator.messages.email = 'Email invalido';
 
 $('#user-new-form').validate({
-  rules: {
-        nombre: { required:true },
-        departamento_id:{ required:true },
-        ciudad_id: { required:true },
-       
-        
+    rules: {
+        kilometros: { required:true }
     },messages: {
                 
-            },
+    },
     
 })
 

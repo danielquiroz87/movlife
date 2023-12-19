@@ -57,11 +57,18 @@
       <input type="hidden" name="is_new" value="true">
       <input type="hidden" name="fecha" value="{{$fecha}}">
 
+        <div class="row">
 
         <div class="col-md-6 form-group mb-3">
               <label><strong>Fecha</strong></label>
                    <input type="date" name="strfecha" value="{{$fecha}}"  class="form-control" placeholder="dd/mm/yyyy" disabled="true" >
-            </div>
+        </div>
+
+         <div class="col-md-6 form-group mb-3">
+              <label><strong>Kilometros</strong></label>
+                   <input type="number" name="kilometros" value=""  class="form-control" placeholder="0"  >
+        </div>
+      </div>
         <div class="row">
 
           <?php foreach($categorias as $key=>$categoria):?>
@@ -134,15 +141,11 @@ $.validator.messages.required = 'Este campo es requerido';
 $.validator.messages.email = 'Email invalido';
 
 $('#user-new-form').validate({
-  rules: {
-        nombre: { required:true },
-        departamento_id:{ required:true },
-        ciudad_id: { required:true },
-       
-        
+    rules: {
+        kilometros: { required:true }
     },messages: {
                 
-            },
+    },
     
 })
 

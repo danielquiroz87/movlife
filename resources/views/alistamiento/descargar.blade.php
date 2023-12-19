@@ -72,7 +72,7 @@ th, td {
               <td colspan="" style="border: 0;width: 20%">
                 {{$al->fecha}}<br/>
                 No. REV. {{$al->id}} <br/>
-                Kilometraje:
+                Kilometros: {{$al->kilometros}} Km
               </td>
             </tr>
 
@@ -87,8 +87,8 @@ th, td {
                 <td style="border-bottom: none;"><strong>Placa:</strong> {{$vehiculo->placa}}</td>
                 <td style="border-bottom: none;"><strong>Nro Interno:</strong> {{$vehiculo->codigo_interno}}</td>
                 <td style="border-bottom: none;"><strong>Modelo:</strong> {{$vehiculo->modelo}}</td>
-                <td style="width: 200px; border-bottom: none;"><strong>Clase:</strong> {{$vehiculo->clase->nombre}}</td>
-                <td style="border-bottom: none;"><strong>Color:</strong> {{$vehiculo->color}}</td>
+                <td style="width: 118px; border-bottom: none;"><strong>Clase:</strong> {{$vehiculo->clase->nombre}}</td>
+                <td style="width: 120px; border-bottom: none;"><strong>Color:</strong> {{$vehiculo->color}}</td>
 
 
               </tr>
@@ -98,8 +98,8 @@ th, td {
         <table width="100%" border="1" style="border-collapse: collapse; text-align: center; border-top:none;border-bottom: none ">
            <tr>
               <td colspan="3" width="80%" style="font-weight: bold;">Aspectos</td>
-              <td style="font-weight: bold;" width="10%">B</td>
-              <td style="font-weight: bold;" width="10%">M</td>
+              <td style="font-weight: bold;" width="118">B</td>
+              <td style="font-weight: bold;" width="118">M</td>
               
             </tr>
           
@@ -115,16 +115,16 @@ th, td {
                         <span>{{$cont++}} - {{$item->item}}</span>
                       </td>
                      @if($item->check==1)
-                      <td width="10%">
+                      <td width="120">
                         <span>&#x2713;</span>
                       </td>
                       <td>
                       </td>
                      @else
-                     <td width="10%">
+                     <td width="120">
                         
                       </td>
-                      <td width="10%">
+                      <td width="120">
                         <span style="font-weight: bold;">&#10005;</span>
                       </td>
                      @endif 
