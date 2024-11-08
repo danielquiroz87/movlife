@@ -18,7 +18,7 @@ class Fuec extends  Model implements Auditable
 
     protected $table = 'fuec';
 
-    protected $fillable = ['placa','id_conductor','consecutivo','tipo','id_cliente','contrato','user_id','contrato','fecha_inicial','fecha_final','ruta_id','objeto_contrato_id','creado_por','_token','is_new','id_conductor_2','id_conductor_3'];
+    protected $fillable = ['placa','id_conductor','consecutivo','tipo','id_cliente','contrato','user_id','contrato','fecha_inicial','fecha_final','ruta_id','objeto_contrato_id','creado_por','_token','is_new','id_conductor_2','id_conductor_3','id_conductor_4','id_contrato_cliente'];
 
 
      public function cliente(){
@@ -35,6 +35,10 @@ class Fuec extends  Model implements Auditable
 
     public function conductor3(){
         return $this->hasOne('App\Models\Conductor','id','id_conductor_3');
+    }
+
+    public function conductor4(){
+        return $this->hasOne('App\Models\Conductor','id','id_conductor_4');
     }
 
     public function vehiculo(){

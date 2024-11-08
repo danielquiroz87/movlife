@@ -1,0 +1,68 @@
+	<table border="1" style="border-collapse: collapse" id="hidden_column_table" class="table-striped table-bordered dataTable dtr-inline" style="width: 100%;" role="grid" aria-describedby="hidden_column_table_info">
+                  <thead>
+                    <tr>
+                      <th>Id</th>
+                      <th>Cliente</th>
+                      <th>Fecha Creación</th>
+                      <th>Fecha Cotización</th>
+                      <th>Fecha Vencimiento</th>
+                      <th>Fecha Servicio</th>
+                      <th>Hora Recogida</th>
+                      <th>Dirección Recogida</th>
+                      <th>Dirección Destino</th>
+                      <th>Valor</th>
+                      <th>Cantidad</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  	                    <tr>
+                    <td>106</td>
+                     <td>900780830, MAYRA BARBOSA</td>
+                     <td>2024-08-06 11:12:38</td>
+                     <td>2024-08-06</td>
+                     <td>2024-09-06</td>
+                     <td>2024-10-21</td>
+                     <td>06:00:00</td>
+                     <td>Hotel Karlo, Calle 4, San Fernando, Cali, Valle del Cauca, Colombia</td>
+                     <td>Plazoleta de San Francisco, Calle 9, COMUNA 3, Cali, Valle del Cauca, Colombia</td>
+                     <td>250000.00</td>
+                     <td>1</td>
+                     <td>250000.00</td>
+                    </tr>
+                  	                    <tr>
+                    <td>107</td>
+                     <td>900532504, MARIA OCHOA</td>
+                     <td>2024-08-06 12:33:51</td>
+                     <td>2024-08-06</td>
+                     <td>2024-09-06</td>
+                     <td>2034-06-11</td>
+                     <td>08:00:00</td>
+                     <td>Aeropuerto Cartagena de Indias (CTG), Provincia de Cartagena, Bolívar, Colombia</td>
+                     <td>hotel caribe, Tv. 72, Manga, Cartagena Province, Bolívar, Colombia</td>
+                     <td>280000.00</td>
+                     <td>1</td>
+                     <td>280000.00</td>
+                    </tr>
+                  	                    <tr>
+                    <td>108</td>
+                     <td>900532504, MARIA OCHOA</td>
+                     <td>2024-08-06 12:41:19</td>
+                     <td>2024-08-06</td>
+                     <td>2024-09-06</td>
+                     <td>2024-06-11</td>
+                     <td>08:00:00</td>
+                     <td>Aeropuerto Cartagena de Indias (CTG), Provincia de Cartagena, Bolívar, Colombia</td>
+                     <td>hotel caribe, Tv. 72, Manga, Cartagena Province, Bolívar, Colombia</td>
+                     <td>280000.00</td>
+                     <td>1</td>
+                     <td>280000.00</td>
+                    </tr>
+                  	                  </tbody>
+                  <tfoot>
+                  	<tr>
+                  	
+
+                  	</tr>
+                  </tfoot>
+                </table>

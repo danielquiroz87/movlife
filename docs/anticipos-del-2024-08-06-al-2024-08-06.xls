@@ -1,0 +1,112 @@
+	<table border="1" style="border-collapse: collapse" id="hidden_column_table" class="table-striped table-bordered dataTable dtr-inline" style="width: 100%;" role="grid" aria-describedby="hidden_column_table_info">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Fecha</th>
+        <th>Servicio Id</th>
+        <th>Fecha Servicio</th>
+        <th>Pasajero</th>
+        <th>Cliente</th>
+        <th>Conductor</th>
+        <th>Valor Cliente</th>
+        <th>Valor Conductor</th>
+        <th>Valor Anticipo</th>
+        <th>Total Abonos</th>
+        <th>Total Restante</th>
+        <th>Estado</th>
+   
+    </tr>
+    </thead>
+    <tbody>
+            <tr>
+        <td>333</td>
+        <td>2024-08-06 10:00:08</td>
+        
+        
+        <td>73050</td>
+        <td>2024-08-03</td>
+        <td>DIEGO AGUILAR</td>
+        <td>AP GLOBAL MUSIC</td>
+        <td>LUIS FERNANDO PARRA RESTREPO</td>
+        <td>$300000.00</td>
+        <td>$110000.00</td>
+
+                <td>$110000.00</td>
+        <td>$0</td>
+        <td>$110000</td>
+        <td>
+                Activo
+                </td>
+        
+    </tr>
+            <tr>
+        <td>334</td>
+        <td>2024-08-06 10:20:46</td>
+        
+        
+        <td>73736</td>
+        <td>2024-08-06</td>
+        <td>MARIA DEL CARMEN OCHOA</td>
+        <td>AZISTIA COLOMBIA S.A.S</td>
+        <td>GERSON BELARMINO ESLAVA CASTRO</td>
+        <td>$675000.00</td>
+        <td>$375000.00</td>
+
+                <td>$400000.00</td>
+        <td>$0</td>
+        <td>$400000</td>
+        <td>
+                Activo
+                </td>
+        
+    </tr>
+            <tr>
+        <td>335</td>
+        <td>2024-08-06 10:26:12</td>
+        
+        
+        <td>73740</td>
+        <td>2024-08-06</td>
+        <td>DUVER ALEXIS YAIMA</td>
+        <td>SOULMEDICAL LIMITADA</td>
+        <td>JAVIER AUGUSTO MEDINA ANDRADE</td>
+        <td>$100000.00</td>
+        <td>$70000.00</td>
+
+                <td>$70000.00</td>
+        <td>$0</td>
+        <td>$70000</td>
+        <td>
+                Activo
+                </td>
+        
+    </tr>
+            <tr>
+        <td>336</td>
+        <td>2024-08-06 14:08:31</td>
+        
+        
+        <td>SIN ASIGNAR</td>
+        <td>NA</td>
+        <td>NA</td>
+        <td>DAVITA S.A.S</td>
+        <td>FRANCISCO LOPEZ NORIEGA</td>
+        <td>$0.00</td>
+        <td>$400000.00</td>
+
+                <td>$400000.00</td>
+        <td>$0</td>
+        <td>$400000</td>
+        <td>
+                Activo
+                </td>
+        
+    </tr>
+        </tbody>
+    <tfoot>
+    <tr>
+    
+
+    </tr>
+    </tfoot>
+</table>

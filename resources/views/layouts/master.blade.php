@@ -27,7 +27,7 @@
         @endif
         <link id="gull-theme" rel="stylesheet" href="{{ asset('assets\fonts\iconsmind\iconsmind.css') }}">
         <link id="gull-theme" rel="stylesheet" href="{{ asset('assets/styles/css/themes/lite-purple.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/styles/vendor/perfect-scrollbar.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/bootstrap-datetimepicker/css/datetimepicker.min.css') }}">
         {{-- page specific css --}}
         @yield('page-css')
 
@@ -38,6 +38,8 @@
             }
         
     </style>
+    
+    <link rel="stylesheet" href="{{ asset('assets/styles/vendor/perfect-scrollbar.css') }}">
 
 
     </head>
@@ -167,15 +169,14 @@
         <script src="{{ asset('assets/js/vendor/feather.min.js') }}"></script>
         <script src="{{ asset('assets/js/vendor/metisMenu.min.js') }}"></script>
         <script src="{{ asset('assets/js/layout-sidebar-vertical.js') }}"></script>
-
+        
 
         @else
         <script src="{{ asset('assets/js/sidebar.large.script.js') }}"></script>
 
         @endif
-
-
-
+        <script src= https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js></script>
+        <script src="{{ asset('assets/bootstrap-datetimepicker/js/datetimepicker.min.js') }}"></script>
         <script src="{{ asset('assets/js/customizer.script.js') }}"></script>
 
         {{-- laravel js --}}

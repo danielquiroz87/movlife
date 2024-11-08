@@ -135,7 +135,7 @@ table th{
 	</tr>
 	<tr>
 		<td colspan="2"><span style="margin:5px;display: block;">{{$fuec->vehiculo->codigo_interno}}</span></td>
-		<td colspan="2"><span style="margin:5px;display: block;">{{ ($documentos[$fuec->vehiculo->placa][13]['numero'])}}</span></td>
+		<td colspan="2"><span style="margin:5px;display: block;">{{($documentos[$fuec->vehiculo->placa][13]['numero'])}}</span></td>
 	</tr>
 	
 	</tbody>
@@ -143,31 +143,31 @@ table th{
 <table width="100%" border="1" style="border-collapse: collapse; text-align: center; ">
 	<tr style="border-top: none">
 		<td><span style="margin:5px;display: block;">CONDUCTOR 1</span></td>
-		<td width="200"><span style="margin:5px;display: block;">NOMBRES Y APELLIDOS {{$fuec->conductor->nombres}} {{$fuec->conductor->apellidos}}</span></td>
-		<td width="80"><span style="margin:5px;display: block;">No. CÉDULA {{$fuec->conductor->documento}}</span></td>
-		<td><span style="margin:5px;display: block;">No. LICENCIA DE CONDUCCIÓN <br/> {{$documentos_conductor[0][1]['numero']}}</span>
+		<td width="200"><span style="margin:5px;display: block;">{{$fuec->conductor->nombres}} {{$fuec->conductor->apellidos}}</span></td>
+		<td width="80"><span style="margin:5px;display: block;">CÉDULA: {{$fuec->conductor->documento}}</span></td>
+		<td><span style="margin:5px;display: block;">LICENCIA #: {{$documentos_conductor[0][1]['numero']}}</span>
 		</td>
-		<td><span style="margin:5px;display: block;">VIGENCIA <br/>{{$documentos_conductor[0][1]['fecha_vencimiento']}}</span>
+		<td><span style="margin:5px;display: block;">VIGENCIA: {{(($documentos_conductor[0][1]['fecha_vencimiento'] ))}}</span>
 		</td>
 	</tr>
 
 	@if($fuec->id_conductor_2)
 	<tr>
 		<td><span style="margin:5px;display: block;">CONDUCTOR 2</span></td>
-		<td width="200"><span style="margin:5px;display: block;">NOMBRES Y APELLIDOS {{$fuec->conductor2->nombres}} {{$fuec->conductor2->apellidos}}</span></td>
-		<td width="80"><span style="margin:5px;display: block;">No. CÉDULA {{$fuec->conductor2->documento}}</span></td>
-		<td><span style="margin:5px;display: block;">No. LICENCIA DE CONDUCCIÓN <br/> {{$documentos_conductor[1][1]['numero']}}</span>
+		<td width="200"><span style="margin:5px;display: block;">{{$fuec->conductor2->nombres}} {{$fuec->conductor2->apellidos}}</span></td>
+		<td width="80"><span style="margin:5px;display: block;">CÉDULA: {{$fuec->conductor2->documento}}</span></td>
+		<td><span style="margin:5px;display: block;">LICENCIA #: {{$documentos_conductor[1][1]['numero']}}</span>
 		</td>
-		<td><span style="margin:5px;display: block;">VIGENCIA <br/>{{$documentos_conductor[1][1]['fecha_vencimiento']}}</span>
+		<td><span style="margin:5px;display: block;">VIGENCIA: {{(($documentos_conductor[1][1]['fecha_vencimiento']))}}</span>
 		</td>
 	</tr>
 	@else
 	<tr>
 		<td><span style="margin:5px;display: block;">CONDUCTOR 2</span></td>
 		<td><span style="margin:5px;display: block;">NOMBRES Y APELLIDOS<br/>&nbsp;&nbsp; </span></td>
-		<td><span style="margin:5px;display: block;">No. CÉDULA <br/>&nbsp;&nbsp;</span></td>
-		<td><span style="margin:5px;display: block;">No. LICENCIA DE CONDUCCIÓN<br/>&nbsp;&nbsp;</span></td>
-		<td><span style="margin:5px;display: block;">VIGENCIA<br/></span></td>
+		<td><span style="margin:5px;display: block;">CÉDULA: <br/>&nbsp;&nbsp;</span></td>
+		<td><span style="margin:5px;display: block;">LICENCIA #:<br/>&nbsp;&nbsp;</span></td>
+		<td><span style="margin:5px;display: block;">VIGENCIA:<br/></span></td>
 		
 	</tr>
 	@endif
@@ -175,11 +175,35 @@ table th{
 	@if($fuec->id_conductor_3)
 	<tr>
 		<td><span style="margin:5px;display: block;">CONDUCTOR 3</span></td>
-		<td width="200"><span style="margin:5px;display: block;">NOMBRES Y APELLIDOS {{$fuec->conductor3->nombres}} {{$fuec->conductor3->apellidos}}</span></td>
-		<td width="80"><span style="margin:5px;display: block;">No. CÉDULA {{$fuec->conductor3->documento}}</span></td>
-		<td><span style="margin:5px;display: block;">No. LICENCIA DE CONDUCCIÓN <br/> {{$documentos_conductor[2][1	]['numero']}}</span>
+		<td width="200"><span style="margin:5px;display: block;">{{$fuec->conductor3->nombres}} {{$fuec->conductor3->apellidos}}</span></td>
+		<td width="80"><span style="margin:5px;display: block;">CÉDULA: {{$fuec->conductor3->documento}}</span></td>
+		<td><span style="margin:5px;display: block;">LICENCIA #: {{$documentos_conductor[2][1]['numero']}}</span>
 		</td>
-		<td><span style="margin:5px;display: block;">VIGENCIA <br/>{{$documentos_conductor[2][1]['fecha_vencimiento']}}</span>
+		<td><span style="margin:5px;display: block;">VIGENCIA: {{(($documentos_conductor[2][1]['fecha_vencimiento']))}}</span>
+		</td>
+	</tr>
+	@else
+	<!--
+	<tr>
+		<td><span style="margin:5px;display: block;">CONDUCTOR 3</span></td>
+		<td><span style="margin:5px;display: block;">NOMBRES Y APELLIDOS <br/>&nbsp;&nbsp;</span></td>
+		<td><span style="margin:5px;display: block;">No. CÉDULA <br/>&nbsp;&nbsp;</span></td>
+		<td><span style="margin:5px;display: block;">No. LICENCIA DE CONDUCCIÓN<br/>&nbsp;&nbsp;</span></td>
+		<td><span style="margin:5px;display: block;">VIGENCIA<br/>&nbsp;&nbsp;</span></td>
+		
+	</tr>
+	!-->
+	@endif
+
+
+	@if($fuec->id_conductor_4)
+	<tr>
+		<td><span style="margin:5px;display: block;">CONDUCTOR 4</span></td>
+		<td width="200"><span style="margin:5px;display: block;">{{$fuec->conductor4->nombres}} {{$fuec->conductor4->apellidos}}</span></td>
+		<td width="80"><span style="margin:5px;display: block;">CÉDULA: {{$fuec->conductor4->documento}}</span></td>
+		<td><span style="margin:5px;display: block;">LICENCIA #: {{$documentos_conductor[3][1]['numero']}}</span>
+		</td>
+		<td><span style="margin:5px;display: block;">VIGENCIA: {{(($documentos_conductor[3][1]['fecha_vencimiento']))}}</span>
 		</td>
 	</tr>
 	@else
@@ -197,9 +221,9 @@ table th{
 
 	<tr>
 		<td><span style="margin:5px;display: block;">RESPONSABLE DEL CONTRATANTE</span></td>
-		<td><span style="margin:5px;display: block;">NOMBRES Y APELLIDOS <br/>{{$contrato->responsable_nombres}} </span></td>
-		<td><span style="margin:5px;display: block;">No. CÉDULA <br/>{{$contrato->responsable_documento}}</span></td>
-		<td><span style="margin:5px;display: block;">TELÉFONO <br/> {{$contrato->responsable_telefono}}</span>
+		<td><span style="margin:5px;display: block;"> {{$contrato->responsable_nombres}} </span></td>
+		<td><span style="margin:5px;display: block;">CÉDULA: {{$contrato->responsable_documento}}</span></td>
+		<td><span style="margin:5px;display: block;">TELÉFONO: {{$contrato->responsable_telefono}}</span>
 		</td>
 		<td><span style="margin:5px;display: block;">DIRECCIÓN:{{$contrato->responsable_direccion}}</span></td>
 	</tr>

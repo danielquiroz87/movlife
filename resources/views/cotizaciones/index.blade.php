@@ -22,6 +22,8 @@
             <div class="d-sm-flex mb-3" data-view="print">
                   <span class="m-auto"></span>
                     <a class="btn btn-primary" href="{{route('cotizaciones.new')}}">Nuevo</a>
+                    &nbsp;&nbsp;
+                    <a class="btn btn-success" href="{{route('cotizaciones.descargar.excel')}}" target="_blank" >Descargar</a>&nbsp;&nbsp;
             </div>
           </div>
   </div>
@@ -32,12 +34,49 @@
       <div class="card text-left">
           <div class="card-body">
                 <h3 class="card-title mb3">Lista Cotizaciones</h3>
+
+                <form>
+                    <div class="row">
+                        <div class="col-md-3 form-group mb-3">
+                          <label><strong>Cliente:</strong></label>
+                          <select id="filtros_cliente" name="filtros[cliente]" multiple="multiple" class="form-control">
+                            <?php echo Helper::selectClientes($filtros['cliente']) ?>
+                         </select>
+                        </div>
+
+                        <div class="col-md-2 form-group mb-2">
+                            <label><strong>Id:</strong></label>
+                            <input type="number" class="form-control" name="filtros[id]" value="{{$filtros['id']}}" >
+                        </div>
+
+                        <div class="col-md-2 form-group mb-2">
+                            <label><strong>Fecha Inicial:</strong></label>
+                            <input type="date" class="form-control" name="filtros[fecha_inicial]" value="{{$filtros['fecha_inicial']}}" >
+                        </div>
+
+                        <div class="col-md-2 form-group mb-2">
+                            <label><strong>Fecha Final:</strong></label>
+                            <input type="date" class="form-control" name="filtros[fecha_final]" value="{{$filtros['fecha_final']}}" >
+                        </div>
+
+                       
+                        <div class="col-md-2 form-group mb-2">
+                            <label><strong>Valor:</strong></label>
+                            <input type="number" class="form-control" name="filtros[valor]" value="{{$filtros['valor']}}" >
+                        </div>
+                        <div class="col-md-2 form-group mb-3">
+                            <label>&nbsp;&nbsp;&nbsp;</label><br/>
+                            <button class="btn btn-success">Filtrar</button>
+                        </div>
+                    </div>
+                </form>
               <!-- /.card-header -->
-             <table id="hidden_column_table" class="display table table-striped table-bordered dataTable dtr-inline" style="width: 100%;" role="grid" aria-describedby="hidden_column_table_info">
+             <table id="hidden_column_table" class="table-striped table-bordered dataTable dtr-inline" style="width: 100%;" role="grid" aria-describedby="hidden_column_table_info">
                   <thead>
                     <tr>
                       <th>Id</th>
                       <th>Cliente</th>
+                      <th>Contacto</th>
                       <th>Fecha Creación</th>
                       <th>Fecha Cotización</th>
                       <th>Fecha Vencimiento</th>
@@ -56,7 +95,8 @@
                   	@foreach ($cotizaciones as $cotizacion)
                     <tr>
                     <td>{{$cotizacion->id}}</td>
-                     <td>{{$cotizacion->cliente->documento}}, {{$cotizacion->cliente->nombres}} {{$cotizacion->cliente->apellidos}}</td>
+                     <td>{{$cotizacion->cliente->documento}}, {{$cotizacion->cliente->razon_social}}</td>
+                     <td>{{$cotizacion->contacto_nombres}}, {{$cotizacion->contacto_telefono}}</td>
                      <td>{{$cotizacion->created_at}}</td>
                      <td>{{$cotizacion->fecha_cotizacion}}</td>
                      <td>{{$cotizacion->fecha_vencimiento}}</td>
@@ -118,6 +158,15 @@
 @section('bottom-js')
 <script type="text/javascript">
  $(document).ready(function(){
+
+
+  $('#filtros_cliente').select2({
+   theme: 'bootstrap-5',
+   multiple: true,
+
+  });
+
+
  	$('.eliminar').click(function(e){
  		e.preventDefault();
  		var url=$(this).attr('href');

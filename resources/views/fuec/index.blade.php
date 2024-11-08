@@ -46,7 +46,49 @@
       <div class="card text-left">
           <div class="card-body">
               <h3 class="card-title mb3">Lista Fuec</h3>
-              @include('partials.search_table', ['q' => $q])
+
+              <form>
+
+              <div class="row">
+                  
+
+              
+                  <div class="col-md-2 form-group mb-3">
+                    <label><strong>Fecha Inicial:</strong></label>
+                        <input type="date" class="form-control" name="filtros[fecha_inicial]" value="{{$filtros['fecha_inicial']}}" >
+                  </div>
+
+                  <div class="col-md-2 form-group mb-3">
+                    <label><strong>Fecha Final:</strong></label>
+                        <input type="date" class="form-control" name="filtros[fecha_final]" value="{{$filtros['fecha_final']}}" >
+                  </div>
+                  <div class="col-md-2 form-group mb-3">
+                    <label><strong>Placa:</strong></label>
+                        <input type="text" class="form-control" name="filtros[placa]" value="{{$filtros['placa']}}" >
+                  </div>
+
+                  <div class="col-md-3 form-group mb-3">
+                    <label><strong>Cliente: </strong></label>
+                        <select id="filtros_cliente" name="filtros[cliente]"  class="form-control">
+                            <?php echo Helper::selectClientes($filtros['cliente']) ?>
+                        </select>
+                  </div>
+                  
+                  <div class="col-md-3 form-group mb-3">
+                    <label><strong>Conductor Servicio:</strong></label>
+                        <select id="filtros_conductor" name="filtros[conductor]"  class="form-control">
+                            <?php echo Helper::selectConductores($filtros['conductor']) ?>
+                        </select>
+                  </div>
+
+
+                  <div class="col-md-3 form-group mb-3">
+                    <label>&nbsp;&nbsp;&nbsp;</label><br/>
+                    <button class="btn btn-success">Filtrar</button>
+                  </div>
+              </div>
+              </form>
+
               <!-- /.card-header -->
              <table id="hidden_column_table" class="display table table-striped table-bordered dataTable dtr-inline" style="width: 100%;" role="grid" aria-describedby="hidden_column_table_info">
                   <thead>
@@ -126,7 +168,18 @@
 
 @section('bottom-js')
 <script type="text/javascript">
+  
  $(document).ready(function(){
+
+  $('#filtros_cliente').select2({
+   theme: 'bootstrap-5',
+
+  });
+  $('#filtros_conductor').select2({
+   theme: 'bootstrap-5',
+
+  });
+
  	$('.eliminar').click(function(e){
  		e.preventDefault();
  		var url=$(this).attr('href');

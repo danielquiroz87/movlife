@@ -64,7 +64,7 @@
                       <th>Email Contacto</th>
                       <th>Teléfono</th>
                       <th>Celular</th>
-                      <th>Whatsap</th>
+                      <th>Whatsapp</th>
                       <th>Activo</th>
                       <th>Acciones</th>
                     </tr>

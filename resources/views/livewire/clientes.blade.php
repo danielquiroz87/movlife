@@ -8,6 +8,8 @@
                                                     <th scope="col">Nombres</th>
                                                     <th scope="col">Email</th>
                                                     <th scope="col">Celular</th>
+                                                    <th scope="col">Estado</th>
+
                                                     <th scope="col">Acciones</th>
                                                 </tr>
                                             </thead>

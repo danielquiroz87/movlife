@@ -84,6 +84,13 @@
                   </select>
             </div>
 
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Conductor 4:</strong></label>
+                  <select name="id_conductor_4" id="conductor_servicio_4" class="form-control conductor_servicio">
+                        <?php echo Helper::selectConductores($fuec->id_conductor_4) ?>
+                  </select>
+            </div>
+
            <div class="col-md-6 form-group mb-3">
               <label><strong>Tipo:</strong></label>
                     <select class="form-control" name="tipo">
@@ -99,7 +106,19 @@
                     <select class="form-control clientes" name="id_cliente" id="id_cliente">
                       <?php echo Helper::selectClientes($fuec->id_cliente) ?>
                     </select>
-                   
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Responsable Contrato Cliente:</strong></label>
+                    <select class="form-control clientes" name="id_contrato_cliente" id="id_contrato_cliente"    >
+                    @foreach($contratos as $row)  
+                      @if($row->id==$contrato->id)
+                      <option value="{{$row->id}}" selected="selected" >{{$row->responsable_nombres}}</option>
+                      @else
+                      <option  value="{{$row->id}}">{{$row->responsable_nombres}}</option>
+                      @endif
+                    @endforeach
+                    </select>
             </div>
 
              
@@ -161,15 +180,19 @@
   var id_conductor="";
   var id_conductor_2="";
   var id_conductor_3="";
+  var id_conductor_4="";
 
   $(document).ready(function(){
 
      id_conductor=$('#conductor_servicio').val();
      id_conductor_2=$('#conductor_servicio_2').val();
      id_conductor_3=$('#conductor_servicio_3').val();
+     id_conductor_4=$('#conductor_servicio_4').val();
+
      getConductores();
 
   });
+
 
  $('#ruta_id').select2({
    theme: 'bootstrap-5'
@@ -185,6 +208,8 @@
      $('#conductor_servicio').val(id_conductor);
      $('#conductor_servicio_2').val(id_conductor_2);
      $('#conductor_servicio_3').val(id_conductor_3);
+     $('#conductor_servicio_4').val(id_conductor_4);
+
        
     })
  }
@@ -217,9 +242,10 @@ $.validator.messages.email = 'Email invalido';
 
 $('#user-new-form').validate({
   rules: {
-        nombre: { required:true },
-        departamento_id:{ required:true },
-        ciudad_id: { required:true },
+        
+        id_cliente: { required:true },
+        id_conductor:{ required:true },
+        placa: { required:true }
         
         
     },messages: {

@@ -31,6 +31,27 @@ class AbonosController extends Controller
         $anticipo=Anticipos::find($id);
         return view('anticipos.abonos')->with(['abonos'=>$abonos,'anticipo'=>$anticipo]);
     }
+
+    public function new(Request $request,$id){
+        $anticipo=Anticipos::find($id);
+        return view('anticipos.abonos_new')->with(['anticipo'=>$anticipo]);
+    }
+
+    public function save(Request $request){
+        $anticipo=Anticipos::find($request->get('anticipo_id'));
+        $abono=new AnticiposAbonos();
+        $abono->anticipo_id=$anticipo->id;
+        if($request->has('servicio_id')){
+            $abono->orden_servicio_id=$request->get('servicio_id');
+        }
+        $abono->valor=$request->get('valor');
+        $abono->save();
+        \Session::flash('flash_message','Abono agregado exitosamente!.');
+
+        return redirect()->route('anticipos');
+
+
+    }
     
 
 }

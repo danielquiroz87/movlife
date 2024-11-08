@@ -320,9 +320,17 @@ ul.social li{
                     <h3 class="name">Movlife, nos mueve tu bienestar.</h3>
                     <span class="position">
                       <br/>
-                       Hola {{$servicio->pasajero->nombres}} {{$servicio->pasajero->apellidos}}, se ha confirmado tu vehiculo, de placa: {{$servicio->vehiculo->placa}},<br/>conductor: {{$servicio->conductorServicio->nombres}} {{$servicio->conductorServicio->apellidos}},<br/> con origen: {{$servicio->origen}},<br/> destino: {{$servicio->destino}},<br/> Hora de recogida:{{date('h:i a',strtotime($servicio->hora_recogida))}} <br/><br/>
-Ahora puedes pedir tu vehiculo m&aacute;s f&aacute;cil a trav&eacute;s del siguiente link <br/>
-<a href="https://app.movlife.co/web/solicitar/servicio">Solicitar Servicio</a>
+                      Hola {{$servicio->pasajero->nombres}} {{$servicio->pasajero->apellidos}}, se ha confirmado tu vehiculo, de placa: {{$servicio->vehiculo->placa}},<br/>
+                      Id: {{$servicio->id}},<br/>
+                      Tipo Servicio: {{$servicio->tipoServicio->nombre}},<br/>
+                      Conductor: {{$servicio->conductorServicio->nombres}} {{$servicio->conductorServicio->apellidos}},<br/>
+                      Origen: {{$servicio->origen}},<br/>
+                      Destino: {{$servicio->destino}},<br/>
+                      Fecha servicio: {{date('d/m/y',strtotime($servicio->fecha_servicio))}}<br/>
+                      Hora de recogida: {{date('h:i a',strtotime($servicio->hora_recogida))}},<br/>
+                      Celular Contacto: {{$servicio->pasajero->celular}},<br/>
+                      Observaciones: {{$servicio->observaciones}}<br/><br/>
+                      <a href="https://app.movlife.co/web/solicitar/servicio">Solicitar Servicio</a>
                     </span>
                     
                   </div>

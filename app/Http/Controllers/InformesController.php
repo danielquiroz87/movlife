@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\AnticiposAbonos;
 use App\Models\Anticipos;
+use App\Models\Vehiculo;
 
 
 
@@ -59,6 +60,54 @@ class InformesController extends Controller
         $documentos=$sql_docs->paginate(25);
        
         return view('informes.documentos')->with(['documentos'=>$documentos,'filtros'=>$filtros]);
+    }
+
+    public function documentosPlaca(Request $request){
+
+      $filtros=$request->get('filtros');
+      $vehiculos=Vehiculo::where('id','>', 0);
+      $exportar=$request->get('exportar',false);
+     
+      if(isset($filtros['tipo_vinculacion']) && $filtros['tipo_vinculacion']!=""){
+        $tipo=$filtros['tipo_vinculacion'];
+        if($tipo==1){
+          $vehiculos=Vehiculo::where('vinculado',1);
+        }else{
+          if($tipo==806){
+            $vehiculos=Vehiculo::where('propietario_id','=', 806);
+          }
+        }
+      }else{
+        $vehiculos=Vehiculo::where('propietario_id','=', 806);
+        $filtros['tipo_vinculacion']=806;
+      }
+
+      if(isset($filtros['placa']) && $filtros['placa']!=""){
+        $vehiculos=Vehiculo::where('placa',$filtros['placa']);
+      }
+      else{
+        $filtros['placa']="";
+      }
+      
+      
+      $vehiculos=$vehiculos->orderBy('placa','Asc');
+      if($exportar){
+        $vehiculos=$vehiculos->get();
+        $fecha=date('Y-m-d');
+        $filename="DocumentosPorPlaca{$fecha}.xls";
+        $html=view('informes.documentos_placa_descargar')->with(['vehiculos'=>$vehiculos,'filtros'=>$filtros]);
+
+        header('Content-type: application/vnd.ms-excel; charset=UTF-8');
+        header('Content-Disposition: attachment; filename='.$filename);
+        echo $html;
+        exit();
+      }
+      $vehiculos=$vehiculos->paginate(25);
+      return view('informes.documentos_placa')->with(['vehiculos'=>$vehiculos,'filtros'=>$filtros]);
+
+       
+
+
     }
     
 

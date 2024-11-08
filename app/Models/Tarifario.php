@@ -19,7 +19,7 @@ class Tarifario extends  Model implements Auditable
 
     protected $table = 'tarifario';
 
-    protected $fillable = ['origen',' destino',' tipo_vehiculo','tiempo','kilometros','valor_conductor','valor_cliente','proveedor',' jornada','trayecto','observaciones','id_cliente'];
+    protected $fillable = ['origen',' destino',' tipo_vehiculo','tiempo','kilometros','valor_conductor','valor_adicional','valor_cliente','proveedor',' jornada','trayecto','observaciones','id_cliente'];
 
 
 }

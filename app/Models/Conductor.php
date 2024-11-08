@@ -19,7 +19,7 @@ class Conductor extends  Model implements Auditable
 
     protected $table = 'conductores';
 
-    protected $fillable = ['user_id','documento','nombres','apellidos','lugar_expedicion_documento','lugar_de_nacimiento','nombre_contacto','telefono_contacto','email_contacto','telefono','celular','direccion_id','whatsapp','activo','estado_civil'];
+    protected $fillable = ['user_id','documento','nombres','apellidos','lugar_expedicion_documento','lugar_de_nacimiento','nombre_contacto','telefono_contacto','email_contacto','telefono','celular','direccion_id','whatsapp','activo','estado_civil','tipo_vinculacion'];
 
 
     public function hojavida(){

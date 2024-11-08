@@ -322,8 +322,16 @@ class ImportadorController extends Controller
                 $user->save();
                 $user_id=$user->id;
             }
+            $cliente_id=null;
+            if($documento_cliente!=""){
+                $cliente=Cliente::where('documento','=',$documento_cliente)->get()->first();
+                if($cliente){
+                    $cliente_id=$cliente->id;
+                }
+            }
 
             $row_pasajero=Pasajero::create([
+            'cliente_id'=>$cliente_id,
             'documento' => $documento,
             'nombres' => $nombres,
             'apellidos' => $apellidos,

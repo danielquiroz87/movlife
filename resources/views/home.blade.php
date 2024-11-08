@@ -97,9 +97,6 @@
 
                                 <div class="">
                                     <livewire:clientes>
-
-
-                              
                                 </div>
                             </div>
 

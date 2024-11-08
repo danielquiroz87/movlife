@@ -94,6 +94,14 @@
                     <span class="item-name">Dashboard</span>
                 </a>
             </li>
+
+            <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='conductores.localizacion' ? 'open' : '' }}"
+                    href="{{route('conductores.localizacion')}}">
+                    <i class="nav-icon i-Clock-3"></i>
+                    <span class="item-name">Localización</span>
+                </a>
+            </li>
             
         </ul>
         @if(auth()->user()->superadmin==1)
@@ -142,10 +150,21 @@
                 </a>
             </li>
 
+            <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='documentos' ? 'open' : '' }}"
+                    href="{{route('informes.documentos')}}">
+                    <i class="nav-icon i-Car-Wheel"></i>
+                    <span class="item-name">Docs Vehiculos Movlife</span>
+                </a>
+            </li>
+
             
         </ul>
         @endif
-       <ul class="childNav" data-parent="operaciones">
+          <ul class="childNav" data-parent="operaciones">
+
+            @if(session::get('is_driver')==true || auth()->user()->superadmin==1  )
+          
             <li class="nav-item ">
                 <a class="{{ Route::currentRouteName()=='vehiculos' ? 'open' : '' }}"
                     href="{{route('vehiculos')}}">
@@ -153,10 +172,25 @@
                     <span class="item-name">Vehiculos</span>
                 </a>
             </li>
-           
+            
+            <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='planillaservicios' ? 'open' : '' }}"
+                    href="{{route('planillaservicios')}}">
+                    <i class="nav-icon i-Car-Wheel"></i>
+                    <span class="item-name">Planilla Servicios</span>
+                </a>
+            </li>
 
-        @if(session::get('is_employe')==true || auth()->user()->superadmin==1  )
+            <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='conductores.jornada' ? 'open' : '' }}"
+                    href="{{route('conductores.jornada')}}">
+                    <i class="nav-icon i-Car-Wheel"></i>
+                    <span class="item-name">Control Jornada</span>
+                </a>
+            </li>
 
+             @endif
+             @if(!session::get('is_client') || auth()->user()->superadmin==1 || session::get('is_driver')==true || session::get('is_employe')==true )
              <li class="nav-item ">
                 <a class="{{ Route::currentRouteName()=='servicios' ? 'open' : '' }}"
                     href="{{route('preservicios')}}">
@@ -164,13 +198,19 @@
                     <span class="item-name">Pre-Servicios</span>
                 </a>
             </li>
-            <li class="nav-item ">
+            @endif
+
+             <li class="nav-item ">
                 <a class="{{ Route::currentRouteName()=='servicios' ? 'open' : '' }}"
                     href="{{route('servicios')}}">
                     <i class="nav-icon i-Car-Wheel"></i>
                     <span class="item-name">Servicios</span>
                 </a>
             </li>
+
+           
+
+        @if(session::get('is_employe')==true || auth()->user()->superadmin==1  )
 
             
              <li class="nav-item ">
@@ -189,6 +229,15 @@
                 </a>
             </li>
 
+
+            <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='tarifastiposervicio' ? 'open' : '' }}"
+                    href="{{route('tarifastiposervicio')}}">
+                    <i class="nav-icon i-Car-Wheel"></i>
+                    <span class="item-name">Tarifas Tipo Servicio</span>
+                </a>
+            </li>
+
             <li class="nav-item ">
                 <a class="{{ Route::currentRouteName()=='fuec' ? 'open' : '' }}"
                     href="{{route('fuec')}}">
@@ -202,6 +251,22 @@
                     href="{{route('rutas')}}">
                     <i class="nav-icon i-Car-Wheel"></i>
                     <span class="item-name">Rutas Fuec</span>
+                </a>
+            </li>
+
+            <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='empresas.convenios' ? 'open' : '' }}"
+                    href="{{route('empresas.convenios')}}">
+                    <i class="nav-icon i-Car-Wheel"></i>
+                    <span class="item-name">Empresas Convenios</span>
+                </a>
+            </li>
+
+            <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='convenios' ? 'open' : '' }}"
+                    href="{{route('convenios')}}">
+                    <i class="nav-icon i-Car-Wheel"></i>
+                    <span class="item-name">Convenios Empresariales</span>
                 </a>
             </li>
             @endif
@@ -348,12 +413,38 @@
             </li>
 
             <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='alistamiento' ? 'open' : '' }}"
+                    href="{{route('alistamiento')}}">
+                    <i class="nav-icon i-Car-Wheel"></i>
+                    <span class="item-name">Alistamiento Diario</span>
+                </a>
+            </li>
+
+            <li class="nav-item ">
                 <a class="{{ Route::currentRouteName()=='documentos' ? 'open' : '' }}"
                     href="{{route('informes.documentos')}}">
                     <i class="nav-icon i-Car-Wheel"></i>
-                    <span class="item-name">Documentos</span>
+                    <span class="item-name">Matriz Vehículos</span>
                 </a>
             </li>
+
+            <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='documentos' ? 'open' : '' }}"
+                    href="{{route('informes.documentos.placa')}}">
+                    <i class="nav-icon i-Car-Wheel"></i>
+                    <span class="item-name">Docs Vehículos Movlife</span>
+                </a>
+            </li>
+
+            <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='sigdocumentos.index' ? 'open' : '' }}"
+                    href="{{route('sigdocumentos.index')}}">
+                    <i class="nav-icon i-Car-Wheel"></i>
+                    <span class="item-name">Documentos SIG</span>
+                </a>
+            </li>
+
+          
             
         </ul>
         @endif
@@ -374,6 +465,14 @@
                     href="{{route('auditoria')}}">
                     <i class="nav-icon i-Car-Wheel"></i>
                     <span class="item-name">Auditoria</span>
+                </a>
+            </li>
+
+            <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='conductores.admin.sms' ? 'open' : '' }}"
+                    href="{{route('conductores.admin.sms')}}">
+                    <i class="nav-icon i-Car-Wheel"></i>
+                    <span class="item-name">Números SMS</span>
                 </a>
             </li>
            

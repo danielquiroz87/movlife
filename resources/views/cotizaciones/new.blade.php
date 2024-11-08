@@ -83,6 +83,8 @@
     <form action="{{route('cotizaciones.save')}}" method="POST" id="cotizacion-new-form" enctype="multipart/form-data" >
     {{ csrf_field() }}
       <input type="hidden" name="id" value="0">
+      <input type="hidden" name="tarifario_id" id="tarifario_id" value="">
+
       <input type="hidden" name="is_new" value="true">
       <input type="hidden" name="id_user" id="id_user" value="{{Auth::user()->id}}">
 
@@ -110,8 +112,12 @@
             </div>
             <div class="col-md-6 form-group mb-3">
               <label><strong>Forma de Pago / Días:</strong></label>
-               <input type="number" name="forma_pago" class="form-control" placeholder="Forma de Pago" value="30" step="15" max="90" min="15" />
-                
+              @if(auth()->user()->superadmin==1  )
+              <input type="number" name="forma_pago" class="form-control" placeholder="Forma de Pago" value="30" step="15" max="90" min="15" />
+              @else
+              <input type="number" name="forma_pago" class="form-control" placeholder="Forma de Pago" value="30" max="30" min="30" readonly=true />
+
+              @endif
             </div>
             <div class="">
             </div>
@@ -251,8 +257,18 @@
                   
                 </select>
             </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Servicio Id:</strong></label>
+                   <input type="text" name="servicio_id" id="servicio_id" value="" class="form-control" placeholder=""  >
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Anticipo Id:</strong></label>
+                   <input type="text" name="anticipo_id" id="anticipo_id" value="" class="form-control" placeholder=""  >
+            </div>
             
-             <div class="col-md-12 form-group mb-3">
+            <div class="col-md-12 form-group mb-3">
               <label><strong>Observaciones Servicio:</strong></label><br/>
                    <textarea class="form-control" name="observaciones" rows="3"></textarea>
             </div>
@@ -305,7 +321,7 @@
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.js"></script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDgnsQUqdsRu0bweRhx7Ji5r2Jknm7ncMo&callback=initMap&libraries=places&v=weekly" async>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBKkK3A_KT0_PyXE66Srs177YSm7WHSMqw&callback=initMap&libraries=places&v=weekly" async>
 </script>
 
 <script type="text/javascript">
@@ -316,11 +332,13 @@ function buscarTarifa(){
     var data=$('#cotizacion-new-form').serializeArray();
     $.post('/cotizaciones/match/tarifa',data,function(response){
       $('#valor_unitario').val(response.data.vcliente);
+      
       if(response.data.id==0){
         matchTarifa=true;
         $('.chk_guardartarifa').show('200');
       }else{
         $('.chk_guardartarifa').hide('200');
+        $('#tarifario_id').val(response.data.id);
       }
     })
 }

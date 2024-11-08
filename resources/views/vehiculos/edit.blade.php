@@ -87,7 +87,7 @@
 
                    <div class="col-md-6 form-group mb-3">
                     <label><strong>Clase:</strong></label>
-                    <select name="id_vehiculo_clase" class="form-control select-busqueda">
+                    <select name="id_vehiculo_clase" id="id_vehiculo_clase" class="form-control select-busqueda">
                         <?php echo Helper::selectClaseVehiculos($vehiculo->id_vehiculo_clase) ?>
                     </select>
                   </div>
@@ -100,7 +100,7 @@
 
                 <div class="col-md-6 form-group mb-3">
                 <label><strong>Clasificación Vehículo:</strong></label>
-                <select name="id_vehiculo_uso" class="form-control select-busqueda">
+                <select name="id_vehiculo_uso" id="id_vehiculo_uso" class="form-control select-busqueda">
                     <option value="" >Seleccione</option>
                     <option value="1" @if($vehiculo->id_vehiculo_uso==1) selected=true @endif>Intermunicipal</option>
                     <option value="2" @if($vehiculo->id_vehiculo_uso==2) selected=true @endif>Especial</option>
@@ -111,7 +111,7 @@
                 </div>
                 <div class="col-md-6 form-group mb-3">
                 <label><strong>Tipo Combustible:</strong></label>
-                <select name="id_vehiculo_tipo_combustible" class="form-control select-busqueda">
+                <select name="id_vehiculo_tipo_combustible" id="id_vehiculo_tipo_combustible" class="form-control select-busqueda">
                     <option value="" selected="selected">Seleccione</option>
                     <option value="1" @if($vehiculo->id_vehiculo_tipo_combustible==1) selected=true @endif>Acpm</option>
                     <option value="2" @if($vehiculo->id_vehiculo_tipo_combustible==2) selected=true @endif>Diesel</option>
@@ -691,6 +691,14 @@
                 <div class="collapse" id="accordion-item-soat" data-parent="#accordionExample">
                   <div class="card-body">
 
+
+                  <div class="col-md-3 form-group ">
+                          <label> <strong>Fecha Expedición:</strong></label>
+                          <input type="date" class="form-control" placeholder="dd/mm/yyyy"
+                        name="documentos[9][fecha_inicial]" id="documentos_fecha_inicial" 
+                        >
+                  </div>
+
                     <div class="row">
                         <div class="col-md-3 form-group ">
                           <label> <strong>Fecha Vencimiento:</strong></label>
@@ -755,11 +763,18 @@
 
               <div class="card ul-card__border-radius">
                 <div class="card-header">
-                  <h6 class="card-title mb-0"><a class="collapsed text-default" data-toggle="collapse" href="#accordion-item-poliza_rcc">Polisa RCC</a></h6>
+                  <h6 class="card-title mb-0"><a class="collapsed text-default" data-toggle="collapse" href="#accordion-item-poliza_rcc">Poliza RCC</a></h6>
                 </div>
                 <div class="collapse" id="accordion-item-poliza_rcc" data-parent="#accordionExample">
                   <div class="card-body">
                     <div class="row">
+
+                    <div class="col-md-3 form-group ">
+                          <label> <strong>Fecha Expedición:</strong></label>
+                          <input type="date" class="form-control" placeholder="dd/mm/yyyy"
+                        name="documentos[11][fecha_inicial]" id="documentos_fecha_inicial" 
+                        >
+                        </div>
 
                       <div class="col-md-3 form-group ">
                           <label> <strong>Fecha Vencimiento:</strong></label>
@@ -778,11 +793,18 @@
 
               <div class="card ul-card__border-radius">
                 <div class="card-header">
-                  <h6 class="card-title mb-0"><a class="collapsed text-default" data-toggle="collapse" href="#accordion-item-poliza_rce">Polisa RCE</a></h6>
+                  <h6 class="card-title mb-0"><a class="collapsed text-default" data-toggle="collapse" href="#accordion-item-poliza_rce">Poliza RCE</a></h6>
                 </div>
                 <div class="collapse" id="accordion-item-poliza_rce" data-parent="#accordionExample">
                   <div class="card-body">
                     <div class="row">
+
+                    <div class="col-md-3 form-group ">
+                          <label> <strong>Fecha Expedición:</strong></label>
+                          <input type="date" class="form-control" placeholder="dd/mm/yyyy"
+                        name="documentos[12][fecha_inicial]" id="documentos_fecha_inicial" 
+                        >
+                        </div>
 
                       <div class="col-md-3 form-group ">
                           <label> <strong>Fecha Vencimiento:</strong></label>
@@ -800,6 +822,37 @@
                </div>
              </div>
 
+              <div class="card ul-card__border-radius">
+                <div class="card-header">
+                  <h6 class="card-title mb-0"><a class="collapsed text-default" data-toggle="collapse" href="#accordion-item-poliza_todo_riesgo">Poliza Todo Riesgo</a></h6>
+                </div>
+                <div class="collapse" id="accordion-item-poliza_todo_riesgo" data-parent="#accordionExample">
+                  <div class="card-body">
+                    <div class="row">
+
+                      <div class="col-md-3 form-group ">
+                          <label> <strong>Fecha Expedición:</strong></label>
+                          <input type="date" class="form-control" placeholder="dd/mm/yyyy"
+                        name="documentos[30][fecha_inicial]" id="documentos_fecha_inicial" 
+                        >
+                        </div>
+
+                      <div class="col-md-3 form-group ">
+                          <label> <strong>Fecha Vencimiento:</strong></label>
+                          <input type="date" name="documentos[30][fecha_final]" class="form-control" placeholder="dd/mm/yyyy">
+                      </div>
+
+
+                      <div class="col-md-6 form-group ">
+                       <label> <strong>Foto Frontal:</strong></label>
+                       <input type="file" class="form-control" name="documentos[30][cara][1]"  >
+                     </div>
+                     
+                   </div>
+                 </div>
+               </div>
+             </div>
+
              <div class="card ul-card__border-radius">
                 <div class="card-header">
                   <h6 class="card-title mb-0"><a class="collapsed text-default" data-toggle="collapse" href="#accordion-item-revision_preventiva">Revisión Preventiva</a></h6>
@@ -807,6 +860,12 @@
                 <div class="collapse" id="accordion-item-revision_preventiva" data-parent="#accordionExample">
                   <div class="card-body">
                     <div class="row">
+
+                    <div class="col-md-3 form-group ">
+                          <label> <strong>Fecha Expedición:</strong></label>
+                          <input type="date" class="form-control" placeholder="dd/mm/yyyy"
+                        name="documentos[14][fecha_inicial]" id="documentos_fecha_inicial" >
+                        </div>
 
                        <div class="col-md-3 form-group ">
                           <label> <strong>Fecha Vencimiento:</strong></label>
@@ -853,7 +912,61 @@
                </div>
              </div>
 
+             <div class="card ul-card__border-radius">
+                <div class="card-header">
+                  <h6 class="card-title mb-0"><a class="collapsed text-default" data-toggle="collapse" href="#accordion-item-botiquin">Botiquin</a></h6>
+                </div>
+                <div class="collapse" id="accordion-item-botiquin" data-parent="#accordionExample">
+                  <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 form-group ">
+                          <label> <strong>Fecha Inicial:</strong></label>
+                          <input type="date" class="form-control" placeholder="dd/mm/yyyy"
+                        name="documentos[24][fecha_inicial]" id="documentos_fecha_inicial" 
+                        >
+                        </div>
 
+                      <div class="col-md-3 form-group ">
+                          <label> <strong>Fecha Vencimiento:</strong></label>
+                          <input type="date" name="documentos[24][fecha_final]" class="form-control" placeholder="dd/mm/yyyy">
+                      </div>
+                      <div class="col-md-6 form-group ">
+                       <label> <strong>Foto Frontal:</strong></label>
+                       <input type="file" class="form-control" name="documentos[24][cara][1]"  >
+                     </div>
+                     
+                   </div>
+                 </div>
+               </div>
+             </div>
+
+             <div class="card ul-card__border-radius">
+                <div class="card-header">
+                  <h6 class="card-title mb-0"><a class="collapsed text-default" data-toggle="collapse" href="#accordion-item-extintor">Extintor</a></h6>
+                </div>
+                <div class="collapse" id="accordion-item-extintor" data-parent="#accordionExample">
+                  <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 form-group ">
+                          <label> <strong>Fecha Inicial:</strong></label>
+                          <input type="date" class="form-control" placeholder="dd/mm/yyyy"
+                        name="documentos[25][fecha_inicial]" id="documentos_fecha_inicial" 
+                        >
+                        </div>
+
+                      <div class="col-md-3 form-group ">
+                          <label> <strong>Fecha Vencimiento:</strong></label>
+                          <input type="date" name="documentos[25][fecha_final]" class="form-control" placeholder="dd/mm/yyyy">
+                      </div>
+                      <div class="col-md-6 form-group ">
+                       <label> <strong>Foto Frontal:</strong></label>
+                       <input type="file" class="form-control" name="documentos[25][cara][1]"  >
+                     </div>
+                     
+                   </div>
+                 </div>
+               </div>
+             </div>
              <br/>
                <div class="col-xs-12 col-sm-12 col-md-12 ">
                 <button id="submit" type="submit" class="btn btn-primary">Enviar</button>
@@ -939,15 +1052,15 @@ $.validator.messages.email = 'Email invalido';
 
 $('#user-new-form').validate({
   rules: {
-    nombres: { required:true },
-    apellidos: { required:true },
-    email:{ required:true },
-    documento:{ required:true },
-    departamento_id:{ required:true },
-    ciudad_id: { required:true },
-    propietario_id: {required:true},
-    password:{ required:false },
-    
+        
+        placa:{required:true},
+        modelo:{required:true},
+        departamento_id:{ required:true },
+        ciudad_id: { required:true },
+        propietario_id: {required:true},
+        id_vehiculo_clase: {required:true},
+        id_vehiculo_tipo_combustible: {required:true},
+        id_vehiculo_uso: {required:true}
 
   },messages: {
 

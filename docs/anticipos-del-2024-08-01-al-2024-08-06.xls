@@ -1,0 +1,70 @@
+	<table border="1" style="border-collapse: collapse" id="hidden_column_table" class="table-striped table-bordered dataTable dtr-inline" style="width: 100%;" role="grid" aria-describedby="hidden_column_table_info">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Fecha</th>
+        <th>Servicio Id</th>
+        <th>Fecha Servicio</th>
+        <th>Pasajero</th>
+        <th>Cliente</th>
+        <th>Conductor</th>
+        <th>Valor Cliente</th>
+        <th>Valor Conductor</th>
+        <th>Valor Anticipo</th>
+        <th>Total Abonos</th>
+        <th>Total Restante</th>
+        <th>Estado</th>
+   
+    </tr>
+    </thead>
+    <tbody>
+            <tr>
+        <td>325</td>
+        <td>2024-08-01 16:20:06</td>
+        
+        
+        <td>72706</td>
+        <td>2024-07-30</td>
+        <td>DIEGO AGUILAR</td>
+        <td>AP GLOBAL MUSIC</td>
+        <td>LUIS FERNANDO PARRA RESTREPO</td>
+        <td>$350000.00</td>
+        <td>$125000.00</td>
+
+                <td>$125000.00</td>
+        <td>$0</td>
+        <td>$125000</td>
+        <td>
+                Activo
+                </td>
+        
+    </tr>
+            <tr>
+        <td>333</td>
+        <td>2024-08-06 10:00:08</td>
+        
+        
+        <td>73050</td>
+        <td>2024-08-03</td>
+        <td>DIEGO AGUILAR</td>
+        <td>AP GLOBAL MUSIC</td>
+        <td>LUIS FERNANDO PARRA RESTREPO</td>
+        <td>$300000.00</td>
+        <td>$110000.00</td>
+
+                <td>$110000.00</td>
+        <td>$0</td>
+        <td>$110000</td>
+        <td>
+                Activo
+                </td>
+        
+    </tr>
+        </tbody>
+    <tfoot>
+    <tr>
+    
+
+    </tr>
+    </tfoot>
+</table>

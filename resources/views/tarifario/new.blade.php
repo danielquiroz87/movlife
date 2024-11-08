@@ -123,6 +123,11 @@
             </div>
 
             <div class="col-md-6 form-group mb-3">
+              <label><strong>Valor Adicional:</strong></label>
+                   <input type="number" name="valor_adicional" id="valor_adicional" value=""  class="form-control" placeholder="0" maxlength="11" >
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
               <label><strong>Valor Cliente:</strong></label>
                    <input type="number" name="valor_cliente" value="0" id="valor_cliente" class="form-control" placeholder="0" maxlength="11" required>
             </div>
@@ -210,7 +215,7 @@
 @section('bottom-js')
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDgnsQUqdsRu0bweRhx7Ji5r2Jknm7ncMo&callback=initMap&libraries=places&v=weekly" async>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBKkK3A_KT0_PyXE66Srs177YSm7WHSMqw&callback=initMap&libraries=places&v=weekly" async>
 </script>
 
 <script type="text/javascript">

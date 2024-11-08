@@ -8,7 +8,11 @@ use App\Models\Pasajero;
 use App\Models\User;
 use App\Models\Direccion;
 use App\Models\Cliente;
+use App\Exports\PasajerosExport;
+
 use Config;
+use Excel;
+
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
@@ -82,7 +86,7 @@ class PasajerosController extends Controller
                 //'email'=>'required|email|max:255',
                 //'password'=>'required|max:20',
                 //'celular'=>'required',
-                //'documento'=>'required|unique:pasajeros,documento|max:20',
+                'documento'=>'required|unique:pasajeros,documento|max:20',
                 'departamento'=>'required',
                 'ciudad'=>'required',
                 //'direccion'=>'required'
@@ -104,11 +108,13 @@ class PasajerosController extends Controller
                 'apellidos' => 'required|max:255',
                 'departamento'=>'required',
                 'ciudad'=>'required',
-                //'documento'=>'unique:pasajeros,documento,'.$id.'|max:20',
-                //'direccion'=>'required'
+                'documento'=>'required|max:20'
             ]);
 
             $direccion=Direccion::find($pasajero->direccion_id);
+            if(!$direccion){
+                $direccion=new Direccion();
+            }
             $direccion->departamento_id=$request->get('departamento');
             $direccion->ciudad_id=$request->get('ciudad');
             $direccion->direccion1=$request->get('direccion');
@@ -148,12 +154,19 @@ class PasajerosController extends Controller
             if($request->has('documento')){
                 $pasajero->documento=$request->get('documento');
             }
+            if($request->has('cliente_id') && $request->get('cliente_id')>0){
+                $pasajero->cliente_id=$request->get('cliente_id');
+            }
+            else{
+                $pasajero->cliente_id=null;
+            }
             $pasajero->nombres=$request->get('nombres');
             $pasajero->apellidos=$request->get('apellidos');
             $pasajero->email_contacto=$request->get('email');
             $pasajero->nombre_contacto=$request->get('nombre_contacto');
             $pasajero->telefono_contacto=$request->get('telefono_contacto');
             $pasajero->celular=$request->get('celular');
+            $pasajero->uri_sede=$request->get('uri_sede',null);
             $pasajero->direccion_id=$direccion->id;
             $pasajero->activo=1;
             
@@ -183,7 +196,7 @@ class PasajerosController extends Controller
          }else{
             \Session::flash('flash_message','Pasajero actualizado exitosamente!.');
 
-            return redirect()->back();
+            return redirect()->route('pasajeros');
 
          }
 
@@ -199,6 +212,11 @@ class PasajerosController extends Controller
         
         return view('pasajeros.importar');
         
+    }
+
+    public function exportar() 
+    {
+        return Excel::download(new PasajerosExport, 'pasajeros_movlife.csv');
     }
 
     public function delete($id){

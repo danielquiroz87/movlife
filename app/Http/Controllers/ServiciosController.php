@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Servicio;
+use App\Models\ServicioImportador;
 use App\Models\Cliente;
 use App\Models\Pasajero;
 use App\Models\Municipios;
@@ -27,6 +28,9 @@ use App\Models\User;
 use App\Models\Direccion;
 use App\Models\Vehiculo;
 use App\Models\Fuec;
+use App\Models\TarifasTipoServicio;
+use Illuminate\Support\Facades\Http;
+
 
 use Config;
 use Illuminate\Support\Facades\DB;
@@ -41,6 +45,9 @@ use App\Http\Helpers\Helper\Helper;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
+
+use Twilio\Rest\Client as TwClient;
+
 
 
 
@@ -62,47 +69,88 @@ class ServiciosController extends Controller
        }
     }
 
-    public function testEmail(Request $request,$id){
+    public function pasajeroListarServicios(Request $request){
+
+        $documento=$request->get('documento');
+        $pasajero=Pasajero::where('documento','=',$documento)->get()->first();
+        if($pasajero){
+
+            $servicios=Servicio::where('id_pasajero','=',$pasajero->id);
+            $servicios->orderBy('fecha_servicio','Asc');
+            $servicios->orderBy('hora_recogida','Asc');
+            $servicios=$servicios->paginate(Config::get('global_settings.paginate'));
+            return view('servicios.serviciospasajeros')->with(['servicios'=>$servicios]);
+
+        }else{
+            return view('servicios.serviciospasajeros')->with(['servicios'=>[]]);
+           
+        }
+    }
+
+    public function conductorListarServicios(Request $request){
+
+        $documento=$request->get('documento');
+        $conductor=Conductor::where('documento','=',$documento)->get()->first();
+        if($conductor){
+
+            $servicios=Servicio::where('id_conductor_servicio','=',$conductor->id);
+            $servicios->orderBy('fecha_servicio','Asc');
+            $servicios->orderBy('hora_recogida','Asc');
+            $servicios=$servicios->paginate(Config::get('global_settings.paginate'));
+            return view('servicios.serviciosconductores')->with(['servicios'=>$servicios]);
+
+        }else{
+            return view('servicios.serviciosconductores')->with(['servicios'=>[]]);
+           
+        }
+    }
+
+    public function conductorFinalizarServicio(Request $request,$id){
+        $servicio=Servicio::find($id);
+        $hora=$request->get('hora_final');
+        $documento=$request->get('documento');
+
+        $imagen=$request->file('file');
+        $filename='img-'.$servicio->id.'.'.$imagen->getClientOriginalExtension();
+        $mover=$imagen->move(public_path('uploads/servicios/'), $filename);
+        if($mover){
+            $servicio->imagen_conductor='uploads/servicios/'.$filename;
+            $servicio->hora_final_conductor=$hora;
+            $servicio->cedula_final_conductor=$documento;
+            $servicio->fecha_final_conductor=date('Y-m-d H:i:s');
+            $servicio->estado=3;
+            $servicio->save();
+
+            \Session::flash('flash_message','Servicio actualizado exitosamente!.');
+
+        }
+         return redirect()->back();
+    }
+
+
+    public function conductorRecogerPasajero(Request $request,$id){
 
         $servicio=Servicio::find($id);
+       if($servicio){
+            $servicio->estado=2;
+            $servicio->save();
+            \Session::flash('flash_message','Servicio actualizado exitosamente!.');
 
-        $body = view('servicios.email',compact('servicio'))->render();
-
-        $mail = new PHPMailer(true);
-
-        try {
-        //Server settings
-        $mail->SMTPDebug = false;                      //Enable verbose debug output
-        $mail->isSMTP();                                            //Send using SMTP
-        $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
-        $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-        $mail->Username   = 'danykyroz@gmail.com';                     //SMTP username
-        $mail->Password   = 'uevp blus zygo yols';                               //SMTP password
-        $mail->SMTPSecure = 'tls';            //Enable implicit TLS encryption
-        $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
-
-        //Recipients
-        $mail->setFrom('danykyroz@gmail.com', 'Movlife');
-        if($servicio->pasajero->email_contacto!=""){
-            $mail->addAddress($servicio->pasajero->email_contacto, $servicio->pasajero->nombres); 
         }
-        if($servicio->cliente->email!=""){
-            $mail->addCC($servicio->cliente->email);
-        }
-        $mail->addBCC('daniel.quiroz@epayco.com');
-        $mail->isHTML(true);                                 
-        $mail->Subject = 'Nuevo Servicio Movlife #'.$servicio->id;
-        $mail->Body    = $body;
-     
-        $mail->send();
-        echo 'Message has been sent';
-
-        } catch (Exception $e) {
-            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-        }
-
-        die();
+         return redirect()->back();
     }
+
+
+    public function pasajeroCancelarServicio(Request $request ,$id){
+
+        $servicio=Servicio::find($id);
+        $servicio->estado=4;
+        $servicio->motivo_cancelacion=3;
+        $servicio->save();
+        return redirect()->back();
+
+    }
+
 
 
      public function sendEmail($id){
@@ -115,30 +163,45 @@ class ServiciosController extends Controller
 
         try {
         //Server settings
+        /*
         $mail->SMTPDebug = false;                      //Enable verbose debug output
         $mail->isSMTP();                                            //Send using SMTP
         $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
         $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
         $mail->Username   = 'danykyroz@gmail.com';                     //SMTP username
-        $mail->Password   = 'uevp blus zygo yols';                               //SMTP password
-        $mail->SMTPSecure = 'tls';            //Enable implicit TLS encryption
-        $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+        $mail->Password   = 'uevp blus zygo yols';     
+        */
 
+        
+        $mail->SMTPDebug = false;  //Enable verbose debug output
+        $mail->isSMTP();   //Send using SMTP
+        $mail->Host       = 'smtp.office365.com'; //Set the SMTP server to send through
+        $mail->SMTPAuth   = true; //Enable SMTP authentication
+        $mail->Username   = 'info@movlife.co';  //SMTP username
+        $mail->Password   = 'Xuk40954'; 
+        
+        $mail->SMTPSecure = 'tls'; //Enable implicit TLS encryption
+        $mail->Port       = 587;  
+        
         //Recipients
-        $mail->setFrom('danykyroz@gmail.com', 'Movlife');
+        $mail->setFrom('info@movlife.co', 'Movlife');
         if($servicio->pasajero->email_contacto!=""){
             $mail->addAddress($servicio->pasajero->email_contacto, $servicio->pasajero->nombres); 
         }
         if($servicio->cliente->email!=""){
             $mail->addCC($servicio->cliente->email);
         }
-        $mail->addBCC('daniel.quiroz@epayco.com');
+        //$mail->addBCC('claudia.florez@movlife.co');
+        //$mail->addBCC('danykyroz@gmail.com');
+        $mail->addBCC('melissa.gomez@movlife.co');
+
         $mail->isHTML(true);                                 
         $mail->Subject = 'Nuevo Servicio Movlife #'.$servicio->id;
         $mail->Body    = $body;
      
-        $mail->send();
+        $emailEnviado=$mail->send();
         $response='Message has been sent';
+
 
         } catch (Exception $e) {
             $response= "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
@@ -146,12 +209,279 @@ class ServiciosController extends Controller
 
         return $response;
     }
+    
+    public function sendMessageWhatsapp($servicio){
+        
+        $celularPasajero=$servicio->pasajero->celular;
+        $celularConductor=$servicio->conductorServicio->celular;
+
+        $from="whatsapp:+573123129835";
+        $bodysms = view('servicios.messagesms',compact('servicio'))->render();
+
+        
+        if($celularPasajero!=""){
+
+            
+                $datasms=[
+                    'from' => 'MOVLIFE',
+                    'to'=>'57'.$celularPasajero,
+                    'text'=>$bodysms,
+                    'transliteration'=>'COLOMBIAN',
+                    'language'=>array('languageCode'=>'ES')
+                ];
+              
+                
+                $responseSms = Http::accept('application/json')
+                            ->withBasicAuth('MOVLIFE', 'Movlife2024$$')
+                            ->withBody(json_encode($datasms),'application/json')
+                            ->withHeaders(['Content-Type'=>'application/json'])
+                            ->post('https://api2.iatechsas.com/sms/1/text/single');
+        
 
 
+
+            /*
+            $sid = "AC17ab8f2480b36b82150a69d9834f18c7";
+            $token = "70b4dd4458db511ab27ed706bae8e1f4";
+            $twilio = new TwClient($sid, $token);
+            $body = view('servicios.messagewhatsapp',compact('servicio'))->render();
+
+            
+            $message = $twilio->messages->create("whatsapp:+57".$celularPasajero, // to
+                array(
+                  "from" => $from,
+                  "body" => $body
+                )
+              );
+
+            
+            if($celularConductor){
+                /*
+                $messageConductor = $twilio->messages->create("whatsapp:+57".$celularConductor, // to
+                array(
+                  "from" => $from,
+                  "body" => $body
+                )
+              );
+                */
+
+               $datasms=[
+                    'from' => 'MOVLIFE',
+                    'to'=>'57'.$celularConductor,
+                    'text'=>$bodysms,
+                    'transliteration'=>'COLOMBIAN',
+                    'language'=>array('languageCode'=>'ES')
+                ];
+               
+                
+                $responseSms = Http::accept('application/json')
+                            ->withBasicAuth('MOVLIFE', 'Movlife2024$$')
+                            ->withBody(json_encode($datasms),'application/json')
+                            ->withHeaders(['Content-Type'=>'application/json'])
+                            ->post('https://api2.iatechsas.com/sms/1/text/single');
+        
+
+            }
+            if($servicio->educador_coordinador>0){
+
+               $empleado=Empleado::find($servicio->educador_coordinador);
+               if($empleado->whatsapp!=""){
+                    /*
+                    $messageConductor = $twilio->messages->create("whatsapp:+57".$empleado->whatsapp, // to
+                    array(
+                    "from" => $from,
+                    "body" => $body
+                    )
+                );*/
+
+                   $datasms=[
+                    'from' => 'MOVLIFE',
+                    'to'=>'57'.$empleado->whatsapp,
+                    'text'=>$bodysms,
+                    'transliteration'=>'COLOMBIAN',
+                    'language'=>array('languageCode'=>'ES')
+                ];
+               
+                
+                $responseSms = Http::accept('application/json')
+                            ->withBasicAuth('MOVLIFE', 'Movlife2024$$')
+                            ->withBody(json_encode($datasms),'application/json')
+                            ->withHeaders(['Content-Type'=>'application/json'])
+                            ->post('https://api2.iatechsas.com/sms/1/text/single');
+
+               }
+            }
+
+          
+
+    }
+
+
+    public function sendMessagePreservicioWhatsapp($preservicio){
+        
+        
+        $from="whatsapp:+573123129835";
+        $sid = "AC17ab8f2480b36b82150a69d9834f18c7";
+        $token = "70b4dd4458db511ab27ed706bae8e1f4";
+        $twilio = new TwClient($sid, $token);
+        $body = view('servicios.message_preservicio_whatsapp',compact('preservicio'))->render();
+       
+        if($preservicio->educador_coordinador>0){
+            $empleado=Empleado::find($preservicio->educador_coordinador);
+            if($empleado->whatsapp!=""){
+                 $messageConductor = $twilio->messages->create("whatsapp:+57".$empleado->whatsapp, // to
+                 array(
+                 "from" => $from,
+                 "body" => $body
+                 )
+             );
+            }
+
+            $existeNumeroListaSms=DB::table('conductor_numeros_sms')->where('numero',$empleado->whatsapp)->get()->first();
+           
+            if($existeNumeroListaSms){
+
+                
+                $datasms=[
+                    'from' => 'MOVLIFE',
+                    'to'=>'57'.$empleado->whatsapp,
+                    'text'=>$body,
+                    'transliteration'=>'COLOMBIAN',
+                    'language'=>array('languageCode'=>'ES')
+                ];
+               /*
+                $datasms2=[
+                    'from' => 'MOVLIFE',
+                    'to'=>'573127633220',
+                    'text'=>$bodysms
+                ];
+
+                $responseSms2 = Http::accept('application/json')
+                ->withBasicAuth('MOVLIFE', 'Movlife2024$$')
+                ->withBody(json_encode($datasms2),'application/json')
+                ->withHeaders(['Content-Type'=>'application/json'])
+                ->post('https://api2.iatechsas.com/sms/1/text/single');
+
+                */
+                
+                $responseSms = Http::accept('application/json')
+                            ->withBasicAuth('MOVLIFE', 'Movlife2024$$')
+                            ->withBody(json_encode($datasms),'application/json')
+                            ->withHeaders(['Content-Type'=>'application/json'])
+                            ->post('https://api2.iatechsas.com/sms/1/text/single');
+        
+              
+               
+            }
+         }
+     
+
+    }
+
+    public function preservicios_placasave(Request $request){
+
+        $id=$request->get('id');
+        $placa=$request->get('placa');
+        $conductor_pago=$request->get('id_conductor_pago');
+        $conductor_servicio=$request->get('id_conductor_servicio');
+        $uri_sede=$request->get('uri_sede');
+
+        $preservicio=PreServicio::find($id);
+
+        
+        if($preservicio){
+            
+            if($preservicio->pasajero_id==""){
+                $pasajero=Pasajero::where('documento','=',$preservicio->pasajero_documento)->get()->first();
+                if($pasajero){
+                    $preservicio->pasajero_id=$pasajero->id;
+                }else{
+                    \Session::flash('flash_bad_message','El pasajero con documento: '.$preservicio->pasajero_documento.', no existe!.');
+                    return redirect()->back();
+                }
+            }
+            
+            $preservicio->placa=$placa;
+            $preservicio->id_conductor_pago=$conductor_pago;
+            $preservicio->id_conductor_servicio=$conductor_servicio;
+            $preservicio->id_cliente=$request->get('id_cliente');
+            $preservicio->uri_sede=$uri_sede;
+            $preservicio->estado=2;
+            $preservicio->save();
+        }else{
+            \Session::flash('flash_bad_message','El servicio no existe!.');
+            return redirect()->back();
+        }
+
+        $existeServicio=Servicio::where('preservicio_id',$preservicio->id)->get()->first();
+        if($existeServicio){
+            \Session::flash('flash_bad_message','Error al tratar de guardar el servicio!. Id Preservicio Duplicado');
+            return redirect()->back();
+
+        }
+        
+        $servicio=new Servicio();
+        $servicio->id_cliente=$preservicio->id_cliente;
+        $servicio->fecha_solicitud=$preservicio->fecha_solicitud;
+        $servicio->fecha_servicio=$preservicio->fecha_servicio;
+        $servicio->hora_recogida=$preservicio->hora_recogida;
+        $servicio->hora_regreso=$preservicio->hora_regreso;
+        $servicio->id_pasajero=$preservicio->pasajero_id;
+
+        
+        $servicio->placa=$preservicio->placa;
+        $servicio->id_conductor_pago=$preservicio->id_conductor_pago;
+        $servicio->id_conductor_servicio=$preservicio->id_conductor_servicio;
+
+        $servicio->barrio=$preservicio->barrio;
+        $servicio->origen=$preservicio->origen;
+        $servicio->destino=$preservicio->destino;
+        $servicio->tipo_viaje=$preservicio->tipo_viaje;
+        $servicio->tipo_servicio=$preservicio->tipo_servicio;
+        $servicio->uri_sede=$preservicio->uri_sede;
+        $servicio->observaciones=$preservicio->observaciones;
+        $servicio->kilometros=$preservicio->kilometros;
+        $servicio->tiempo=$preservicio->tiempo;
+        $servicio->educador_coordinador=$preservicio->educador_coordinador;
+        $servicio->estado=0;
+        $servicio->preservicio_id=$preservicio->id;
+        $servicio->user_id=Auth::user()->id;
+
+        $existe_tarifa=TarifasTipoServicio::where('cliente_id',$servicio->id_cliente)
+                                            ->where('tipo_servicio',$servicio->tipo_servicio)
+                                            ->where('uri_sede',$servicio->uri_sede)->get()->first();
+        if($existe_tarifa){
+
+        }else{
+            $existe_tarifa=TarifasTipoServicio::where('cliente_id',$servicio->id_cliente)
+                                            ->where('tipo_servicio',$servicio->tipo_servicio)
+                                            ->where('destino',$servicio->destino)->get()->first();
+            
+       
+        }
+        if($existe_tarifa){
+            $servicio->valor_conductor=$existe_tarifa->valor_conductor;
+            $servicio->valor_cliente=$existe_tarifa->valor_cliente;
+        }
+
+        $servicio->save();
+
+        $this->sendEmail($servicio->id);
+        $this->sendMessageWhatsapp($servicio);
+
+        
+        \Session::flash('flash_message','Servicio actualizado exitosamente!.');
+
+        return redirect()->back();
+
+
+    }
+    
      public function listar_preservicios(Request $request){
         $servicios=PreServicio::whereIn('estado',array(1,2,3));
+        
         $filtros=$request->get('filtros');
-
+        
         if(isset($filtros['estado'])){
             $estado=(int) $filtros['estado'];
             if($estado!="" || $estado>0){
@@ -161,6 +491,8 @@ class ServiciosController extends Controller
         else{
             $filtros['estado']="";
         }
+
+        
         if(isset($filtros['cliente'])){
             $cliente=(int) $filtros['cliente'];
             if($cliente!="" || $cliente>0){
@@ -170,17 +502,21 @@ class ServiciosController extends Controller
         }else{
              $filtros['cliente']="";
         }
-        
-        if(isset($filtros['uri_sede'])){
-            $uri_sede=(int) $filtros['uri_sede'];
-            if($uri_sede!="" || $uri_sede>0){
-                $servicios->where('uri_sede','=',$uri_sede);
+       
+     
+        $sedes=$request->get('filtros_urisede');
+        if($sedes!=""){
+            $uri_sede=array_values($sedes);
+            if($uri_sede!=""){
+                $filtros['uri_sede']=$uri_sede;
+                $servicios->whereIn('uri_sede',$uri_sede);
             }
             
         }else{
              $filtros['uri_sede']="";
         }
-
+        
+      
         if(isset($filtros['fecha_inicial'])){
             $fecha_inicial=$filtros['fecha_inicial'];
             if($fecha_inicial!=""){
@@ -199,17 +535,57 @@ class ServiciosController extends Controller
         }else{
             $filtros['fecha_final']=date('Y-m-d');
         }
-        $request->session()->put('filtros_servicios', $filtros);
 
+        if(isset($filtros['cedula'])){
+            $cedula=$filtros['cedula'];
+            if($cedula!=""){
+               $servicios->where('pasajero_documento','=',$cedula); 
+            }
+            
+        }else{
+            $filtros['cedula']="";
+        }
+        
+        $pasajero=$request->get('filtros_pasajero');
+        if($pasajero!=""){
+            $pasajeros=array_values($pasajero);
+            $filtros['pasajero']=$pasajero;
+            $servicios->whereIn('pasajero_id',$pasajeros);
+        }else{
+            $filtros['pasajero']="";
+        }
+        
+        $coordinador=$request->get('filtros_coordinador');
+        if($coordinador!=""){
+            $coordinadores=array_values($coordinador);
+            if($coordinadores!=""){
+                $filtros['coordinador']=$coordinadores;
+                $servicios->whereIn('educador_coordinador',$coordinadores); 
+            }
+        }else{
+            $filtros['coordinador']="";
+        }
+
+        if(isset($filtros['id'])){
+            $id_servicio=explode(",",$filtros['id']);
+            if($id_servicio!="" || count($id_servicio)>0){
+                $servicios->whereIn('id',$id_servicio);
+            }
+        }
+        else{
+            $filtros['id']="";
+        }
+
+        $request->session()->put('filtros_servicios', $filtros);
+       
+        $servicios->orderBy('fecha_servicio','Asc');
+        $servicios->orderBy('hora_recogida','Asc');
+        
         $servicios=$servicios->paginate(Config::get('global_settings.paginate'));
         //$servicios=$servicios->paginate(2);
 
         return view('servicios.preservicios_index')->with(['servicios'=>$servicios,'filtros'=>$filtros]);
 
-
-
-
-        return view('servicios.listar_preservicios');
     }
 
     public function preservicio(Request $request){
@@ -217,6 +593,15 @@ class ServiciosController extends Controller
         $sedes=Sedes::all();
 
         return view('servicios.preservicio')->with(['sedes'=>$sedes]);
+    }
+
+    public function preservicio_delete($id){
+        
+        $preservicio=PreServicio::find($id);
+        $preservicio->delete();
+        \Session::flash('flash_message','PreServicio eliminado exitosamente!.');
+
+        return redirect()->route('preservicios');
     }
 
     public function fromPreservicio(Request $request,$id){
@@ -235,22 +620,71 @@ class ServiciosController extends Controller
         $dt->origen=$preservicio->origen;
         $dt->destino=$preservicio->destino;
 
+        $existeServicio=Servicio::where('preservicio_id',$preservicio->id)->get()->first();
+        if($existeServicio){
+            \Session::flash('flash_bad_message','Error al tratar de guardar el servicio!. Id Preservicio Duplicado');
+            return redirect()->back();
+
+        }
+
         $servicio=new Servicio();
         $servicio->id_cliente=$preservicio->id_cliente;
+
+        if($preservicio->pasajero_id!=""){
+            $existePasajero=Pasajero::find($preservicio->pasajero_id);
+           
+            if($existePasajero){
+                if($existePasajero->cliente_id!=""){
+                    $servicio->id_cliente=$existePasajero->cliente_id;
+                }
+            }
+        }
+        
         $servicio->fecha_solicitud=$preservicio->fecha_solicitud;
         $servicio->fecha_servicio=$preservicio->fecha_servicio;
         $servicio->hora_recogida=$preservicio->hora_recogida;
         $servicio->hora_regreso=$preservicio->hora_regreso;
         $servicio->id_pasajero=$preservicio->pasajero_id;
+        $servicio->placa=$preservicio->placa;
+        $servicio->id_conductor_pago=$preservicio->id_conductor_pago;
+        $servicio->id_conductor_servicio=$preservicio->id_conductor_servicio;
 
         $servicio->barrio=$preservicio->barrio;
         $servicio->origen=$preservicio->origen;
         $servicio->destino=$preservicio->destino;
         $servicio->tipo_viaje=$preservicio->tipo_viaje;
         $servicio->tipo_servicio=$preservicio->tipo_servicio;
-        $servicio->uri_sede=$preservicio->uri_sede;
+        if($preservicio->uri_sede>1){
+            $servicio->uri_sede=$preservicio->uri_sede;
+        }else{
+            $servicio->uri_sede=null;
+        }
         $servicio->observaciones=$preservicio->observaciones;
+        $servicio->kilometros=$preservicio->kilometros;
+        $servicio->tiempo=$preservicio->tiempo;
+        $servicio->educador_coordinador=$preservicio->educador_coordinador;
         $servicio->estado=1;
+        $servicio->preservicio_id=$preservicio->id;
+        $existe_tarifa=false;
+
+        if($servicio->uri_sede!=""){
+            $existe_tarifa=TarifasTipoServicio::where('cliente_id',$servicio->id_cliente)
+            ->where('tipo_servicio',$servicio->tipo_servicio)
+            ->where('uri_sede',$servicio->uri_sede)->get()->first();
+        }
+        if($existe_tarifa){
+    
+        }else{
+            $existe_tarifa=TarifasTipoServicio::where('cliente_id',$servicio->id_cliente)
+                ->where('tipo_servicio',$servicio->tipo_servicio)
+                ->where('destino',$servicio->destino)->get()->first();
+
+
+        }
+        if($existe_tarifa){
+            $servicio->valor_conductor=$existe_tarifa->valor_conductor;
+            $servicio->valor_cliente=$existe_tarifa->valor_cliente;
+        }
 
         $sedes=Sedes::all();
 
@@ -277,11 +711,13 @@ class ServiciosController extends Controller
             $preservicio->cliente_celular=$existe_cliente->celular;
 
        }else{
+            /*
             $preservicio->cliente_documento=$request->get('cliente_documento');
             $preservicio->cliente_nombres=$request->get('cliente_nombres');
             $preservicio->cliente_apellidos=$request->get('cliente_apellidos');
             $preservicio->cliente_email=$request->get('cliente_email');
             $preservicio->cliente_celular=$request->get('cliente_celular');
+            */
        }
        $existe_pasajero=Pasajero::where('documento',$documento_pasajero)->get()->first();
        if($existe_pasajero){
@@ -300,24 +736,80 @@ class ServiciosController extends Controller
             $preservicio->pasajero_apellidos=$request->get('pasajero_apellidos');
             $preservicio->pasajero_email=$request->get('pasajero_email');
             $preservicio->pasajero_celular=$request->get('pasajero_celular');
-       } 
 
-       $preservicio->fecha_solicitud=$request->get('fecha_solicitud');
+            //Creamos el pasajero
+            /*
+            $pasajero=new Pasajero();
+            $pasajero->documento=$preservicio->pasajero_documento;
+            $pasajero->nombres=$preservicio->pasajero_nombres;
+            $pasajero->apellidos=$preservicio->pasajero_apellidos;
+            $pasajero->celular=$preservicio->pasajero_celular;
+            $pasajero->telefono=$preservicio->pasajero_celular;
+            $pasajero->whatsapp=$preservicio->pasajero_celular;
+            $pasajero->email_contacto=$preservicio->pasajero_email;
+            $pasajero->activo=1;
+            $pasajero->save();
+            $preservicio->pasajero_id=$pasajero->id;
+            */
+
+       }
+       
+       
+       $preservicio->cliente_documento=$preservicio->pasajero_documento;
+       $preservicio->cliente_nombres=$preservicio->pasajero_nombres;
+       $preservicio->cliente_apellidos=$preservicio->pasajero_apellidos;
+       $preservicio->cliente_email=$preservicio->pasajero_email;
+       $preservicio->cliente_celular=$preservicio->pasajero_celular;
+
+       $preservicio->fecha_solicitud=date('Y-m-d H:i:s');
        $preservicio->fecha_servicio=$request->get('fecha_servicio');
        $preservicio->hora_recogida=$request->get('hora_recogida');
+       $preservicio->hora_regreso=$request->get('hora_regreso');
+
        $preservicio->origen=$request->get('origen');
        $preservicio->destino=$request->get('destino');
        $preservicio->tipo_viaje=$request->get('tipo_viaje');
        $preservicio->tipo_servicio=$request->get('tipo_servicio');
-       $preservicio->uri_sede=$request->get('uri_sede');
-       $preservicio->observaciones=$request->get('observaciones');
-       $preservicio->estado=1;
-       $preservicio->save();
+       $preservicio->kilometros=$request->get('kilometros');
+       $preservicio->tiempo=$request->get('tiempo');
+       $preservicio->educador_coordinador=$request->get('educador_coordinador');
+      
+       $observaciones=trim(preg_replace('/[\r\n|\n|\r]+/', '. ', $request->get('observaciones')));
+       $preservicio->observaciones=$observaciones;
 
-        \Session::flash('flash_message','Servicio enviado exitosamente!.');
+       $uri=$request->get('uri');
+       if($uri!=""){
+         $sede=Sedes::where('nombre','like',"%{$uri}%")->get()->first();
+         if($sede){
+            $preservicio->uri_sede=$sede->id;
+         }
+         if($existe_pasajero && $existe_pasajero->uri_sede>0){
+            $preservicio->uri_sede=$existe_pasajero->uri_sede;
+         }
+       }
+      
+       $preservicio->estado=1;
+
+       $existe_preservicio=PreServicio::where('fecha_servicio',$preservicio->fecha_servicio)
+                                        ->where('hora_recogida',$preservicio->hora_recogida)
+                                        ->where('tipo_servicio',$preservicio->tipo_servicio)
+                                        ->where('uri_sede',$preservicio->uri_sede)
+                                        ->where('origen',$preservicio->origen)
+                                        ->where('destino',$preservicio->destino)
+                                        ->get()->first();
+      
+        if($existe_preservicio){
+            \Session::flash('flash_bad_message','Error al tratar de guardar el servicio!. Servicio Duplicado');
+
+        }else{
+            $preservicio->save();
+            $this->sendMessagePreservicioWhatsapp($preservicio);
+            \Session::flash('flash_message','Servicio enviado exitosamente!.');
+
+        }
 
        }catch(Exception $ex){
-            \Session::flash('bad_message','Error al tratar de guardar el servicio!.');
+            \Session::flash('flash_bad_message','Error al tratar de guardar el servicio!.');
        }
 
         return redirect()->route('web.preservicio');
@@ -327,37 +819,84 @@ class ServiciosController extends Controller
 
     public function index(Request $request)
     {   
-        $servicios=Servicio::whereIn('estado',array(1,2,3));
+        
+        $user_id=Auth::user()->id;
+        $is_driver=Conductor::where('user_id',$user_id)->get()->first();
         $filtros=$request->get('filtros');
+       
+        if(is_object($is_driver)){
+            
+            $servicios=Servicio::where('id_conductor_servicio','=',$is_driver->id)
+            ->orWhere('id_conductor_pago','=',$is_driver->id);
+            $servicios->orderBy('id','Desc');
+            $servicios->orderBy('fecha_servicio','Desc');
+            $servicios->orderBy('hora_recogida','Asc');
+            $servicios=$servicios->paginate(Config::get('global_settings.paginate'));
+            return view('servicios.serviciosconductores')->with(['servicios'=>$servicios]);
 
+        }else{
+            $is_client=Cliente::where('user_id',$user_id)->get()->first();
+            
+            if($is_client){
+                
+                $servicios=Servicio::where('id_cliente','=',$is_client->id);
+               
+                if(isset($filtros['id'])){
+                    $id_servicio=explode(",",$filtros['id']);
+                    if($id_servicio!="" || count($id_servicio)>0){
+                        $servicios->whereIn('id',$id_servicio);
+                    }
+                }
+                else{
+                    $filtros['id']="";
+                }
+                
+                $servicios->orderBy('estado','Asc');
+                $servicios->orderBy('fecha_servicio','Desc');
+                $servicios->orderBy('hora_recogida','Asc');
+                $servicios=$servicios->paginate(Config::get('global_settings.paginate'));
+                return view('servicios.serviciospasajeros')->with(['servicios'=>$servicios,'filtros'=>$filtros]);
+
+            }
+        }
+
+        $servicios=Servicio::whereIn('estado',array(0,1,2,3,4));
+        $filtros=$request->get('filtros');
+        
         if(isset($filtros['estado'])){
             $estado=(int) $filtros['estado'];
-            if($estado!="" || $estado>0){
+            if($estado!="" || $estado>=0){
                 $servicios->where('estado','=',$estado);
             }
         }
         else{
             $filtros['estado']="";
         }
-        if(isset($filtros['cliente'])){
-            $cliente=(int) $filtros['cliente'];
-            if($cliente!="" || $cliente>0){
-                $servicios->where('id_cliente','=',$cliente);
+        
+        $cliente=$request->get('filtros_cliente');
+        if($cliente!=""){
+            $clientes=array_values($cliente);
+            if($clientes!=""){
+                $filtros['cliente']=$clientes;
+                $servicios->whereIn('id_cliente',$clientes);
             }
             
         }else{
              $filtros['cliente']="";
         }
-        if(isset($filtros['conductor'])){
-            $conductor=(int) $filtros['conductor'];
-            if($conductor!="" || $conductor>0){
-                $servicios->where('id_conductor_servicio','=',$conductor);
+
+        $conductor=$request->get('filtros_conductor');
+        if($conductor){
+            $conductores=array_values($conductor);
+            if($conductores){
+                $filtros['conductor']=$conductores;
+                $servicios->whereIn('id_conductor_servicio',$conductores);
             }
             
         }else{
              $filtros['conductor']="";
         }
-
+        /*
         if(isset($filtros['conductor_pago'])){
             $conductor_pago=(int) $filtros['conductor_pago'];
             if($conductor_pago!="" || $conductor_pago>0){
@@ -367,35 +906,43 @@ class ServiciosController extends Controller
         }else{
              $filtros['conductor_pago']="";
         }
+        */
 
-        if(isset($filtros['uri_sede'])){
-            $uri_sede=(int) $filtros['uri_sede'];
-            if($uri_sede!="" || $uri_sede>0){
-                $servicios->where('uri_sede','=',$uri_sede);
+        $sedes=$request->get('filtros_urisede');
+        if($sedes!=""){
+            $uri_sede=array_values($sedes);
+            if($uri_sede!=""){
+                $filtros['uri_sede']=$uri_sede;
+                $servicios->whereIn('uri_sede',$uri_sede);
             }
             
         }else{
              $filtros['uri_sede']="";
         }
 
-        if(isset($filtros['pasajero'])){
-            
-            $pasajero=$filtros['pasajero'];
+        
+        $coordinador=$request->get('filtros_coordinador');
 
-            if($pasajero!="" ){
-
-               $servicios ->leftJoin('pasajeros AS p', function($join){
-                    $join->on('ordenes_servicio.id_pasajero', '=', 'p.id');
-                   
-            });
-                 $servicios->where('p.nombres', 'LIKE', '%'.$pasajero.'%')
-                            ->orwhere('p.apellidos', 'LIKE', '%'.$pasajero.'%'); 
+        if($coordinador!=""){
+            $coordinadores=array_values($coordinador);
+            if($coordinadores!=""){
+                $filtros['coordinador']=$coordinadores;
+                $servicios->whereIn('educador_coordinador',$coordinadores);
             }
             
         }else{
-             $filtros['pasajero']="";
+             $filtros['coordinador']="";
         }
 
+        $pasajero=$request->get('filtros_pasajero');
+        if($pasajero!=""){
+            $pasajeros=array_values($pasajero);
+            $filtros['pasajero']=$pasajero;
+            $servicios->whereIn('id_pasajero',$pasajeros);
+        }else{
+            $filtros['pasajero']="";
+        }
+        
         if(isset($filtros['fecha_inicial'])){
             $fecha_inicial=$filtros['fecha_inicial'];
             if($fecha_inicial!=""){
@@ -414,8 +961,75 @@ class ServiciosController extends Controller
         }else{
             $filtros['fecha_final']=date('Y-m-d');
         }
-        $request->session()->put('filtros_servicios', $filtros);
 
+
+        if(isset($filtros['fecha_inicial_creacion'])){
+            $fecha_inicial_creacion=$filtros['fecha_inicial_creacion'];
+            if($fecha_inicial_creacion!=""){
+               $servicios->where('created_at','>=',$fecha_inicial_creacion); 
+            }
+            
+        }else{
+            $filtros['fecha_inicial_creacion']="";
+        }
+        if(isset($filtros['fecha_final_creacion'])){
+            $fecha_final_creacion=$filtros['fecha_final_creacion'];
+            if($fecha_final_creacion!=""){
+               $servicios->where('created_at','<=',$fecha_final_creacion.' 23:59:59'); 
+            }
+            
+        }else{
+            $filtros['fecha_final_creacion']="";
+        }
+
+        if(isset($filtros['id'])){
+            $id_servicio=explode(",",$filtros['id']);
+            if($id_servicio!="" || count($id_servicio)>0){
+                $servicios->whereIn('id',$id_servicio);
+            }
+        }
+        else{
+            $filtros['id']="";
+        }
+
+        if(isset($filtros['importadoraux'])){
+            $importadoraux=$filtros['importadoraux'];
+            if($importadoraux!=""){
+                $servicios=Servicio::where('importadoraux',$importadoraux);
+            }
+        }
+        else{
+            $filtros['importadoraux']="";
+        }
+
+      
+        
+        $request->session()->put('filtros_servicios', $filtros);
+        $servicios->orderBy('fecha_servicio','Asc');
+        $servicios->orderBy('hora_recogida','Asc');
+
+        $exportarSoloPlacas=$request->get('exportarplacas',false);
+
+        if($exportarSoloPlacas){
+
+            $servicios=$servicios->orderBy('placa','Asc')->get();
+            $arr_vehiculos=array();
+            foreach($servicios as $servicio){
+                $vehiculo=Vehiculo::where('placa',$servicio->placa)->get()->first();
+                $arr_vehiculos[$vehiculo->id]=$vehiculo;
+            }
+            $fecha=date('Y-m-d');
+            $filename="DocumentosPorPlacaDesdeServicios{$fecha}.xls";
+            $html=view('informes.documentos_placa_descargar')->with(['vehiculos'=>$arr_vehiculos,'filtros'=>$filtros]);
+            header('Content-type: application/vnd.ms-excel; charset=UTF-8');
+            header('Content-Disposition: attachment; filename='.$filename);
+            echo $html;
+            exit();
+
+        }
+        
+        
+        //$servicios=$servicios->addSelect('ordenes_servicio.id as IdServicio');
         $servicios=$servicios->paginate(Config::get('global_settings.paginate'));
         //$servicios=$servicios->paginate(2);
 
@@ -425,6 +1039,27 @@ class ServiciosController extends Controller
 
         return view('servicios.importar');
  
+    }
+
+    public function importadorpreview(Request $request, $auxid){
+        $servicios=ServicioImportador::where('importadoraux','=',$auxid);
+        $servicios=$servicios->paginate(Config::get('global_settings.paginate'));
+        return view('servicios.importador_preview')->with(['servicios'=>$servicios,'auxid'=>$auxid]);
+
+    }
+
+    public function importadorenviarlote(Request $request, $auxid){
+        $servicios=ServicioImportador::where('importadoraux','=',$auxid);
+        $this->saveServicioImportadorAux($auxid);
+        \Session::flash('flash_message','Lote importado exitosamente!.');
+        return redirect()->route('servicios',['importadoraux'=>$auxid]);
+    }
+
+
+    public function importadoreliminarlote(Request $request, $auxid){
+        $servicios=ServicioImportador::where('importadoraux','=',$auxid)->delete();
+        \Session::flash('flash_message','Lote eliminado exitosamente!.');
+        return redirect()->route('servicios');
     }
 
     public function importarsave(Request $request){
@@ -455,6 +1090,7 @@ class ServiciosController extends Controller
         $arr_servicios=array();
 
         DB::beginTransaction();
+        $importadoraux=uniqid();
 
         foreach ($importData_arr as $importData) {
         $j++;
@@ -471,17 +1107,29 @@ class ServiciosController extends Controller
             $fecha_prestacion=explode("/",$fecha_prestacion);
             $fecha_prestacion=$fecha_prestacion[2].'-'.$fecha_prestacion[1].'-'.$fecha_prestacion[0];
             
-            $str_tipo_servicio=$importData[3];
-            $coordinador=$importData[4];
-            $semana=$importData[5];
-            $persona_transportar=$importData[6];
-            $persona_transportar=trim($persona_transportar);
-            $telefono_paciente=$importData[7];
-            $nombre_cliente=$importData[8];
-            $nombre_uri_sede=$importData[9];
+            $str_tipo_servicio=trim($importData[3]);
+            $strcoordinador=trim($importData[4]);
+            
+            $obj_coordinador=Empleado::where('area_empresa','=',5)
+            ->whereRaw('CONCAT(nombres," ",apellidos) LIKE "%'.$strcoordinador.'%"')
+            ->orWhere('id',$strcoordinador)->get()->first();
 
-            $ciudad=$importData[10];
-            $depto=$importData[11];
+            $coordinador = null;       
+           if($obj_coordinador){
+            $coordinador=$obj_coordinador->id;
+           }
+           if((int)$strcoordinador>0){
+            $coordinador=$strcoordinador;
+           }
+
+            $semana=trim($importData[5]);
+            $persona_transportar=trim($importData[6]);
+            $telefono_paciente=trim($importData[7]);
+            $nombre_cliente=trim($importData[8]);
+            $nombre_uri_sede=trim($importData[9]);
+
+            $ciudad=trim($importData[10]);
+            $depto=trim($importData[11]);
             $cod_paciente=trim($importData[12]);
             if($cod_paciente=="N/A"){
                 $cod_paciente=0;
@@ -497,10 +1145,8 @@ class ServiciosController extends Controller
             }
 
             $tiempo=$importData[18];
-
-
-
-            $str_tipo_viaje=$importData[20];
+        
+            $str_tipo_viaje=trim($importData[20]);
             $hora_recogida=strtolower($importData[19]);
             $hora_recogida=trim($hora_recogida);
             $hora_regreso=NULL;
@@ -516,8 +1162,7 @@ class ServiciosController extends Controller
                     $tipo_viaje=3;
                }
             }
-
-
+            
             if($hora_recogida=="n/a" || $hora_recogida=="no aplica"){
                 $hora_recogida=NULL;
             }
@@ -575,7 +1220,7 @@ class ServiciosController extends Controller
                     $tipo_servicio=1;
                 }
             }
-
+            
 
 
             $turno=$importData[21];
@@ -694,8 +1339,11 @@ class ServiciosController extends Controller
             }
             
             $orden_compra=trim($importData[46]);
+            $observaciones_coordinador=trim($importData[48]);
+            $observaciones_contabilidad=trim($importData[49]);
 
-            $placa=$importData[50];
+
+            $placa=strtoupper($importData[50]);
             $cedula_placa=$importData[51];
             $estado_servicio=trim($importData[52]);
             if($estado_servicio==""){
@@ -791,8 +1439,8 @@ class ServiciosController extends Controller
                throw new \Exception("Error, La placa es requerida para impotar el servicio.");
                 break; 
             }
-
-            $servicio=new Servicio();
+            $servicio=new ServicioImportador();
+            $servicio->importadoraux=$importadoraux;
             $servicio->id_cliente=$id_cliente;
             $servicio->placa=$placa;
             $servicio->id_conductor_pago=$cond_pago->id;
@@ -807,7 +1455,7 @@ class ServiciosController extends Controller
 
 
             
-            $servicio->fecha_solicitud=$fecha_solicitud;
+            $servicio->fecha_solicitud=date('Y-m-d H:i:s');
             $servicio->fecha_servicio=$fecha_prestacion;
             $servicio->hora_recogida=$hora_recogida;    
             $servicio->hora_regreso=$hora_regreso;
@@ -827,6 +1475,8 @@ class ServiciosController extends Controller
             $servicio->turno=$turno;
             $servicio->kilometros=$kilometros;
             $servicio->tiempo=$tiempo;
+            $observaciones=trim(preg_replace('/[\r\n|\n|\r]+/', '. ', $observaciones));
+          
             $servicio->observaciones=$observaciones;
             $servicio->hora_infusion_inicial=$hora_inf_inicial;
             $servicio->hora_infusion_final=$hora_inf_final;
@@ -836,6 +1486,9 @@ class ServiciosController extends Controller
             $servicio->estado=$estado_servicio;
             $servicio->saldo=$saldo;
             $servicio->orden_compra=$orden_compra;
+            $servicio->observaciones_contabilidad=$observaciones_contabilidad;
+            $servicio->comentarios=$observaciones_coordinador;
+            
             if($nro_factura!=""){
                 $servicio->nro_factura=$nro_factura;
             }
@@ -886,16 +1539,34 @@ class ServiciosController extends Controller
         }
         if(!$error){
             DB::commit();
-            \Session::flash('flash_message','Archivo Importado Exitosamente!.');
+            \Session::flash('flash_message','Archivo importado exitosamente!.');
+            return redirect()->route('servicios.importador.preview',['auxid'=>$importadoraux]);
+
         }else{
               DB::rollBack();
-               
              \Session::flash('flash_bad_message','Error al tratar de impotar los servicios!.'.$message);
         }
 
         return redirect()->route('servicios');
 
     }
+
+
+    private function saveServicioImportadorAux($importadoraux){
+
+        $existeLote=Servicio::where('importadoraux',$importadoraux)->get()->first();
+        if($existeLote){
+            return false;
+        }
+        
+        $sql="insert into ordenes_servicio select null as 'id', `id_cliente`, `placa`, `id_conductor_pago`, `id_conductor_servicio`, `id_pasajero`, `fecha_solicitud`, `fecha_servicio`, `hora_recogida`, `hora_regreso`, `semana`, `barrio`, `origen`, `destino`, `tipo_viaje`, `tipo_servicio`, `tiempo_adicional`, `jornada`, `horas_tiempo_adicional`, `valor_conductor`, `valor_cliente`, `turno`, `observaciones`, `comentarios`, `educador_coordinador`, `uri_sede`, `alimentacion`, `estado`, `motivo_cancelacion`, `created_at`, `updated_at`, `cotizacion_id`, `tipo_anticipo`, `kilometros`, `tiempo`, `orden_compra`, `total_anticipos`, `total_abonos`, `fecha_pago`, `banco`, `doc_contable`, `nro_anticipo`, `valor_banco`, `observaciones_contabilidad`, `nro_pago`, `nro_factura`, `saldo`, `descuento`, `user_id`, `hora_infusion_inicial`, `hora_infusion_final`, `terapia`, `programa`, `fecha_final_conductor`, `cedula_final_conductor`, `imagen_conductor`, `hora_final_conductor`, `fecha_final_coordinador`, `preservicio_id`, `auxiliar`, `valor_auxiliar`, `auxiliar2`, `valor_auxiliar2`, `auxiliar3`, `valor_auxiliar3`, `importadoraux`
+        from ordenes_servicio_importador where importadoraux='$importadoraux'";
+        
+        DB::statement ($sql);
+
+        return true;
+
+    }   
 
     public function new()
     { 
@@ -922,19 +1593,29 @@ class ServiciosController extends Controller
      public function edit($id)
     {   
         $servicio=Servicio::find($id);
-        $cotizacion=Cotizacion::find($servicio->cotizacion_id);
+        if(!$servicio){
+            \Session::flash('flash_bad_message','Error, el servicio no existe!.');
+            return redirect()->route('servicios');
+        }
+        if($servicio->cotizacion_id>0){
+            $cotizacion=Cotizacion::find($servicio->cotizacion_id);
+        }
+        else{
+            $cotizacion=false;
+        }
         $detalle=OrdenServicioDetalle::where('orden_servicio_id',$servicio->id)->first();
         $tipo_servicios=TipoServicios::all();
         $sedes=Sedes::all();
         $empleados=Empleado::where('area_empresa','4')->get();
-
+        $empleado=\Session::get('employe');
 
         return view('servicios.edit')->with(['servicio'=>$servicio,
                                              'cotizacion'=>$cotizacion,
                                              'detalle'=>$detalle,
                                              'tipo_servicios'=>$tipo_servicios,
                                              'sedes'=>$sedes,
-                                             'empleados'=>$empleados
+                                             'empleados'=>$empleados,
+                                             'empleado'=>$empleado
                                          ]);
 
     }
@@ -1080,23 +1761,48 @@ class ServiciosController extends Controller
                 $data['is_new'],
                 $data['hora_estimada_salida'],
                 $data['destino2'],$data['destino3'],$data['destino4'],$data['destino5'],
-                $data['horas_adicionales']
+                $data['horas_adicionales'],
+                $data['url_tarifa_tiposervicio']
             );
             
             $servicio=Servicio::firstOrNew($data);
-            /*$servicio->create($request->all());*/
             $servicio->user_id=Auth::user()->id;
+            $servicio->placa=strtoupper($request->input('placa'));
+            $observaciones=trim(preg_replace('/[\r\n|\n|\r]+/', '. ', $request->get('observaciones')));
+            $servicio->observaciones=$observaciones;
+
+            $existeServicio=Servicio::where('preservicio_id',$servicio->preservicio_id)->get()->first();
+            if($existeServicio){
+                \Session::flash('flash_bad_message','Error al tratar de guardar el servicio!. Id Preservicio Duplicado');
+                return redirect()->back();
+    
+            }
             $servicio->save();
+
+            if($servicio->preservicio_id>0){
+                $preservicio=PreServicio::find($servicio->preservicio_id);
+                if($preservicio){
+                    $preservicio->estado=2;
+                    $preservicio->save();
+                }
+            }
+
             \Session::flash('flash_message','Servicio agregado exitosamente!.');
             
             $this->sendEmail($servicio->id);
-
-             return redirect()->route('servicios');
+            $this->sendMessageWhatsapp($servicio);
+            return redirect()->route('servicios');
 
          }else{
+            $data=$request->all();
+            unset($data['url_tarifa_tiposervicio']);
+
             $servicio=Servicio::find($request->get('id'));
-            $servicio->update($request->all());
+            $servicio->update($data);
             $servicio->user_id=Auth::user()->id;
+            $servicio->placa=strtoupper($request->input('placa'));
+            $observaciones=trim(preg_replace('/[\r\n|\n|\r]+/', '. ', $request->get('observaciones')));
+            $servicio->observaciones=$observaciones;
             
             //Tipo Anticipo
             if($request->get('tipo_anticipo')==1){
@@ -1114,6 +1820,11 @@ class ServiciosController extends Controller
                     $abono->valor=$servicio->valor_conductor;
                     $abono->save();
                }
+            }
+            if($servicio->conductor){
+                if($servicio->conductor->tipo_vinculacion==1){
+                    $servicio->tipo_anticipo=2;
+                }
             }
 
             //Actualizamos valores de anticipos en la orden de servicio
@@ -1170,7 +1881,6 @@ class ServiciosController extends Controller
                 $servicio->save();
             }
             
-            $this->sendEmail($servicio->id);
 
             \Session::flash('flash_message','Servicio actualizado exitosamente!.');
 
@@ -1203,31 +1913,43 @@ class ServiciosController extends Controller
 
     public function descargar(Request $request){
         ini_set('max_execution_time', '600');
-        $servicios=Servicio::whereIn('estado',array(1,2,3));
+        $servicios=Servicio::whereIn('estado',array(0,1,2,3,4));
+       
         $filtros=$request->session()->get('filtros_servicios');
-
+        
         if(isset($filtros['estado'])){
             $estado=(int) $filtros['estado'];
             if($estado!="" || $estado>0){
                 $servicios->where('estado','=',$estado);
             }
         }
-        
-        if(isset($filtros['cliente'])){
-            $cliente=(int) $filtros['cliente'];
-            if($cliente!="" || $cliente>0){
-                $servicios->where('id_cliente','=',$cliente);
-            }
-            
+        else{
+            $filtros['estado']="";
         }
-        if(isset($filtros['conductor'])){
-            $conductor=(int) $filtros['conductor'];
-            if($conductor!="" || $conductor>0){
-                $servicios->where('id_conductor_servicio','=',$conductor);
+        
+        $cliente=$filtros['cliente'];
+        
+        if($cliente!=""){
+            $clientes=array_values($cliente);
+            if($clientes!=""){
+                $servicios->whereIn('id_cliente',$clientes);
             }
             
+        }else{
+             $filtros['cliente']="";
         }
 
+        $conductor=$filtros['conductor'];
+        if($conductor!=""){
+            $conductores=array_values($conductor);
+            if($conductores){
+                $servicios->whereIn('id_conductor_servicio',$conductores);
+            }
+            
+        }else{
+             $filtros['conductor']="";
+        }
+        /*
         if(isset($filtros['conductor_pago'])){
             $conductor_pago=(int) $filtros['conductor_pago'];
             if($conductor_pago!="" || $conductor_pago>0){
@@ -1237,57 +1959,111 @@ class ServiciosController extends Controller
         }else{
              $filtros['conductor_pago']="";
         }
+        */
 
-        if(isset($filtros['uri_sede'])){
-            $uri_sede=(int) $filtros['uri_sede'];
-            if($uri_sede!="" || $uri_sede>0){
-                $servicios->where('uri_sede','=',$uri_sede);
+        $sedes=$filtros['uri_sede'];
+        if($sedes!=""){
+            $uri_sede=array_values($sedes);
+            if($uri_sede!=""){
+                $servicios->whereIn('uri_sede',$uri_sede);
             }
             
         }else{
              $filtros['uri_sede']="";
         }
 
-        if(isset($filtros['pasajero'])){
-            
-            $pasajero=$filtros['pasajero'];
-
-            if($pasajero!="" ){
-
-               $servicios ->leftJoin('pasajeros AS p', function($join){
-                    $join->on('ordenes_servicio.id_pasajero', '=', 'p.id');
-                   
-            });
-                 $servicios->where('p.nombres', 'LIKE', '%'.$pasajero.'%')
-                            ->orwhere('p.apellidos', 'LIKE', '%'.$pasajero.'%'); 
+        
+        $coordinador=$filtros['coordinador'];
+        
+        if($coordinador!=""){
+            $coordinadores=array_values($coordinador);
+            if($coordinadores!=""){
+                $servicios->whereIn('educador_coordinador',$coordinadores);
             }
             
+        }else{
+             $filtros['coordinador']="";
         }
 
+        $pasajero=$filtros['pasajero'];
+        if($pasajero!=""){
+            $pasajeros=array_values($pasajero);
+            $servicios->whereIn('id_pasajero',$pasajeros);
+        }else{
+            $filtros['pasajero']="";
+        }
+        
         if(isset($filtros['fecha_inicial'])){
             $fecha_inicial=$filtros['fecha_inicial'];
             if($fecha_inicial!=""){
                $servicios->where('fecha_servicio','>=',$fecha_inicial); 
             }
             
+        }else{
+            $filtros['fecha_inicial']=date('Y-m-01');
         }
-
         if(isset($filtros['fecha_final'])){
             $fecha_final=$filtros['fecha_final'];
             if($fecha_final!=""){
                $servicios->where('fecha_servicio','<=',$fecha_final); 
             }
             
+        }else{
+            $filtros['fecha_final']=date('Y-m-d');
         }
 
-        $servicios=$servicios->orderBy('fecha_servicio','Asc')->get();
 
+        if(isset($filtros['fecha_inicial_creacion'])){
+            $fecha_inicial_creacion=$filtros['fecha_inicial_creacion'];
+            if($fecha_inicial_creacion!=""){
+               $servicios->where('created_at','>=',$fecha_inicial_creacion); 
+            }
+            
+        }else{
+            $filtros['fecha_inicial_creacion']="";
+        }
+        if(isset($filtros['fecha_final_creacion'])){
+            $fecha_final_creacion=$filtros['fecha_final_creacion'];
+            if($fecha_final_creacion!=""){
+               $servicios->where('created_at','<=',$fecha_final_creacion.' 23:59:59'); 
+            }
+            
+        }else{
+            $filtros['fecha_final_creacion']="";
+        }
+
+        if(isset($filtros['id']) && $filtros['id']!="" ){
+            $id_servicio=explode(",",$filtros['id']);
+            if($id_servicio!="" || count($id_servicio)>0){
+                $servicios->whereIn('id',$id_servicio);
+            }
+        }
+        else{
+            $filtros['id']="";
+        }
+        
+        if(isset($filtros['importadoraux']) && $filtros['importadoraux']!="" ){
+            $importadoraux=$filtros['importadoraux'];
+            $servicios=Servicio::whereIn('importadoraux',array($importadoraux));
+        }
+
+        if($request->has('temporal')){
+            $importadoraux=$request->get('importadoraux');
+            $servicios=ServicioImportador::whereIn('importadoraux',array($importadoraux));
+        }
+        $servicios=$servicios->orderBy('fecha_servicio','Asc')->get();
         $tipo_servicios=TipoServicios::all();
         $fecha=date('Y-m-d');
         $filename = 'consolidado-semanal-'.$fecha.'.xls';
-        header('Content-type: application/vnd.ms-excel; charset=UTF-8');
-        header('Content-Disposition: attachment; filename='.$filename);
         $tabla=view('servicios.descargar')->with(['servicios'=>$servicios,'tipo_servicios'=>$tipo_servicios])->render();
+       
+        
+        if(isset($_GET['revisar'])){
+
+        }else{
+            header('Content-type: application/vnd.ms-excel; charset=UTF-8');
+            header('Content-Disposition: attachment; filename='.$filename);
+        }
         echo $tabla;
         exit();
     }

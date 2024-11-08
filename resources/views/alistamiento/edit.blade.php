@@ -44,9 +44,10 @@
 
          <div class="row">
             <div class="col-md-6 form-group mb-3">
+
               <label><strong>Fecha</strong></label>
-                   <input type="date" name="fecha" value="{{$al->fecha}}"  class="form-control" placeholder="dd/mm/yyyy" disabled="true" >
-            </div>
+                   <input type="date" name="fecha" value="{{$al->fecha}}"  class="form-control" placeholder="dd/mm/yyyy">
+              </div>
             <div class="col-md-6 form-group mb-3">
               <label><strong>Kilometros</strong></label>
                    <input type="number" name="kilometros" value="{{$al->kilometros}}"  class="form-control" placeholder="0"  >
@@ -141,6 +142,7 @@ $.validator.messages.email = 'Email invalido';
 
 $('#user-new-form').validate({
     rules: {
+        fecha: {required:true},
         kilometros: { required:true }
     },messages: {
                 

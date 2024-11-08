@@ -30,8 +30,9 @@
           <div class="col-md-12">
             <h1>Alistamientos</h1>
             <div class="d-sm-flex mb-3" data-view="print">
-                  <span class="m-auto"></span>
-                   
+            <span class="m-auto"></span>
+            <a class="btn btn-success" href="{{route('alistamiento.descargar.excel')}}" target="_blank" >Descargar</a>&nbsp;&nbsp;
+
                     
             </div>
           </div>
@@ -47,22 +48,29 @@
 
                 <div class="row">
 
-                  <div class="col-md-3 form-group mb-4">  
+                  <div class="col-md-2 form-group mb-4">  
                       <label>Buscar</label>
                       <input name="q" class="form-control " value="{{$q}}" ></input>
                   </div>
                 
-                   <div class="col-md-3 form-group mb-3">
+                   <div class="col-md-2 form-group mb-3">
                     <label><strong>Fecha Inicial:</strong></label>
                          <input type="date" class="form-control" name="fecha_inicial" value="{{$fecha_inicial}}" >
                   </div>
 
-                  <div class="col-md-3 form-group mb-3">
+                  <div class="col-md-2 form-group mb-3">
                     <label><strong>Fecha Final:</strong></label>
                          <input type="date" class="form-control" name="fecha_final" value="{{$fecha_final}}" >
-                  </div>  
+                  </div> 
+                  
+                  <div class="col-md-3 form-group mb-4">  
+                      <label>Propietario Vehiculo</label>
+                      <select name="propietario" id="propietario" class="form-control">
+                      <?php echo Helper::selectPropietarios($propietario) ?>
+                      </select>
+                  </div>
 
-                   <div class="col-md-3 form-group mb-4">  
+                   <div class="col-md-2 form-group mb-4">  
                       <label>Revisado</label>
                       <select name="revisado" class="form-control">
                         <option value="-1">Todos</option>
@@ -131,7 +139,8 @@
    				    	<?php echo $alistamientos->appends(['q' => $q,
                                                     'fecha_inicial'=>$fecha_inicial,
                                                     'fecha_final'=>$fecha_final,
-                                                    'revisado'=>$revisado
+                                                    'revisado'=>$revisado,
+                                                    'propietario'=>$propietario
                                                   ])->links(); ?>
    				    </div>
 
@@ -148,3 +157,10 @@
 @endsection
 
 
+@section('bottom-js')
+<script>
+  $('#propietario').select2({
+   theme: 'bootstrap-5'
+ });
+</script>
+@endsection

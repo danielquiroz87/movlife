@@ -38,6 +38,22 @@
 
         <div class="row">
             <div class="col-md-6 form-group mb-3">
+              <label><strong>Cliente:</strong></label>
+                    
+                    <select name="cliente_id" id="cliente_id" class="form-control">
+                      <?php echo Helper::selectClientes($pasajero->cliente_id) ?>
+                    </select>
+            </div> 
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>URI SEDE: </strong></label>
+                   <select name="uri_sede" id="uri_sede" class="form-control">
+                     <?php echo Helper::selectSedes($pasajero->uri_sede) ?>
+                   </select>
+            </div>
+
+
+            <div class="col-md-6 form-group mb-3">
               <label><strong>Documento / Nit:</strong></label>
                    <input type="text" name="documento"  class="form-control" placeholder="000000" maxlength="20"  value="{{$pasajero->documento}}">
             </div>
@@ -69,7 +85,8 @@
                     <input type="number" name="whatsapp" class="form-control" placeholder="0000000000"
                          maxlength="255"  value="{{$pasajero->whatsapp}}">
             </div>
-           <div class="col-md-6 form-group mb-3">
+            @if($direccion)
+            <div class="col-md-6 form-group mb-3">
               <label><strong>Departamento:</strong></label>
                     <select class="form-control departamentos" name="departamento">
                       <?php echo Helper::selectDepartamentos($direccion->departamento_id) ?>
@@ -93,14 +110,42 @@
               <label><strong>Detalle Dirección:</strong></label>
                    <input type="text" name="direccion_detalle" class="form-control" placeholder=""  value="{{$direccion->direccion2}}">
             </div>
+            @else
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Departamento:</strong></label>
+                    <select class="form-control departamentos" name="departamento">
+                      <?php echo Helper::selectDepartamentos() ?>
+                    </select>
+                   
+            </div>
+           
+           <div class="col-md-6 form-group mb-3">
+              <label><strong>Ciudad:</strong></label>
+                  <select class="form-control municipios" name="ciudad">
+                      <?php echo Helper::selectMunicipios() ?>
+                  </select>
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Dirección:</strong></label>
+                   <input type="text" name="direccion" class="form-control" placeholder=""   value="">
+            </div>
+           
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Detalle Dirección:</strong></label>
+                   <input type="text" name="direccion_detalle" class="form-control" placeholder=""  value="">
+            </div>
+
+            @endif
             <div class="col-md-6 form-group mb-3">
                     <label><strong>Email:</strong></label>
-                    <input type="email" name="email" class="form-control" placeholder="example@email.com"
+                    <input type="text" name="email" class="form-control" placeholder="example@email.com"
                          maxlength="255"  value="{{$pasajero->email_contacto}}">
             </div>
             <div class="col-md-6 form-group mb-3">
                    <label> <strong>Nuevo Password:</strong></label>
-                    <input type="password" name="password" class="form-control" placeholder=""
+                    <input type="text" name="password" class="form-control" placeholder=""
                         value="" autocomplete="off" maxlength="20" >
             </div>
 
@@ -146,8 +191,14 @@
 
 <script>
 
+$('#cliente_id').select2({
+   theme: 'bootstrap-5'
+ });
 
-
+ $('#uri_sede').select2({
+   theme: 'bootstrap-5'
+ });
+ 
 // just for the demos, avoids form submit
 var form = $( "#user-new-form" );
 $.validator.messages.required = 'Este campo es requerido';
@@ -157,10 +208,10 @@ $('#user-new-form').validate({
   rules: {
         nombres: { required:true },
         apellidos: { required:true },
+        email:{ required:false,email:true },
         departamento_id:{ required:true },
         ciudad_id: { required:true },
-        
-        
+        documento:{ required:true }
     },messages: {
                 
             },

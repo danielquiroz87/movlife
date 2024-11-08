@@ -55,14 +55,22 @@
     {{ csrf_field() }}
       <input type="hidden" name="id" value="{{$vehiculo->id}}">
       <input type="hidden" name="is_new" value="true">
-      <input type="hidden" name="fecha" value="{{$fecha}}">
 
         <div class="row">
 
+        @if(auth()->user()->superadmin==1  )
         <div class="col-md-6 form-group mb-3">
               <label><strong>Fecha</strong></label>
-                   <input type="date" name="strfecha" value="{{$fecha}}"  class="form-control" placeholder="dd/mm/yyyy" disabled="true" >
+              <input type="date" name="fecha" value="{{$fecha}}"  class="form-control" placeholder="dd/mm/yyyy"  >
         </div>
+        @else
+        <div class="col-md-6 form-group mb-3">
+              <label><strong>Fecha</strong></label>
+              <input type="date" name="fecha" value="{{$fecha}}"  class="form-control" placeholder="dd/mm/yyyy"  >
+        </div>
+        @endif
+
+       
 
          <div class="col-md-6 form-group mb-3">
               <label><strong>Kilometros</strong></label>
@@ -142,6 +150,7 @@ $.validator.messages.email = 'Email invalido';
 
 $('#user-new-form').validate({
     rules: {
+        fecha: {required:true },
         kilometros: { required:true }
     },messages: {
                 

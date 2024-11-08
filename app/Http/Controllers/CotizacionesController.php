@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Support\Facades\Storage;
 
+use Config;
 
 class CotizacionesController extends Controller
 {
@@ -30,11 +31,131 @@ class CotizacionesController extends Controller
     }
     public function index(Request $request)
     {   
-        $cotizaciones=Cotizacion::paginate(25);
+        $cotizaciones=Cotizacion::where('estado','>=',1);
+        $filtros=$request->get('filtros');
 
 
-        return view('cotizaciones.index')->with(['cotizaciones'=>$cotizaciones]);
+        if(isset($filtros['fecha_inicial'])){
+            $fecha_inicial=$filtros['fecha_inicial'];
+            if($fecha_inicial!=""){
+               $cotizaciones->where('fecha_cotizacion','>=',$fecha_inicial); 
+            }
+        }else{
+            $filtros['fecha_inicial']=date('01-m-Y');
+        }
+        
+        if(isset($filtros['fecha_final'])){
+            $fecha_final=$filtros['fecha_final'];
+            if($fecha_final!=""){
+               $cotizaciones->where('fecha_cotizacion','<=',$fecha_final.' 23:59:59'); 
+            }
+        }
+        else{
+            $filtros['fecha_final']=date('d-m-Y'); 
+        }
+
+        if(isset($filtros['cliente'])){
+            $cliente=$filtros['cliente'];
+            if($cliente!=""){
+               $cotizaciones->where('id_cliente',$cliente); 
+            }
+        }
+        else{
+            $filtros['cliente']="";
+        }
+
+        if(isset($filtros['valor'])){
+            $valor=$filtros['valor'];
+            if($valor!=""){
+               $cotizaciones->where('valor','>=',$valor); 
+            }
+        }
+        else{
+            $filtros['valor']="";
+        }
+
+        if(isset($filtros['id'])){
+            $id=$filtros['id'];
+            if($id!=""){
+               $cotizaciones=Cotizacion::where('id','=',$id); 
+            }
+        }
+        else{
+            $filtros['id']="";
+        }
+
+
+        $request->session()->put('filtros.cotizaciones', $filtros);
+        $cotizaciones=$cotizaciones->paginate(Config::get('global_settings.paginate')); 
+
+        return view('cotizaciones.index')->with(['cotizaciones'=>$cotizaciones,'filtros'=>$filtros]);
     }
+
+    public function descargarExcel(Request $request)
+    {   
+        $cotizaciones=Cotizacion::where('estado','>=',1);
+
+        $filtros=$request->session()->get('filtros.cotizaciones');
+        $fecha_inicial=$filtros['fecha_inicial'];
+        $fecha_final=$filtros['fecha_final'];
+
+
+        $id="";
+        if(isset($filtros['id'])){
+            $id=$filtros['id'];
+            if($id!=""){
+               $cotizaciones->where('id','=',$id); 
+            }
+        }
+        if($id==""){
+
+            if(isset($filtros['fecha_inicial'])){
+                $fecha_inicial=$filtros['fecha_inicial'];
+                if($fecha_inicial!=""){
+                   $cotizaciones->where('fecha_cotizacion','>=',$fecha_inicial); 
+                }
+            }
+            
+            if(isset($filtros['fecha_final'])){
+                $fecha_final=$filtros['fecha_final'];
+                if($fecha_final!=""){
+                   $cotizaciones->where('fecha_cotizacion','<=',$fecha_final.' 23:59:59'); 
+                }
+                
+            }
+            if(isset($filtros['cliente'])){
+                $cliente=$filtros['cliente'];
+                if($cliente!=""){
+                   $cotizaciones->where('id_cliente',$cliente); 
+                }
+            }
+            if(isset($filtros['valor'])){
+                $valor=$filtros['valor'];
+                if($valor!=""){
+                   $cotizaciones->where('valor','>=',$valor); 
+                }
+            }
+
+        }
+  
+      
+       
+
+        $filename = 'cotizaciones-del-'.$fecha_inicial.'-al-'.$fecha_final.'.xls';
+        $tabla= view('cotizaciones.excel')->with(['cotizaciones'=>$cotizaciones->get()]);
+        
+        if(isset($_GET['revisar'])){
+            var_dump($cotizaciones);
+        }else{
+            header('Content-type: application/vnd.ms-excel; charset=UTF-8');
+            header('Content-Disposition: attachment; filename='.$filename);
+        }
+        echo $tabla;
+        exit();
+        
+    }
+    
+
     public function new()
     { 
         return view('cotizaciones.new');
@@ -108,6 +229,9 @@ class CotizacionesController extends Controller
             $cotizacion->jornada=$request->jornada;
             $cotizacion->tipo_vehiculo=$request->tipo_vehiculo;
             $cotizacion->estado=$request->estado;
+            $cotizacion->servicio_id=$request->servicio_id;
+            $cotizacion->anticipo_id=$request->anticipo_id;
+            $cotizacion->estado=1;
 
 
             $file = $request->file('foto');
@@ -138,6 +262,10 @@ class CotizacionesController extends Controller
                     $cd->destino5=$request->get('destino5');
                     $cd->valor=$request->get('valor_unitario',0);
                     $cd->cantidad=$request->get('cantidad',1);
+                    $cd->hora_recogida=$request->get('hora_recogida');
+                    $cd->hora_salida=$request->get('hora_salida');
+                    $cd->tipo_viaje=$request->get('tipo_viaje');
+            
                     $cd->total=($cd->cantidad*$cd->valor);
                     $cd->save();
                 }
@@ -207,6 +335,8 @@ class CotizacionesController extends Controller
             $cotizacion->jornada=$request->jornada;
             $cotizacion->tipo_vehiculo=$request->tipo_vehiculo;
             $cotizacion->estado=$request->estado;
+            $cotizacion->servicio_id=$request->servicio_id;
+            $cotizacion->anticipo_id=$request->anticipo_id;
 
 
             $file = $request->file('foto');
@@ -241,6 +371,9 @@ class CotizacionesController extends Controller
                     $cd->destino5=$request->get('destino5');
                     $cd->valor=$request->get('valor_unitario',0);
                     $cd->cantidad=$request->get('cantidad',1);
+                    $cd->hora_recogida=$request->get('hora_recogida');
+                    $cd->hora_salida=$request->get('hora_salida');
+                    $cd->tipo_viaje=$request->get('tipo_viaje');
                     $cd->total=($cd->cantidad*$cd->valor);
                     $cd->save();
                 }
@@ -298,9 +431,16 @@ class CotizacionesController extends Controller
             $cd->valor=$request->get('valor_unitario',0);
             $cd->cantidad=$request->get('cantidad',1);
             $cd->total=($cd->cantidad*$cd->valor);
+            $cd->tarifario_id=$request->get('tarifario_id');
+            $cd->fecha_servicio=$request->get('fecha_servicio');
+            $cd->descripcion=$request->get('descripcion');
+            $cd->hora_recogida=$request->get('hora_recogida');
+            $cd->hora_salida=$request->get('hora_salida');
+            $cd->tipo_viaje=$request->get('tipo_viaje');
+
             $cd->save();
 
-            \Session::flash('flash_message','Cotización actualizada exitosamente!.');
+            \Session::flash('flash_message','Cotización Actualizada Exitosamente!.');
 
         }
 
@@ -346,9 +486,9 @@ class CotizacionesController extends Controller
         $cotizacion=Cotizacion::find($id);
         $detalle=$cotizacion->detalle();
 
-        $filename = 'cotizacion-'.$id.'.xls';
-        header('Content-type: application/vnd.ms-excel; charset=UTF-8');
-        header('Content-Disposition: attachment; filename='.$filename);
+        //$filename = 'cotizacion-'.$id.'.xls';
+        //header('Content-type: application/vnd.ms-excel; charset=UTF-8');
+       // header('Content-Disposition: attachment; filename='.$filename);
         $tabla=view('cotizaciones.descargar')->with(['cotizacion'=>$cotizacion])->render();
         echo $tabla;
         exit();

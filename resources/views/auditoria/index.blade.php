@@ -61,7 +61,12 @@
                       <td>{{$au->created_at}}</td>
                       <td>{{$au->updated_at}}</td>
                       <td>{{$au->event}}</td>
-                      <td>{{$au->usuario->name}} / {{$au->usuario->email}}</td>
+                      <td>@if($au->usuario)
+                        {{$au->usuario->name}} / {{$au->usuario->email}}
+                        @else
+                        NA
+                        @endif
+                      </td>
                       <td>
                         {{$au->getModulo()}}
                       </td>

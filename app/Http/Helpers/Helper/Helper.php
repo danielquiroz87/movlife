@@ -35,7 +35,8 @@ public static function getUserName($id){
 }	
 
 public static function getClientes(){
- 	return Cliente::orderBy('nombres', 'Asc')->get();
+ 	return Cliente::orderBy('razon_social', 'Asc')
+	->get();
 }
 public static function getConductores(){
  	return Conductor::orderBy('nombres', 'Asc')->get();
@@ -48,6 +49,13 @@ public static function selectClientes($id=0){
 	$option_clientes="<option value=''>Sin Cliente</option>";
 	foreach ($clientes as $cliente) { 
 		$nombres=$cliente->razon_social.','.$cliente->documento;
+		
+		if(is_array($id)){
+			if(in_array($cliente->id,$id)){
+				$option_clientes.='<option value="'.$cliente->id.'" selected="selected">'.$nombres.'</option>';
+			}
+		}
+		
 		if($id>0){
 			if($id==$cliente->id){
 				$option_clientes.='<option value="'.$cliente->id.'" selected="selected">'.$nombres.'</option>';
@@ -68,7 +76,14 @@ public static function selectConductores($id=0){
 	$option_conductores="<option value=''>Seleccione Un Conductor</option>";
 	foreach ($conductores as $conductor) { 
 		$nombres=$conductor->nombres.' '.$conductor->apellidos.','.$conductor->documento;
+
+			if(is_array($id)){
+				if(in_array($conductor->id,$id)){
+					$option_conductores.='<option value="'.$conductor->id.'" selected="selected">'.$nombres.'</option>';
+				}
+			}
 			if($id>0){
+				
 				if($conductor->id==$id){
 					$option_conductores.='<option value="'.$conductor->id.'" selected="selected">'.$nombres.'</option>';
 				}else{
@@ -85,9 +100,17 @@ public static function selectConductores($id=0){
 
 public static function selectPasajeros($id=0){
 	$pasajeros=self::getPasajeros();
-	$option_pasajeros="";
+	$option_pasajeros="<option value=''>Seleccione un Pasajero</option>";
+
 	foreach ($pasajeros as $pasajero) { 
-		$nombres=$pasajero->nombres.' '.$pasajero->apellidos;
+		$nombres=$pasajero->nombres.' '.$pasajero->apellidos.','.$pasajero->documento;
+
+		if(is_array($id)){
+			if(in_array($pasajero->id,$id)){
+				$option_pasajeros.='<option value="'.$pasajero->id.'" selected="selected">'.$nombres.'</option>';
+			}
+		}
+		
 		if($id>0 && $pasajero->id==$id){
 			$option_pasajeros.='<option value="'.$pasajero->id.'" selected="selected" >'.$nombres.'</option>';
 		}else{
@@ -229,8 +252,15 @@ public static function selectSedes($id=0){
 	$clases=self::getSedes();
 	$option_clase="<option value=''>Seleccione una Sede</option>";
 	foreach ($clases as $clase) { 
-		$name=$clase->nombre.'-';
-		if($id>0){
+		$name=$clase->nombre;
+
+		if(is_array($id)){
+			if(in_array($clase->id,$id)){
+				$option_clase.='<option value="'.$clase->id.'" selected="selected">'.$name.'</option>';
+			}
+		}
+
+		if($id>0 && $clase->id==$id){
 			$option_clase.='<option value="'.$clase->id.'" selected="selected">'.$name. '</option>';
 		}
 		else{
@@ -238,8 +268,8 @@ public static function selectSedes($id=0){
 		}
 	}
 	return $option_clase;
-}
 
+}
 
 public static function getVehiculosMarcas(){
 	return DB::table('vehiculos_marcas')
@@ -284,31 +314,49 @@ public static function selectTipoServicios($id=0){
 	return $option_clase;
 }
 
+public static function selectEmpresas($id=0){
+	$clases= DB::table('empresas_convenios')
+         -> orderBy('razon_social', 'asc')
+         -> get();
+
+	$option_clase="<option value=''>Seleccione</option>";
+	
+	foreach ($clases as $clase) { 
+		if($id>0 && $clase->id==$id){
+			$option_clase.='<option value="'.$clase->id.'" selected="selected">'.$clase->razon_social.'</option>';
+		}
+		else{
+			$option_clase.='<option value="'.$clase->id.'">'.$clase->razon_social.'</option>';
+		}
+	}
+	return $option_clase;
+}
+
 
 public static function convertiraLetras($number, $decimals = 2){
        	$numero=new NumeroALetras();
         return $numero->toWords($number, $decimals);
 }
 
-public function totalClientes(){
+public static function totalClientes(){
 	
 	$clientes=Cliente::all()->count();
 	return $clientes;
 }
 
-public function totalVentas(){
+public static function totalVentas(){
 	$ventas=Servicio::select(DB::raw('sum(valor_cliente) as totalVentas'))->where('estado','=',3)->where('fecha_servicio','>=',date('Y-m-01'))->get()->first();
 	
 
 	return $ventas->totalVentas?number_format($ventas->totalVentas):0;
 }
 
-public function totalOrdenes(){
+public static function totalOrdenes(){
 	$ordenes=Servicio::all()->count();
 	return $ordenes;
 }
 
-public static function getDocumentosConductor($id_conductor){
+public static function getDocumentosConductor($id_conductor,$format='y-m-d'){
 
 	$tipo_documentos=TipoDocumentos::where('tipo_usuario',5)->get();
 	$arr_documentos=array();
@@ -316,21 +364,39 @@ public static function getDocumentosConductor($id_conductor){
 		
 		$existe=Documentos::where('id_registro',$id_conductor)
 							->where('id_tipo_documento',$tipo->id)->get()->first();
+      
 
 		if($existe){
+			$fecha_final='NA';
+			$fecha_inicial='NA';
+
 			if($existe->cara_frontal!="" || $existe->cara_trasera!="" ){
 				$cargado='SI';
 			}else{
 				$cargado='NO';
 			}
+			if($existe->fecha_inicial!=""){
+				$fecha_inicial=date($format,strtotime($existe->fecha_inicial));
+			}
+			if($existe->fecha_final!=""){
+				$fecha_final=date($format,strtotime($existe->fecha_final));
+			}
+
 			$arr_documentos[$id_conductor][$tipo->id]=array('cargado'=>$cargado,
-															'fecha_vencimiento'=>$existe->fecha_final,
-															'numero'=>$existe->numero_documento
+															'fecha_expedicion'=>date('d/m/Y',strtotime($fecha_inicial)),
+															'fecha_vencimiento'=>date('d/m/Y',strtotime($fecha_final)),
+															'numero'=>$existe->numero_documento,
+															'nombre_entidad'=>$existe->nombre_entidad,
+															'extra1'=>$existe->extra1
 														);
 		}else{
 			$arr_documentos[$id_conductor][$tipo->id]=array('cargado'=>'NO',
+															'fecha_expedicion'=>'NA',
 															'fecha_vencimiento'=>'NA',
-															'numero'=>''
+															'fecha_vencimiento_bd'=>'NA',
+															'numero'=>'',
+															'nombre_entidad'=>'NA',
+															'extra1'=>'NA'
 														);
 		}
 	}
@@ -339,7 +405,7 @@ public static function getDocumentosConductor($id_conductor){
 
 }
 
-public static function getDocumentosVehiculo($placa){
+public static function getDocumentosVehiculo($placa,$format='Y-m-d'){
 
 	$vehiculo=Vehiculo::where('placa',$placa)->get()->first();
 
@@ -353,16 +419,27 @@ public static function getDocumentosVehiculo($placa){
 							->where('id_tipo_documento',$tipo->id)->get()->first();
 
 		if($existe){
+			$fecha_final='NA';
+			$fecha_inicial='NA';
+
 			if($existe->cara_frontal!="" || $existe->cara_trasera!="" ){
 				$cargado='SI';
 			}else{
 				$cargado='NO';
 			}
+			if($existe->fecha_inicial!=""){
+				$fecha_inicial=date($format,strtotime($existe->fecha_inicial));
+			}
+			if($existe->fecha_final!=""){
+				$fecha_final=date($format,strtotime($existe->fecha_final));
+			}
 			$arr_documentos[$vehiculo->placa][$tipo->id]=array('cargado'=>$cargado,
-															'fecha_vencimiento'=>$existe->fecha_final,
+															'fecha_expedicion'=>$fecha_inicial,
+															'fecha_vencimiento'=>$fecha_final,
 															'numero'=>$existe->numero_documento);
 		}else{
 			$arr_documentos[$vehiculo->placa][$tipo->id]=array('cargado'=>'NO',
+															'fecha_expedicion'=>'NA',
 															'fecha_vencimiento'=>'NA',
 															'numero'=>'');
 		}
@@ -410,12 +487,19 @@ public static function getFechasDias($fecha2){
 	
 	
 	if($fecha2!="" && $fecha2!='NA'){
+		$fecha = \DateTime::createFromFormat('d/m/Y', $fecha2);
+      	if(!$fecha){
+        	$fecha = \DateTime::createFromFormat('Y-m-d', $fecha2);
+        }
+		
 		$f1=new \DateTime(date('Y-m-d'));
-		$f2=new \DateTime($fecha2);
+		$f2=$fecha;
+      	
 		if($f2>=$f1){
 			$diff=$f1->diff($f2);
 			$days='+'.$diff->days.'/Vigente';
 		}else{
+          	
 			$diff=$f2->diff($f1);
 			$days='-'.$diff->days.'/ Vencido';
 		}
@@ -432,7 +516,7 @@ public static function getFechaBd($fecha){
 	return $exp_fecha[2].'-'.$exp_fecha[1].'-'.$exp_fecha[0];
 }
 
-public function getUsoVehiculo($placa){
+public static function getUsoVehiculo($placa){
 
 	$vehiculo=Vehiculo::where('placa',$placa)->get()->first();
 
@@ -444,7 +528,7 @@ public function getUsoVehiculo($placa){
 	return $nombre_uso;
 }
 
-public function getMarcaVehiculo($placa){
+public static function getMarcaVehiculo($placa){
 
 	$vehiculo=Vehiculo::where('placa',$placa)->get()->first();
 	return $vehiculo->marca->nombre;
@@ -468,7 +552,7 @@ public function getEmpresaAfiliadora($placa){
 	return $nombre;
 }
 public static function getEstadoServicio($id){
-	$estados=[1=>'Iniciado',2=>'En Proceso',3=>'Completado',4=>'Cancelado'];
+	$estados=[0=>'Pendiente',1=>'Iniciado',2=>'En Proceso',3=>'Completado',4=>'Cancelado'];
 	return $estados[$id];
 }
 
@@ -502,7 +586,7 @@ public static function getPasajero($id){
 	
 }
 
-public function getCiudad($id){
+public static function getCiudad($id){
 	$m=Municipios::find($id);
 	return $m->nombre;
 
@@ -536,6 +620,50 @@ public function selectRutas($id=0){
 	return $option;
 }
 
+public static function selectEmpleadosDirectores($id=""){
+
+	$objetos_empleados= DB::table('empleados')
+		->where('area_empresa','=',5)
+        ->orderBy('id', 'asc')
+        ->get();
+
+		$option="<option value=''>Seleccione</option>";
+
+		foreach ($objetos_empleados as $objeto) { 
+
+			if(is_array($id)){
+				if(in_array($objeto->id,$id)){
+					$option.='<option value="'.$objeto->id.'" selected="selected">'.$objeto->nombres.' '.$objeto->apellidos.'</option>';
+				}
+			}
+
+			if($id>0 && $objeto->id==$id){
+				$option.='<option value="'.$objeto->id.'" selected=true>'.$objeto->nombres.' '.$objeto->apellidos.'</option>';
+			}else{
+				$option.='<option value="'.$objeto->id.'">'.$objeto->nombres.' '.$objeto->apellidos.'</option>';
+			}
+		}
+		return $option;	
+}
+
+public static function selectBancos($id=""){
+
+	$objetos_bancos= DB::table('bancos_ach')
+		->orderBy('nombre', 'asc')
+        ->get();
+
+		$option="<option value=''>Seleccione</option>";
+
+		foreach ($objetos_bancos as $objeto) { 
+			if($id>0 && $objeto->id==$id){
+				$option.='<option value="'.$objeto->nombre.'" selected=true>'.$objeto->nombre.'</option>';
+			}else{
+				$option.='<option value="'.$objeto->nombre.'">'.$objeto->nombre.'</option>';
+			}
+		}
+		return $option;	
+}
+
 
 
 public function selectObjetosContrato($id=0){
@@ -565,12 +693,61 @@ public static function alertaDocumentos($conductores,$placa,$fecha_final){
 	
 	$list_ids=implode(',', $conductores);
 
-	$sql="select `tipo_documento`,tipo_usuario,`fecha_final`,nombres,DATEDIFF(fecha_final,'$fecha_final') as  resta from reporte_all_documentos where tipo_usuario='Conductor' and id_registro in ($list_ids) and `fecha_final`<'$fecha_final' having resta<0";
-
+	$sql="select `tipo_documento`,tipo_usuario,`fecha_final`,nombres,DATEDIFF(fecha_final,'".$fecha_final."') as  resta from reporte_all_documentos where tipo_usuario='Conductor' and id_registro in ($list_ids) and `fecha_final`<'".$fecha_final."' having resta<0";
 	$sql.=" union select `tipo_documento`,tipo_usuario,`fecha_final`,nombres, DATEDIFF(fecha_final,'$fecha_final') as  resta from reporte_all_documentos where tipo_usuario='Vehiculo' and nombres = ('$placa') and `fecha_final`<'$fecha_final' having resta<0 ";
 
 	return DB::select($sql);
 
+}
+
+public static function getTotalAbonosAnticipos($anticipo_id){
+
+	$abonos=AnticiposAbonos::where('anticipo_id','=',$anticipo_id)->get();
+    $total=0;
+	foreach($abonos as $abono ){
+		$total+=$abono->valor;
+	}
+	return $total;
+}
+public static function  limpiarCadena($cadena){
+
+    //Codificamos la cadena en formato utf8 en caso de que nos de errores
+    //$cadena = utf8_encode($cadena);
+
+    //Ahora reemplazamos las letras
+    $cadena = str_replace(
+        array('á', 'à', 'ä', 'â', 'ª', 'Á', 'À', 'Â', 'Ä'),
+        array('a', 'a', 'a', 'a', 'a', 'A', 'A', 'A', 'A'),
+        $cadena
+    );
+
+    $cadena = str_replace(
+        array('é', 'è', 'ë', 'ê', 'É', 'È', 'Ê', 'Ë'),
+        array('e', 'e', 'e', 'e', 'E', 'E', 'E', 'E'),
+        $cadena );
+
+    $cadena = str_replace(
+        array('í', 'ì', 'ï', 'î', 'Í', 'Ì', 'Ï', 'Î'),
+        array('i', 'i', 'i', 'i', 'I', 'I', 'I', 'I'),
+        $cadena );
+
+    $cadena = str_replace(
+        array('ó', 'ò', 'ö', 'ô', 'Ó', 'Ò', 'Ö', 'Ô'),
+        array('o', 'o', 'o', 'o', 'O', 'O', 'O', 'O'),
+        $cadena );
+
+    $cadena = str_replace(
+        array('ú', 'ù', 'ü', 'û', 'Ú', 'Ù', 'Û', 'Ü'),
+        array('u', 'u', 'u', 'u', 'U', 'U', 'U', 'U'),
+        $cadena );
+
+    $cadena = str_replace(
+        array('ñ', 'Ñ', 'ç', 'Ç'),
+        array('n', 'N', 'c', 'C'),
+        $cadena
+    );
+
+    return $cadena;
 }
 
 

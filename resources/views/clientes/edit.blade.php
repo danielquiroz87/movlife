@@ -5,12 +5,19 @@
       <ul>
           <li><a href="/">Inicio</a></li>
           <li><a href="{{route('customers')}}">Clientes</a></li>
-          <li>Nuevo Cliente</li>
+          <li>Editar Cliente</li>
       </ul>
   </div>
   <div class="separator-breadcrumb border-top"></div>
 
 <div class="row">
+
+  @if ($message = Session::get('flash_message'))
+    <div class="alert alert-success alert-block">
+        <button type="button" class="close" data-dismiss="alert">×</button> 
+            <strong>{{ $message }}</strong>
+    </div>
+  @endif
 
     @if ($errors->any())
         <div class="alert alert-danger">
@@ -29,7 +36,26 @@
       <div class="card text-left">
           <div class="card-body">
                 <h3 class="card-title mb3">Editar Cliente</h3>
-  
+
+                <ul class="nav nav-tabs" id="myIconTab" role="tablist">
+                    <li class="nav-item">
+                      <a class="nav-link active show" id="general-icon-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true">
+                        <i class="nav-icon i-Home1 mr-1"></i>General</a>
+                    </li>
+                  
+                    <li class="nav-item">
+                      <a class="nav-link" id="documentos-icon-tab" data-toggle="tab" href="#documentos" role="tab" aria-controls="documentos" aria-selected="false"><i class="nav-icon i-Home1 mr-1"></i> Documentos</a>
+                    </li>
+                      </li>
+                  
+                    <li class="nav-item"><a class="nav-link" id="historial-documentos-icon-tab" data-toggle="tab" href="#historial-documentos" role="tab" aria-controls="historial" aria-selected="false">
+                      <i class="nav-icon i-Home1 mr-1"></i> Historial Documentos</a>
+                  
+                  </ul>
+                  <div class="tab-content">
+
+<div class="tab-pane fade active show" id="general" role="tabpanel" aria-labelledby="general-icon-tab">
+
  <div class="box box-info">
     <form action="{{route('customers.save')}}" method="POST" id="user-new-form" enctype="multipart/form-data" >
     {{ csrf_field() }}
@@ -95,13 +121,18 @@
                    <input type="text" name="direccion_detalle" class="form-control" placeholder="" maxlength="20"  value="{{$direccion->direccion2}}">
             </div>
             <div class="col-md-6 form-group mb-3">
+              <label><strong>Plazo Pagos:</strong></label>
+                   <input type="number" name="plazo_pagos" class="form-control" placeholder="" maxlength="3"  value="{{$cliente->plazo_pagos}}">
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
                     <label><strong>Email:</strong></label>
-                    <input type="email" name="email" class="form-control" placeholder="example@email.com"
+                    <input type="text" name="email" class="form-control" placeholder="example@email.com"
                          maxlength="255"  value="{{$cliente->email_contacto}}">
             </div>
             <div class="col-md-6 form-group mb-3">
                    <label> <strong>Nuevo Password:</strong></label>
-                    <input type="password" name="password" class="form-control" placeholder=""
+                    <input type="text" name="password" class="form-control" placeholder=""
                         value="" autocomplete="off" maxlength="20">
             </div>
 
@@ -114,7 +145,90 @@
     </form>
 
 </div>
-             
+          
+</div>
+
+<div class="tab-pane" id="documentos" role="tabpanel" aria-labelledby="general-icon-tab">
+
+  <div class="box box-info">
+  <form action="{{route('customers.documentos.save')}}" method="POST" id="user-new-form" enctype="multipart/form-data" >
+      {{ csrf_field() }}
+      <input type="hidden" name="id" value="{{$cliente->id}}">
+
+        <div class="card-body">
+              <div class="row"> 
+                  <div class="col-md-6 form-group ">
+                        <label> <strong>Rut:</strong></label>
+                        <input type="file" name="documentos[22][cara][1]" class="form-control" placeholder="">
+                  </div>
+                  <div class="col-md-6 form-group ">
+                      <label> <strong>Camara Comercio:</strong></label>
+                      <input type="file" class="form-control" name="documentos[23][cara][1]">
+                  </div>
+
+                  <div class="col-md-6 form-group ">
+                      <label> <strong>Cédula de Representante Legal:</strong></label>
+                      <input type="file" class="form-control" name="documentos[26][cara][1]">
+                  </div>
+
+                  <div class="col-md-6 form-group ">
+                      <label> <strong>Estados Financieros:</strong></label>
+                      <input type="file" class="form-control" name="documentos[27][cara][1]">
+                  </div>
+
+                  <div class="col-md-6 form-group ">
+                      <label> <strong>Formato FR-03-002 / Acuerdo de Servicio:</strong></label>
+                      <input type="file" class="form-control" name="documentos[28][cara][1]">
+                  </div>
+
+                  <div class="col-md-6 form-group ">
+                      <label> <strong>Copia Del Contrato:</strong></label>
+                      <input type="file" class="form-control" name="documentos[29][cara][1]">
+                  </div>
+
+                  <div class="col-xs-12 col-sm-12 col-md-12 ">
+                    <button id="submit" type="submit" class="btn btn-primary">Enviar</button>
+                    <a href="{{ route('customers') }}" class="btn btn-danger">Cancelar</a>
+                  </div>
+                </div>
+        </div>
+     
+    </form>
+  </div>
+</div>
+<div class="tab-pane" id="historial-documentos" role="tabpanel" aria-labelledby="general-icon-tab">
+
+  <div class="box box-info">
+  <div class="row">
+        <div class="col-md-12 form-group mb-3">
+          <label><strong>Historial Documentos:</strong></label>
+          <table id="hidden_column_table" class="display table table-striped table-bordered dataTable dtr-inline" style="width: 100%;" role="grid" aria-describedby="hidden_column_table_info">
+            <tr>
+              <thead>
+                <th>Tipo Documento</th>
+                <th>Cara Frontal</th>
+                <th>Cara Trasera</th>
+              </thead>
+            </tr>
+            <tbody>
+              @foreach($documentos as $documento)
+              <tr>
+                <td>{{$tipo_documentos[$documento->id_tipo_documento]}}</td>
+                <td><a href="{{asset($documento->cara_frontal)}}" target="_blank">{{$documento->cara_frontal}}</a></td>
+                <td><a href="{{asset($documento->cara_trasera)}}" target="_blank">{{$documento->cara_trasera}}</a></td>
+
+              </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+      
+      </div>
+  </div>
+</div>
+
+
+                  </div>
    </div>
               <!-- /.card-body -->
             </div>

@@ -39,8 +39,9 @@ class AlistamientoVehiculosController extends Controller
     public function index(Request $request)
     {   
         $alistamientos=VehiculoAlistamientoDiario::where('conductor_id','>',0);
-        $fecha_inicial=$request->get('fecha_inicial','2023-09-01');
+        $fecha_inicial=$request->get('fecha_inicial','2024-04-01');
         $fecha_final=$request->get('fecha_final',date('Y-m-d'));
+        $propietario=$request->get('propietario',"");
         $revisado= $request->get('revisado',-1);
 
         if(session('is_driver')){
@@ -74,7 +75,14 @@ class AlistamientoVehiculosController extends Controller
             $conductor=session('driver');
             $alistamientos_ids=$alistamientos_ids->where('conductor_id',$conductor->id);
         }
-
+        if($propietario!="" && $propietario>0){
+            $alistamientos_ids = DB::table('vehiculo_alistamiento_diario')
+            ->join('vehiculos','vehiculo_alistamiento_diario.vehiculo_id', '=', 'vehiculos.id')
+            ->where('vehiculos.propietario_id','=',$propietario)
+            ->where('vehiculo_alistamiento_diario.fecha','>=',$fecha_inicial)
+            ->where('vehiculo_alistamiento_diario.fecha','<=',$fecha_final);
+        }
+        
 
         $alistamientos_ids=$alistamientos_ids->select('vehiculo_alistamiento_diario.id')->get();
 
@@ -86,14 +94,93 @@ class AlistamientoVehiculosController extends Controller
         $alistamientos=VehiculoAlistamientoDiario::whereIn('id',$arr_ids)->orderBy('id','Desc');
         
         $alistamientos=$alistamientos->paginate(Config::get('global_settings.paginate'));
+
+        $filtros=array(
+            'q'=>$q,
+            'fecha_inicial'=>$fecha_inicial,
+            'fecha_final'=>$fecha_final,
+            'revisado'=>$revisado,
+            'propietario'=>$propietario
+            
+        );
         
-        
+        $request->session()->put('filtros.alistamiento', $filtros);
+
         return view('alistamiento.index')->with(['alistamientos'=>$alistamientos,'q'=>$q,
             'fecha_inicial'=>$fecha_inicial,
             'fecha_final'=>$fecha_final,
-            'revisado'=>$revisado
+            'revisado'=>$revisado,
+            'propietario'=>$propietario
             ]);
     }
+    
+    public function descargarExcel(Request $request){
+
+        $filtros=$request->session()->get('filtros.alistamiento');
+        $fecha_inicial=$filtros['fecha_inicial'];
+        $fecha_final=$filtros['fecha_final'];
+        $propietario=$filtros['propietario'];
+        $revisado= $filtros['revisado'];
+        $q=$filtros['q'];
+
+        $alistamientos=VehiculoAlistamientoDiario::where('conductor_id','>',0);
+        $alistamientos_ids=$alistamientos->where('fecha','>=',$fecha_inicial)->where('fecha','<=',$fecha_final);
+
+        if($revisado>=0){
+            $alistamientos_ids=$alistamientos_ids->where('aprobado','=',$revisado);
+        }
+        $q="";
+
+        if($q){
+            if($q!=""){
+                
+                $alistamientos_ids = DB::table('vehiculo_alistamiento_diario')
+                ->join('vehiculos','vehiculo_alistamiento_diario.vehiculo_id', '=', 'vehiculos.id')
+                ->where('vehiculos.placa','LIKE', '%'.$q.'%')
+                ->where('vehiculo_alistamiento_diario.fecha','>=',$fecha_inicial)
+                ->where('vehiculo_alistamiento_diario.fecha','<=',$fecha_final);
+
+                if($revisado>=0){
+                   $alistamientos_ids=$alistamientos_ids->where('vehiculo_alistamiento_diario.aprobado','=',$revisado);
+
+                }
+            }
+        }
+        
+      
+        if($propietario!="" && $propietario>0){
+            $alistamientos_ids = DB::table('vehiculo_alistamiento_diario')
+            ->join('vehiculos','vehiculo_alistamiento_diario.vehiculo_id', '=', 'vehiculos.id')
+            ->where('vehiculos.propietario_id','=',$propietario)
+            ->where('vehiculo_alistamiento_diario.fecha','>=',$fecha_inicial)
+            ->where('vehiculo_alistamiento_diario.fecha','<=',$fecha_final);
+        }
+        
+
+        $alistamientos_ids=$alistamientos_ids->select('vehiculo_alistamiento_diario.id')->get();
+
+        $arr_ids=array();
+        foreach ($alistamientos_ids as $key => $id) {
+            $arr_ids[]=$id->id;
+        }
+        
+        $alistamientos=VehiculoAlistamientoDiario::whereIn('id',$arr_ids)->orderBy('id','Desc')->get();
+       
+
+        $fecha=date('Y-m-d');
+        $filename = 'alistamiento-diario-del-'.$fecha_inicial.'-al-'.$fecha_final.'.xls';
+        $tabla= view('alistamiento.excel')->with(['alistamientos'=>$alistamientos]);
+        if(isset($_GET['revisar'])){
+
+        }else{
+            header('Content-type: application/vnd.ms-excel; charset=UTF-8');
+            header('Content-Disposition: attachment; filename='.$filename);
+        }
+        echo $tabla;
+        exit();
+
+    }
+
     public function new(Request $request,$id)
     { 
         $vehiculo=Vehiculo::find($id);
@@ -110,7 +197,13 @@ class AlistamientoVehiculosController extends Controller
 
         }
 
-        $fecha_inicio='2023-10-15';
+        //Consultar la última fecha de
+        $ultimoAlistamiento=VehiculoAlistamientoDiario::where('vehiculo_id',$vehiculo->id)->orderBy('fecha','Desc')->get()->first();
+        if($ultimoAlistamiento){
+            $fecha_inicio=$ultimoAlistamiento->fecha;
+        }else{
+            $fecha_inicio=date('Y-m-d');
+        }
         $str_fecha=strtotime($fecha_inicio);
         $hoy=date('Y-m-d');
         $str_to_hoy=strtotime($hoy);
@@ -128,6 +221,7 @@ class AlistamientoVehiculosController extends Controller
             }
             
         }
+        
         $items=DB::select('select* from alistamiento_diario_items order by categoria_id,id asc');
         $categorias=array();
         foreach ($items as $key => $item) {
@@ -140,6 +234,7 @@ class AlistamientoVehiculosController extends Controller
     public function save(Request $request){
         
         $hoy=date('Y-m-d');
+        $conductor=false;
         $vehiculo=Vehiculo::find($request->get('id'));
         $fecha=$request->get('fecha');
         $idsItems=$request->get('items');
@@ -150,7 +245,12 @@ class AlistamientoVehiculosController extends Controller
         
         if(session('is_driver')){
             $conductor=session('driver');
+        }
+        if($conductor){
             $al->conductor_id=$conductor->id;
+        }else{
+            \Session::flash('flash_bad_message','No existe o no se encontro el conductor para guardar el regisro!.');
+            return redirect()->route('alistamiento');
         }
         
         $al->fecha=$fecha;

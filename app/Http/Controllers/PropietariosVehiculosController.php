@@ -94,7 +94,7 @@ class PropietariosVehiculosController extends Controller
             $direccion->departamento_id=$request->get('departamento_id');
             $direccion->ciudad_id=$request->get('ciudad_id');
             $direccion->direccion1=$request->get('direccion');
-            //$direccion->direccion2=$request->get('direccion_detalle');
+            $direccion->direccion2=$request->get('direccion_detalle');
             $direccion->tipo_usuario=4;
             $direccion->save();
 
@@ -110,7 +110,14 @@ class PropietariosVehiculosController extends Controller
                 #'direccion'=>'required'
             ]);
 
+            
             $direccion=Direccion::where('tipo_usuario',4)->where('parent_id',$propietario->id)->get()->first();
+            
+            if(!$direccion){
+                $direccion=new Direccion();
+                $direccion->tipo_usuario=4;
+            }
+
             $direccion->departamento_id=$request->get('departamento_id');
             $direccion->ciudad_id=$request->get('ciudad_id');
             $direccion->direccion1=$request->get('direccion');

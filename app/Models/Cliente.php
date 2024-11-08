@@ -19,7 +19,7 @@ class Cliente extends  Model implements Auditable
 
     protected $table = 'clientes';
 
-    protected $fillable = ['user_id','documento','nombres','apellidos','razon_social','email_contacto','telefono','celular','direccion_id','whatsapp','activo'];
+    protected $fillable = ['user_id','documento','nombres','apellidos','razon_social','email_contacto','telefono','celular','direccion_id','whatsapp','activo','plazo_pagos'];
 
 
 

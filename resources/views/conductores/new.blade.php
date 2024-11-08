@@ -117,6 +117,17 @@
                     <input type="number" name="telefono_contacto" class="form-control" placeholder=""
                         value="" maxlength="20" >
             </div>
+
+            <div class="col-md-6 form-group ">
+                    <label> <strong>Tipo Vinculación:</strong></label>
+                    <select name="tipo_vinculacion" class="form-control" >
+                      <option value="">Seleccione un tipo de vinculación</option>
+                      <option value="1">Empleado</option>
+                      <option value="2">Vinculado</option>
+                      <option value="3">Tercero</option>
+                    </select>
+                </div>
+              
          
       
             <div class="col-xs-12 col-sm-12 col-md-12 ">

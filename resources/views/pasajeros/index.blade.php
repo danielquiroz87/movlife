@@ -29,7 +29,9 @@
             <div class="d-sm-flex mb-3" data-view="print">
                   <span class="m-auto"></span>
                   <a class="btn btn-success" href="{{route('pasajeros.importar')}}" target="_blank" >Importar</a>&nbsp;&nbsp;
-                    <a class="btn btn-primary" href="{{route('pasajeros.new')}}">Nuevo</a>
+                  <a class="btn btn-primary" href="{{route('pasajeros.new')}}">Nuevo</a>&nbsp;&nbsp;
+                  <a class="btn btn-success" href="/pasajeros/exportar" target="_blank">Exportar</a>
+
             </div>
           </div>
   </div>
@@ -45,6 +47,8 @@
              <table id="hidden_column_table" class="display table table-striped table-bordered dataTable dtr-inline" style="width: 100%;" role="grid" aria-describedby="hidden_column_table_info">
                   <thead>
                     <tr>
+                      <th>Cliente</th>
+                      <th>Uri/Sede</th>
                       <th>Documento</th>
                       <th>Nombres</th>
                       <th>Email Contacto</th>
@@ -58,13 +62,31 @@
                   <tbody>
                   	@foreach ($pasajeros as $user)
                     <tr>
+                      @if($user->cliente)
+                      <td>{{$user->cliente->razon_social}}</td>
+                      @else
+                      <td>NA</td>
+                      @endif
+                      @if($user->sede)
+                      <td>{{$user->sede->nombre}}</td>
+
+                      @else
+                      <td>NA</td>
+                      @endif
+                      
                       <td>{{$user->documento}}</td>
                       <td>{{$user->nombres}} {{$user->apellidos}}</td>
                       <td>{{$user->email_contacto}}</td>
                       <td>{{$user->telefono}}</td>
                       <td>{{$user->celular}}</td>
                       <td>{{$user->whatsapp}}</td>
-                      <td>{{$user->activo}}</td>
+                      <td>
+                      @if($user->activo==1) 
+                        SI
+                      @else
+                        NO
+                      @endif
+                      </td>
                       <td>
                       	<a class="text-success mr-2" href="{{route('pasajeros.edit', $user->id)}}" title="Editar"><i class="nav-icon i-Pen-2 font-weight-bold"></i></a>
                       	<a class="text-danger mr-2 eliminar" href="{{route('pasajeros.delete.get', $user->id)}}" title="Eliminar" ><i class="nav-icon i-Close-Window"></i></a>

@@ -184,6 +184,16 @@
                  <input type="text" name="password" class="form-control" 
                  value="" autocomplete="off" maxlength="20" >
                 </div>
+
+                <div class="col-md-6 form-group ">
+                    <label> <strong>Tipo Vinculación:</strong></label>
+                    <select name="tipo_vinculacion" class="form-control" >
+                      <option value="">Seleccione un tipo de vinculación</option>
+                      <option value="1" @if($conductor->tipo_vinculacion==1) selected="selected" @endif >Empleado</option>
+                      <option value="2" @if($conductor->tipo_vinculacion==2) selected="selected" @endif >Vinculado</option>
+                      <option value="3" @if($conductor->tipo_vinculacion==3) selected="selected" @endif >Tercero</option>
+                    </select>
+                </div>
               
                <div class="col-xs-12 col-sm-12 col-md-12 ">
                 <button id="submit" type="submit" class="btn btn-primary">Enviar</button>
@@ -405,7 +415,7 @@
                   
                   <div class="col-md-3 form-group ">
                         <label> <strong>Fecha Inicial:</strong></label>
-                        <input type="date" name="licencia_fecha_inicial" class="form-control" placeholder="dd/mm/yyyy"
+                        <input type="date"  class="form-control" placeholder="dd/mm/yyyy"
                         name="documentos[1][fecha_inicial]" id="documentos_fecha_inicial" 
                         >
                   </div>
@@ -478,8 +488,6 @@
                 <div class="card-body">
                   <div class="row"> 
 
-                 
-
                   <div class="col-md-6 form-group ">
                       <label> <strong>Archivo SIMIT:</strong></label>
                       <input type="file" class="form-control" name="documentos[16][cara][1]">
@@ -538,25 +546,38 @@
       <input type="hidden" name="id" value="{{$conductor->id}}">
 
         <div class="card-body">
-                   <div class="row"> 
+              <div class="row"> 
+                   <div class="col-md-3 form-group ">
+                        <label> <strong>Tipo Cuenta:</strong></label>
+                        <select name="documentos[20][extra1]" class="form-control" >
+                          <option>Ahorros</option>
+                          <option>Corriente</option>
+                      </select>
+                  </div>
+
+                  <div class="col-md-3 form-group ">
+                        <label> <strong>Banco:</strong></label>
+                        <select name="documentos[20][nombre]" class="form-control" placeholder="">
+                          <?php echo Helper::selectBancos() ?>
+                        </select>
+
+                  </div>
 
                   <div class="col-md-3 form-group ">
                         <label> <strong>Numero Cuenta:</strong></label>
                         <input type="number" name="documentos[20][numero]" class="form-control" placeholder="">
                   </div>
-                   <div class="col-md-3 form-group ">
-                        <label> <strong>Banco:</strong></label>
-                        <input type="text" name="documentos[20][nombre]" class="form-control" placeholder="">
-                  </div>
+                  
+                
                   <div class="col-md-6 form-group ">
                       <label> <strong>Archivo:</strong></label>
                       <input type="file" class="form-control" name="documentos[20][cara][1]">
                   </div>
 
                   <div class="col-xs-12 col-sm-12 col-md-12 ">
-        <button id="submit" type="submit" class="btn btn-primary">Enviar</button>
-        <a href="{{ route('conductores') }}" class="btn btn-danger">Cancelar</a>
-      </div>
+                    <button id="submit" type="submit" class="btn btn-primary">Enviar</button>
+                    <a href="{{ route('conductores') }}" class="btn btn-danger">Cancelar</a>
+                  </div>
                 </div>
         </div>
      

@@ -14,9 +14,16 @@ class Clientes extends Component
     public function render()
     {
         
-        $this->clientes=Cliente::all();
- 	
-
+        //Cliente::paginate(Config::get('global_settings.paginate'));
+        $clientes=Cliente::where('id','>=',1)->orderBy('id','Desc')->get();
+        $k=0;
+        foreach($clientes as $cliente){
+            $this->clientes[]=$cliente;
+            $k++;
+            if($k>=25){
+                break;
+            }
+        }
         return view('livewire.clientes');
     }
 }

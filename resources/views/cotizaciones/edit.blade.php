@@ -122,9 +122,14 @@
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Forma de Pago / Días:</strong></label>
-               <input type="number" name="forma_pago" class="form-control" placeholder="Forma de Pago" value="{{$cotizacion->forma_pago}}" step="15" max="90" min="15" />
-                
+              @if(auth()->user()->superadmin==1  )
+              <input type="number" name="forma_pago" class="form-control" placeholder="Forma de Pago" value="{{$cotizacion->forma_pago}}" step="15" max="90" min="15" />
+              @else
+              <input type="number" name="forma_pago" class="form-control" placeholder="Forma de Pago" value="{{$cotizacion->forma_pago}}" max="30" min="30" readonly=true />
+
+              @endif
             </div>
+          
             <div class="">
             </div>
             
@@ -142,6 +147,11 @@
               <label><strong>Fecha Servicio:</strong></label>
                    <input type="date" name="fecha_servicio" value="{{$cotizacion->fecha_servicio}}" class="form-control" placeholder="" maxlength="20" required>
             </div>
+          
+             <div class="col-md-12 form-group mb-3">
+              <label><strong>Descripción:</strong></label>
+                   <input type="text" name="descripcion"  class="form-control" placeholder="" maxlength="255" value="{{$cotizacion->descripcion}}"required>
+            </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Hora Recogida (Desde):</strong></label>
@@ -153,11 +163,6 @@
                    <input type="time" name="hora_salida" value="{{$cotizacion->hora_salida}}" class="form-control" max="23:59:59" min="00:00:00"  required >
             </div>
 
-
-             <div class="col-md-12 form-group mb-3">
-              <label><strong>Descripción:</strong></label>
-                   <input type="text" name="descripcion"  class="form-control" placeholder="" maxlength="255" value="{{$cotizacion->descripcion}}"required>
-            </div>
 
           
             <div class="col-md-6 form-group mb-3">
@@ -319,7 +324,7 @@
               <td>{{number_format($direccion->valor,2,',','.')}}</td>
               <td>{{number_format($direccion->total,2,',','.')}}</td>
               <td><a href="{{route('servicios.new.fromaddress',[$direccion->id])}}">Nueva Orden De Servicio</a></td>
-              <td> <a class="text-danger mr-2 eliminar" href="{{route('cotizaciones.delete.detalle', $direccion->id)}}" title="Eliminar"><i class="nav-icon i-Close-Window font-weight-bold"></i></a></td>
+              <td> <a class="text-danger mr-2 eliminar_all" href="{{route('cotizaciones.delete.detalle', $direccion->id)}}" title="Eliminar"><i class="nav-icon i-Close-Window font-weight-bold"></i></a></td>
               </tr>
               @endforeach
               </tbody>
@@ -349,6 +354,17 @@
                   @endif
                   <input type="file" name="foto" value="" id="foto" class="form-control" >
             </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Servicio Id:</strong></label>
+                   <input type="text" name="servicio_id" id="servicio_id" value="{{$cotizacion->servicio_id}}" class="form-control" placeholder=""  >
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Anticipo Id:</strong></label>
+                   <input type="text" name="anticipo_id" id="anticipo_id" value="{{$cotizacion->anticipo_id}}" class="form-control" placeholder=""  >
+            </div>
+            
              <div class="col-md-12 form-group mb-3">
               <label><strong>Observaciones Servicio:</strong></label><br/>
                    <textarea class="form-control" name="observaciones" rows="3">{{$cotizacion->observaciones}}</textarea>
@@ -403,7 +419,7 @@
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.js"></script>
 
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDgnsQUqdsRu0bweRhx7Ji5r2Jknm7ncMo&callback=initMap&libraries=places&v=weekly" async>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBKkK3A_KT0_PyXE66Srs177YSm7WHSMqw&callback=initMap&libraries=places&v=weekly" async>
 </script>
 
 

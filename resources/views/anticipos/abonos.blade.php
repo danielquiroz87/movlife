@@ -25,7 +25,11 @@
                 <h3 class="card-title mb3">Lista Abonos Anticipos</h3>
               <!-- /.card-header -->
               
-
+              <div class="d-sm-flex mb-3" data-view="print">
+                  <span class="m-auto"></span>
+                    <a class="btn btn-success" href="{{route('anticipos.abonos.new',['id'=>$anticipo->id])}}">Nuevo Abono</a>&nbsp;&nbsp;
+                   
+            </div>
 
              <table id="hidden_column_table" class="display table table-striped table-bordered dataTable dtr-inline" style="width: 100%;" role="grid" aria-describedby="hidden_column_table_info">
                   <thead>
@@ -40,8 +44,8 @@
                   <tbody>
                    
                     <tr>
-                                           <td>{{$anticipo->id}}</td>
-
+                     
+                    <td>{{$anticipo->id}}</td>
                      <td>{{$anticipo->created_at}}</td>
                      <td>{{$anticipo->id}}</td>
 

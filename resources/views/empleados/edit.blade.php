@@ -94,13 +94,13 @@
              <div class="col-md-6 form-group mb-3">
         
                    <label> <strong>Area Empresa:</strong></label>
-                  <select name="cargo" class="form-control">
-                      <option value="1">Dirección General</option>
-                      <option value="2">Dirección SIG</option>
-                      <option value="3">Dirección Administrativa Financiera</option>
-                      <option value="4">Dirección de RRHH</option>
-                      <option value="5">Dirección de Operaciones</option>
-                      <option value="6">Dirección de Servicio al Cliente</option>
+                  <select name="area_empresa" class="form-control">
+                      <option value="1" @if ($cliente->area_empresa==1) selected="true" @endif >Dirección General</option>
+                      <option value="2" @if ($cliente->area_empresa==2) selected="true" @endif >Dirección SIG</option>
+                      <option value="3" @if ($cliente->area_empresa==3) selected="true" @endif >Dirección Administrativa Financiera</option>
+                      <option value="4" @if ($cliente->area_empresa==4) selected="true" @endif >Dirección de RRHH</option>
+                      <option value="5" @if ($cliente->area_empresa==5) selected="true" @endif >Dirección de Operaciones</option>
+                      <option value="6" @if ($cliente->area_empresa==6) selected="true" @endif >Dirección de Servicio al Cliente</option>
                   </select>
                
             </div>

@@ -40,6 +40,7 @@
              <table id="hidden_column_table" class="display table table-striped table-bordered dataTable dtr-inline" style="width: 100%;" role="grid" aria-describedby="hidden_column_table_info">
                   <thead>
                     <tr>
+                      <th>Id Empleado</th>
                       <th>Documento</th>
                       <th>Nombres</th>
                       <th>Email</th>
@@ -54,6 +55,7 @@
                   <tbody>
                   	@foreach ($empleados as $user)
                     <tr>
+                      <td>{{$user->id}}</td>
                       <td>{{$user->documento}}</td>
                       <td>{{$user->nombres}} {{$user->apellidos}}</td>
                       <td>{{$user->email_contacto}}</td>

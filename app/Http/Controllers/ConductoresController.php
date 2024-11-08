@@ -2,15 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Conductor;
+use App\Models\ConductorNumeroSms;
+
 use App\Models\ConductorHojaDeVida;
 use Config;
 use App\Models\User;
 use App\Models\Direccion;
 use App\Models\Documentos;
 use App\Models\TipoDocumentos;
+use App\Models\ConductorLocalizacion;
+use Illuminate\Support\Facades\DB;
+
 
 use Illuminate\Http\UploadedFile;
 
@@ -28,10 +34,49 @@ class ConductoresController extends Controller
     {
         $this->middleware('auth');
     }
+    public function adminsms(Request $request){
+        
+        $listaSms=DB::table('conductor_numeros_sms');
+        $q=$request->get('q','');
+        if($q!=""){
+            $listaSms->where('numero',$q);
+        }
+        $numeros=$listaSms->get();
+        return view('conductores.numeros_sms')->with(['numeros'=>$numeros,'q'=>$q]);
+
+    }
+
+    public function adminsmsSave(Request $request){
+
+        $existe=ConductorNumeroSms::where('numero',$request->numero)->get()->first();
+        if(!$existe){
+            $newSms=new ConductorNumeroSms();
+            $newSms->numero=$request->numero;
+            $newSms->save();
+
+        }
+        \Session::flash('flash_message','Número guardado exitosamente!.');
+        return redirect()->back();
+
+    }
+
+    public function deleteSms(Request $request){
+        
+        $existe=ConductorNumeroSms::where('id',$request->id)->get()->first();
+        if($existe){
+            $existe->delete();
+        }
+        \Session::flash('flash_message','Número eliminado exitosamente!.');
+        return redirect()->back();
+
+    }
+
     public function index(Request $request)
     {   
         $conductores=$this->getRepository();
-        
+        $exportar=$request->get('exportar',false);
+        $filtros=$request->get('filtros',false);
+
         $q="";
         if($request->has('q')){
             if($request->get('q')!=""){
@@ -46,13 +91,39 @@ class ConductoresController extends Controller
                                           ->orWhere('whatsapp', 'LIKE', '%'.$search.'%');
 
 
-               $conductores=$conductores->paginate(config::get('global_settings.paginate'));                           
             }
         }
 
+        $conductor=$request->get('filtros_conductor');
+        if($conductor){
+            $listconductores=array_values($conductor);
+            if($listconductores){
+                $filtros['conductor']=$listconductores;
+                $conductores->whereIn('id',$listconductores);
+            }
+            
+        }else{
+             $filtros['conductor']="";
+        }
 
-        return view('conductores.index')->with(['conductores'=>$conductores,'q'=>$q]);
+        if($exportar){
+            $conductores=$conductores->get();
+            $fecha=date('Y-m-d');
+            $filename="DocumentosConductores{$fecha}.xls";
+            $html=view('conductores.descargar')->with(['conductores'=>$conductores,'q'=>$q]);
+    
+            header('Content-type: application/vnd.ms-excel; charset=UTF-8');
+            header('Content-Disposition: attachment; filename='.$filename);
+            echo $html;
+            exit();
+        }
+
+        $conductores=$conductores->paginate(config::get('global_settings.paginate'));                           
+
+        return view('conductores.index')->with(['conductores'=>$conductores,'q'=>$q,'filtros'=>$filtros]);
     }
+        
+    
     public function new()
     { 
         return view('conductores.new');
@@ -97,7 +168,7 @@ class ConductoresController extends Controller
                 foreach($documentos as $key=>$arrdocumento){
                     $existeDoc=Documentos::where('id_tipo_documento',$key)->where('id_registro',$id)->get()->first();
                     $infodocumento=(object) $arrdocumento;
-
+                   
                     if($existeDoc){
                         $docbd=Documentos::find($existeDoc->id);
                              if($infodocumento){
@@ -280,6 +351,7 @@ class ConductoresController extends Controller
             $conductor->email_contacto=$request->get('email');
             $conductor->nombre_contacto=$request->get('nombre_contacto');
             $conductor->telefono_contacto=$request->get('telefono_contacto');
+            $conductor->tipo_vinculacion=$request->get('tipo_vinculacion');
            
             $conductor->celular=$request->get('celular');
             $conductor->direccion_id=$direccion->id;
@@ -399,7 +471,39 @@ class ConductoresController extends Controller
 
         return redirect()->back();
     }
+    public function planilla_servicios(){
+        return view('conductores.planilla_servicios');
+
+    }
+
+    public function getLocationMap(Request $request){
+        $session=$request->session();
+        $placa= $session->get('jornada_placa');
+
+        if(!$placa){
+
+            \Session::flash('flash_bad_message','Debes de iniciar una jornada antes de localizar el vehiculo!.');
+            return redirect()->route('conductores.jornada');
+        }
+
+        return view ('conductores.geolocationmap');
+    }
+
+    public function locationSave(Request $request){
+
+       
+        $lat=$request->get('lat');
+        $long=$request->get('long');
+        $localization=new ConductorLocalizacion();
+        $localization->long=$long;
+        $localization->lat=$lat;
+        $localization->user_id=Auth::user()->id;
+        $localization->placa=$placa;
+        $localization->save();
+        echo 'localizacion guardada exitosamente';
+    }
+
     private function getRepository(){
-        return Conductor::paginate(Config::get('global_settings.paginate'));
+        return Conductor::where('id','>',0);
     }
 }

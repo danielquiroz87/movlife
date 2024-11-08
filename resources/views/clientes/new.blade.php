@@ -100,7 +100,11 @@
               <label><strong>Detalle Dirección:</strong></label>
                    <input type="text" name="direccion_detalle" value="" class="form-control" placeholder="" maxlength="255" required>
             </div>
-           
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Plazo Pagos:</strong></label>
+                   <input type="number" name="plazo_pagos" class="form-control" placeholder="" maxlength="3"  value="">
+            </div>
             
             <div class="col-md-6 form-group mb-3">
                     <label><strong>Email:</strong></label>

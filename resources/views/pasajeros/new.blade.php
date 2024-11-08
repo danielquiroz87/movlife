@@ -39,12 +39,19 @@
         <div class="row">
 
            <div class="col-md-6 form-group mb-3">
-              <label><strong>Clientes:</strong></label>
+              <label><strong>Cliente:</strong></label>
                     
                     <select name="cliente_id" class="form-control">
                       <?php echo Helper::selectClientes() ?>
                     </select>
             </div> 
+            
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>URI SEDE: </strong></label>
+                   <select name="uri_sede" class="form-control">
+                     <?php echo Helper::selectSedes() ?>
+                   </select>
+            </div>
 
            <div class="col-md-6 form-group mb-3">
               <label><strong>Documento / Nit:</strong></label>
@@ -106,12 +113,12 @@
             
             <div class="col-md-6 form-group mb-3">
                     <label><strong>Email:</strong></label>
-                    <input type="email" name="email" class="form-control" placeholder="example@email.com"
+                    <input type="text" name="email" class="form-control" placeholder="example@email.com"
                         value="" maxlength="255" >
             </div>
             <div class="col-md-6 form-group mb-3">
                    <label> <strong>Password:</strong></label>
-                    <input type="password" name="password" class="form-control" placeholder=""
+                    <input type="text" name="password" class="form-control" placeholder=""
                         value="" maxlength="20" >
             </div>
 
@@ -157,7 +164,13 @@
 
 <script>
 
+$('#cliente_id').select2({
+   theme: 'bootstrap-5'
+ });
 
+ $('#uri_sede').select2({
+   theme: 'bootstrap-5'
+ });
 
 // just for the demos, avoids form submit
 var form = $( "#user-new-form" );
@@ -168,9 +181,9 @@ $('#user-new-form').validate({
   rules: {
         nombres: { required:true },
         apellidos: { required:true },
-        //email:{ required:true },
+        email:{ required:false,email:true },
         //password:{ required:true },
-        //documento:{ required:true },
+        documento:{ required:true },
         departamento_id:{ required:true },
         ciudad_id: { required:true },
        

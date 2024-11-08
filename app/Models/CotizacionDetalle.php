@@ -19,7 +19,7 @@ class CotizacionDetalle extends  Model implements Auditable
 
     protected $table = 'cotizacion_detalle';
 
-    protected $fillable = ['cotizacion_id','origen','destino','destino1','destino2','destino3','destino4','destino5','valor','cantidad','total'];
+    protected $fillable = ['cotizacion_id','origen','destino','destino1','destino2','destino3','destino4','destino5','valor','cantidad','total','tarifario_id','fecha_servicio','descripcion','tipo_viaje','hora_recogida','hora_salida'];
 
 
     public function cotizacion(){

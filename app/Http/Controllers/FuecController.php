@@ -32,19 +32,73 @@ class FuecController extends Controller
     }
     public function index(Request $request)
     {   
-        $fuecs=Fuec::orderBy('created_at', 'Desc');
-        $fuecs=$fuecs->paginate(Config::get('global_settings.paginate'));
-       
+        $fuecs=Fuec::where('id','>',0);
+        $filtros=$request->get('filtros');
         $q="";
+        
+        
         if($request->has('q')){
-           $q=$request->get('q');
-
+            $q=$request->get('q');
             $fuecs=Fuec::where('placa','LIKE', '%'.$q.'%')->orderBy('created_at', 'Desc');
-            $fuecs=$fuecs->paginate(Config::get('global_settings.paginate'));                           
-
         }
 
-        return view('fuec.index')->with(['fuecs'=>$fuecs,'q'=>$q]);
+        if(isset($filtros['fecha_inicial'])){
+            $fecha_inicial=$filtros['fecha_inicial'];
+            if($fecha_inicial!=""){
+               $fuecs->where('fecha_inicial','>=',$fecha_inicial); 
+            }
+            
+        }else{
+            $filtros['fecha_inicial']=date('Y-m-01');
+        }
+        if(isset($filtros['fecha_final'])){
+            $fecha_final=$filtros['fecha_final'];
+            if($fecha_final!=""){
+               $fuecs->where('fecha_inicial','<=',$fecha_final.' 23:59:59'); 
+            }
+            
+        }else{
+            $filtros['fecha_final']=date('Y-m-d');
+        }
+
+        if(isset($filtros['cliente'])){
+            $cliente=$filtros['cliente'];
+            if($cliente!=""){
+               $fuecs->where('id_cliente','=',$cliente); 
+            }
+            
+        }else{
+            $filtros['cliente']="";
+        }
+
+        if(isset($filtros['conductor'])){
+            $conductor=$filtros['conductor'];
+            if($conductor!=""){
+               $fuecs->where('id_conductor','=',$conductor)
+                ->orWhere('id_conductor_2','=',$conductor)
+                ->orWhere('id_conductor_3','=',$conductor)
+                ->orWhere('id_conductor_4','=',$conductor);
+            }
+            
+        }else{
+            $filtros['conductor']="";
+        }
+
+        if(isset($filtros['placa'])){
+            $placa=$filtros['placa'];
+            if($placa!=""){
+               $fuecs->where('placa','=',$placa); 
+            }
+            
+        }else{
+            $filtros['placa']="";
+        }
+
+        $fuecs=$fuecs->orderBy('created_at','Desc');
+        $fuecs=$fuecs->paginate(Config::get('global_settings.paginate'));                           
+
+
+        return view('fuec.index')->with(['fuecs'=>$fuecs,'q'=>$q,'filtros'=>$filtros]);
     }
 
     public function new()
@@ -55,12 +109,18 @@ class FuecController extends Controller
     {   
         $fuec=Fuec::find($id);
         $contrato=FuecContrato::where('id_cliente',$fuec->id_cliente)->get()->first();
+        $listContratos=FuecContrato::where('id_cliente',$fuec->id_cliente)->get();
+        if($fuec->id_contrato_cliente!=""){
+            $contrato=FuecContrato::find($fuec->id_contrato_cliente);
+        }
         if($contrato){
 
         }else{
             $contrato=new FuecContrato();
         }
-        return view('fuec.edit')->with(['fuec'=>$fuec,'contrato'=>$contrato,'duplicado'=>false]);
+        return view('fuec.edit')->with(['fuec'=>$fuec,'contrato'=>$contrato,'duplicado'=>false,
+        'contratos'=>$listContratos
+        ]);
 
     }
     public function duplicar($id)
@@ -71,7 +131,8 @@ class FuecController extends Controller
 
         }else{
             $contrato=new FuecContrato();
-        }
+        }   
+        
         $fuec=new Fuec();
         $fuec->placa=$fuec_original->placa;
         $fuec->id_conductor=$fuec_original->id_conductor;
@@ -87,8 +148,9 @@ class FuecController extends Controller
         $fuec->fecha_inicial="";
         $fuec->fecha_final="";
 
+        $listContratos=FuecContrato::where('id_cliente',$fuec->id_cliente)->get();
 
-        return view('fuec.edit')->with(['fuec'=>$fuec,'contrato'=>$contrato,'duplicado'=>true]);
+        return view('fuec.edit')->with(['fuec'=>$fuec,'contrato'=>$contrato,'duplicado'=>true,'contratos'=>$listContratos]);
 
     }
     public function delete($id){
@@ -182,10 +244,13 @@ class FuecController extends Controller
              \Session::flash('flash_alert_message',$flash_message);
         }
 
-        $contrato=FuecContrato::where('id_cliente',$request->get('id_cliente'))->get()->first();
+        $contrato=FuecContrato::where('id',$request->get('id_contrato_cliente'))->get()->first();
 
         if($is_new){
              $fuec=Fuec::firstOrNew($request->all());
+            if($contrato){
+                $fuec->contrato=$contrato->contrato;
+            }
              $fuec->consecutivo=$fuec->id;
              $fuec->creado_por=Auth::user()->name;
              $fuec->user_id=Auth::user()->id;
@@ -211,29 +276,31 @@ class FuecController extends Controller
 
     public function descargar($id)
     {   
-        
-        setlocale(LC_TIME, 'es_ES');
+        date_default_timezone_set("America/Bogota");
+        setlocale(LC_TIME, 'es_CO');
 
         $fuec=Fuec::find($id);
         $monthNum  = date('m',strtotime($fuec->fecha_inicial));
         $monthNum2  = date('m',strtotime($fuec->fecha_final));
         $monthNum3  = date('m',strtotime($fuec->created_at));
+        $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
 
 
         $dateObj   = \DateTime::createFromFormat('!m', $monthNum);
         $dateObj2   = \DateTime::createFromFormat('!m', $monthNum2);
         $dateObj3   = \DateTime::createFromFormat('!m', $monthNum3);
         
-        $mes_1 = strtoupper(strftime('%B', $dateObj->getTimestamp()));
-        $dia_1=        date('d',strtotime($fuec->fecha_inicial));
+        $mes_1 = strtoupper($meses[$monthNum-1]);
+        $dia_1= date('d',strtotime($fuec->fecha_inicial));
         $year_1=date('Y',strtotime($fuec->fecha_inicial));
 
-        $mes_2 = strtoupper(strftime('%B', $dateObj2->getTimestamp()));
-        $dia_2=        date('d',strtotime($fuec->fecha_final));
+        $mes_2 = strtoupper($meses[$monthNum2-1]);
+        $dia_2=  date('d',strtotime($fuec->fecha_final));
         $year_2=date('Y',strtotime($fuec->fecha_final));
 
-        $mes_3 = strtoupper(strftime('%B', $dateObj3->getTimestamp()));
-        $dia_3=        date('d',strtotime($fuec->created_at));
+        $mes_3 =strtoupper($meses[$monthNum3-1]);
+
+        $dia_3= date('d',strtotime($fuec->created_at));
         $year_3=date('Y',strtotime($fuec->created_at));
 
         $fechas[0]=['mes'=>$mes_1,'dia'=>$dia_1,'year'=>$year_1];
@@ -245,15 +312,21 @@ class FuecController extends Controller
         $documentos_conductor=Helper::getDocumentosConductor($fuec->id_conductor);
         $documentos_conductor2=Helper::getDocumentosConductor($fuec->id_conductor_2);
         $documentos_conductor3=Helper::getDocumentosConductor($fuec->id_conductor_3);
+        $documentos_conductor4=Helper::getDocumentosConductor($fuec->id_conductor_4);
+
 
 
         $documentos_conductor=array_merge($documentos_conductor,$documentos_conductor2);
         $documentos_conductor=array_merge($documentos_conductor,$documentos_conductor3);
+        $documentos_conductor=array_merge($documentos_conductor,$documentos_conductor4);
+
 
         $contrato=FuecContrato::where('id_cliente',$fuec->id_cliente)->where('tipo',$fuec->tipo)->get()->first();
 
         if($contrato){
-        
+            if($fuec->id_contrato_cliente>0){
+                $contrato=FuecContrato::find($fuec->id_contrato_cliente);
+            }
         }
         else{
 
@@ -311,7 +384,8 @@ class FuecController extends Controller
         $str.='Objeto Contrato: '.$data['fuec']->objeto_contrato->nombre.$saltol;
         $str.='Origen-Destino: '.$ruta.$saltol;
         $str.='Convenio: '.$data['vehiculo']->empresa_afiliadora.$saltol;
-        $url='https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl='.urlencode($str).'&choe=UTF-8';
+        //$url='https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl='.urlencode($str).'&choe=UTF-8';
+        $url='https://qrcode.tec-it.com/API/QRCode?data='.urlencode($str).'&choe=UTF-8';
         $url_final=str_replace("%0A++++++++","%0A", $url);
         return $url_final;
 
@@ -330,7 +404,7 @@ class FuecController extends Controller
 
     public function getContratoCliente($id){
 
-        $contrato=FuecContrato::where('id_cliente',$id)->get()->first();
+        $contrato=FuecContrato::where('id_cliente',$id)->get();
         return response()->json([
             'data'=>$contrato
         ]);

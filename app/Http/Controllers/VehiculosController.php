@@ -37,19 +37,17 @@ class VehiculosController extends Controller
         $vehiculos=Vehiculo::where('id','>', 0);
       
         $q="";
+        $arr_ids=[];
+
         if($request->has('q')){
-            
             if($request->get('q')!=""){
 
                 $search=$request->get('q');
                 $q=$search;
                 $vehiculos=Vehiculo::where('placa','LIKE', '%'.$search.'%');
                
-            }
-                                          
+            }                             
         }
-
-        
          if(session('is_driver')){
 
                 $conductor=session('driver');
@@ -63,20 +61,43 @@ class VehiculosController extends Controller
                 }
                 $vehiculos_ids=$vehiculos_ids->select('vehiculos.id as id')->get();
 
-                $arr_ids=[];
-
                 foreach ($vehiculos_ids as $key => $id) {
                     ($arr_ids[$id->id]=$id->id);
                 }
-
                 $vehiculos=Vehiculo::whereIn('id',$arr_ids);
 
         }
 
+        $request->session()->put('filtros.vehiculos', ['q'=>$q,'ids'=>$arr_ids]);
 
         $vehiculos=$vehiculos->paginate(Config::get('global_settings.paginate'));
 
         return view('vehiculos.index')->with(['vehiculos'=>$vehiculos,'q'=>$q]);
+    }
+    public function descargarExcel(Request $request){
+    
+        $filtros=$request->session()->get('filtros.vehiculos');
+        $vehiculos=Vehiculo::where('id','>', 0);
+
+        if(isset($filtros['q']) && $filtros['q']!=""){
+            $q=$filtros['q'];
+            $vehiculos=Vehiculo::where('placa','LIKE', '%'.$q.'%');
+        }
+        if(isset($filtros['ids']) && count($filtros['ids'])>0){
+            $vehiculos=Vehiculo::whereIn('id',$filtros['ids']);
+        }
+        $fecha=date('Y-m-d H-i');
+        $filename = 'vehiculos-por-placas'.$fecha.'.xls';
+        $tabla=view('informes.documentos_placa_descargar')->with(['vehiculos'=>$vehiculos->get()]);
+        if(isset($_GET['revisar'])){
+            var_dump($vehiculos);
+        }else{
+            header('Content-type: application/vnd.ms-excel; charset=UTF-8');
+            header('Content-Disposition: attachment; filename='.$filename);
+        }
+        echo $tabla;
+        exit();
+       
     }
 
     public function new()
@@ -95,7 +116,7 @@ class VehiculosController extends Controller
             }
         }
 
-        $documentos=Documentos::whereIn('id_tipo_documento',[8,9,10,11,12,13,14,15,17,21])
+        $documentos=Documentos::whereIn('id_tipo_documento',[8,9,10,11,12,13,14,15,17,21,24,25,30])
                                 ->where('id_registro',$id)->get();
 
         $tipo_documentos=TipoDocumentos::where('tipo_usuario',6)->get();
@@ -126,32 +147,38 @@ class VehiculosController extends Controller
                 //Actualizamos fechas sin subir el documento
 
                 foreach($documentos as $key=>$arrdocumento){
+
                     $existeDoc=Documentos::where('id_tipo_documento',$key)->where('id_registro',$id)->get()->first();
                     $infodocumento=(object) $arrdocumento;
 
                     if($existeDoc){
                         $docbd=Documentos::find($existeDoc->id);
-                             if($infodocumento){
+                    }else{
+                        $docbd=new Documentos();
+                    }
+                    if($infodocumento){
                                 
-                                if(isset($infodocumento->fecha_inicial)){
-                                    $docbd->fecha_inicial=$infodocumento->fecha_inicial;
-                                }
-                                if(isset($infodocumento->fecha_final)){
-                                    $docbd->fecha_final=$infodocumento->fecha_final;
-                                }
-                                if(isset($infodocumento->numero)){
-                                    $docbd->numero_documento=$infodocumento->numero;
-                                }
-                                if(isset($infodocumento->nombre)){
-                                    $docbd->nombre_entidad=$infodocumento->nombre;
-                                }
-                                if(isset($infodocumento->extra1)){
-                                    $docbd->extra1=$infodocumento->extra1;
-                                }
-                                $docbd->save();
-                            }
-
-
+                        if(isset($infodocumento->fecha_inicial)){
+                            $docbd->fecha_inicial=$infodocumento->fecha_inicial;
+                        }
+                        if(isset($infodocumento->fecha_final)){
+                            $docbd->fecha_final=$infodocumento->fecha_final;
+                        }
+                        if(isset($infodocumento->numero)){
+                            $docbd->numero_documento=$infodocumento->numero;
+                        }
+                        if(isset($infodocumento->nombre)){
+                            $docbd->nombre_entidad=$infodocumento->nombre;
+                        }
+                        if(isset($infodocumento->extra1)){
+                            $docbd->extra1=$infodocumento->extra1;
+                        }
+                        $docbd->id_tipo_documento=$key;
+                        $docbd->id_registro=$id;
+                        if($infodocumento->fecha_inicial!="" or $infodocumento->fecha_final!=""){
+                            $docbd->save();
+                        }
+                        
                     }
                 }
                 

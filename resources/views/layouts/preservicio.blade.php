@@ -37,6 +37,13 @@
             font-size: 1.1em !important;
             }
         
+        table{
+            width:100%;
+            word-wrap: break-word;
+            overflow-x: auto;
+            max-width: 600px;
+
+        }
     </style>
 
 

@@ -1,25 +1,19 @@
 <?php
 $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 ?>
+<html>
+<meta charset="UTF-8">
+<title>Excel</title>
+<body>
 <table  border="1" style="border-collapse: collapse" >
 <tr>
-<th colspan="17"><p style="margin: 10px">
-	<img src="https://app.movlife.co/images/movlife.png" height="44"></p>
-</th>
-<th colspan="16">CUADRO CIERRE SEMANAL</th>
-<th colspan="16">FR-05-021-00<br>
-				Página 1 de 1<br> 
-				<?php echo date('d/m/Y');?>
-</th>
-</tr>
-
-<tr>
+<th>PRESERVICIO ID</th>
 <th>CONSECUTIVO</th>
 <th>FECHA DE SOLICITUD DEL SERVICIO</th>
 <th>FECHA DE PRESTACION DEL SERVICIO</th>
 <th>TIPO DE SERVICIO</th>
 <th>USUARIO SISTEMA</th>
-<th>EDUCADDOR / COORDINADOR</th>
+<th>EDUCADOR / COORDINADOR</th>
 <th>SEMANA</th>
 <th>PERSONA A TRANSPORTAR</th>
 <th>DOCUMENTO PERSONA A TRANSPORTAR	</th>
@@ -53,8 +47,9 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 <th>PRECIO ALIMENTACIÓN CONDUCTOR 	</th> 
 <th>TOTAL CON DESCUENTO INCLUIDO </th>	 
 <th>VALOR CLIENTE	 </th>
+<th>AUXILIAR</th>
+<th>VALOR AUXILIAR</th>
 <th>FACTURA	 </th>
-
 <th>TIPO ANTICIPO</th>
 <th>ANTICIPO	 </th>
 <th>NUMERO PAGO	</th>
@@ -64,7 +59,8 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 <th>SALDO </th>
 <th>NO ORDEN DE COMPRA 	 </th>
 <th>DOC CONTABLE	</th>
-<th>OBSERVACIONES COORDINADOR</th>
+<th>OBSERVACIONES SERVICIO	</th>
+<th>COMENTARIOS SERVICIO</th>
 <th>OBSERVACIONES CONTABILIDAD</th>
 <th>PLACA</th>
 <th>CEDULA PLACA</th>
@@ -111,10 +107,11 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 	@foreach ($servicios as $servicio)
 	<tr>
 	<?php 
+	
 	$documentos_conductor=Helper::getDocumentosConductor($servicio->id_conductor_servicio);
 	$documentos_vehiculo=Helper::getDocumentosVehiculo($servicio->placa);
 	?>
-
+	<td>{{$servicio->preservicio_id}}</td>
 	<td>{{$servicio->id}}</td>
 	<td>{{$servicio->fecha_servicio}}</td>
 	<td>{{$servicio->fecha_servicio}}</td>
@@ -253,16 +250,23 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 		{{number_format($total_con_descuento,2,',','.')}}
 	</td>
 	<td>{{number_format($servicio->valor_cliente,2,',','.')}}</td> 
+	<td>{{$servicio->auxiliar}}</td>
+	<td>{{$servicio->valor_auxiliar}}</td>
 	<td>{{$servicio->nro_factura}}</td> 
 	<td>
-		@if($servicio->tipo_anticipo==1)
-			{{Helper::getTipoAnticipo($servicio->tipo_anticipo)}} - {{Helper::getIdAnticipo($servicio->id)}}
-		@else
-			{{Helper::getTipoAnticipo($servicio->tipo_anticipo)}}
-		@endif
 		
 	</td> 
-	<td>{{$servicio->nro_anticipo}} </td> 
+	<td>
+	@if($servicio->tipo_anticipo==1)
+			{{Helper::getTipoAnticipo($servicio->tipo_anticipo)}} - {{Helper::getIdAnticipo($servicio->id)}}
+		@else
+				@if($servicio->conductor->tipo_vinculacion==1)	
+					{{Helper::getTipoAnticipo(2)}}
+				@else
+					{{Helper::getTipoAnticipo($servicio->tipo_anticipo)}}
+				@endif
+		@endif
+	</td> 
 	<td>{{$servicio->nro_pago}}</td> 
 	<td>{{$servicio->fecha_pago}}</td>
 	<td>{{$servicio->banco}}</td>
@@ -279,6 +283,7 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 	<td>{{$servicio->orden_compra}}</td>
 	<td>{{$servicio->doc_contable}}</td>
 	<td>{{$servicio->observaciones}}</td>
+	<td>{{$servicio->comentarios}}</td>
 	<td>{{$servicio->observaciones_contabilidad}}</td>
 	<td>{{$servicio->placa}}</td>
 	<td>{{$servicio->conductor->documento}}</td>
@@ -326,4 +331,6 @@ $tipo_viaje=array(1=>'Ida',2=>'Ida y Regreso',3=>'Regreso',4=>'Multiviaje');
 	@endforeach
 </tbody>
 </table>
+</body>
+</html>
 

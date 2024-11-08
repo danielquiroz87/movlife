@@ -70,9 +70,24 @@
     </div>
   @endif
 </div>
+
 <div class="col-md-8">
       <div class="card text-left">
           <div class="card-body">
+
+
+    <div class="row">
+          <div class="col-md-12">
+            <h1>Servicios</h1>
+            <div class="d-sm-flex mb-3" data-view="print">
+                  <span class="m-auto"></span>
+                    <a class="btn btn-success" href="https://app.movlife.co">Iniciar Sesión</a>&nbsp;&nbsp;
+                   
+            </div>
+            
+          </div>
+  </div>
+
                 <h3 class="card-title mb3">Nuevo Servicio</h3>
   
  <div class="box box-info">
@@ -81,21 +96,19 @@
       <input type="hidden" name="id" value="0">
       <input type="hidden" name="is_new" value="true">
       <input type="hidden" name="cotizacion_id" value="0">
-        <input type="hidden" name="estado" value="1">
+      <input type="hidden" name="estado" value="1">
+      <input type="hidden" name="fecha_solicitud" value="{{date('Y-m-d H:i:s')}}">
+
 
         <div class="row">
 
-           <div class="col-md-6 form-group mb-3">
-              <label><strong>Fecha Solicitud: *</strong></label>
-                   <input type="date" name="fecha_solicitud" value="{{date('Y-m-d')}}" class="form-control" placeholder="" maxlength="20" required>
-            </div>
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Fecha Servicio: *</strong></label>
                    <input type="date" name="fecha_servicio" value="" class="form-control" placeholder="" maxlength="20" required>
             </div>
 
-         
+         <!--
            <div class="col-md-6 form-group mb-3">
               <label><strong>Cliente Documento: *</strong></label>
               <input type="text" name="cliente_documento" id="cliente_documento" class="form-control"  />
@@ -121,7 +134,7 @@
                   <input type="text" name="cliente_celular" id="cliente_celular" class="form-control"  />
             </div>  
 
-         
+            !-->
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Pasajero Documento: *</strong></label>
@@ -152,7 +165,7 @@
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Tipo Servicio: *</strong></label>
-                  <select name="tipo_servicio" class="form-control">
+                  <select name="tipo_servicio" id="tipo_servicio" class="form-control">
                      <?php echo Helper::selectTipoServicios() ?>
                   </select>
             </div>
@@ -203,17 +216,44 @@
 
             <div class="col-md-6 form-group mb-3">
               <label><strong>Destino5:</strong></label>
-                   <input type="text" name="destino5"  value="" class="form-control" placeholder="" maxlength="600" >
+              <input type="text" name="destino5"  value="" class="form-control" placeholder="" maxlength="600" >
             </div>
 
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Kilometros:</strong></label>
+                   <input type="text" name="kilometros" id="kilometros" value="" class="form-control" readonly="true" >
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Tiempo:</strong></label>
+                   <input type="text" name="tiempo" id="tiempo" value="" class="form-control" placeholder="" readonly="true" >
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Coordinadora:</strong></label>
+              <select class="form-control" name="educador_coordinador" id="educador_coordinador" >
+              <?php echo Helper::selectEmpleadosDirectores() ?>
+              </select>
+            </div>
+
+           
              <div class="col-md-6 form-group mb-3">
               <label><strong>Uri Sede: </strong></label>
-                   <select name="uri_sede" class="form-control">
-                    <option value="">Seleccione una Sede</option>
-                    @foreach($sedes as $sede)
-                      <option value="{{$sede->id}}" >{{$sede->nombre}}</option>
-                    @endforeach
-                   </select>
+              <input type="text" name="uri" id="uri" value="" class="form-control" placeholder="" maxlength="600" >
+                   
+            </div>
+
+             <div class="opciones_disponibilidad col-md-6 form-group mb-3 ">
+               <br/>
+              <label class="checkbox checkbox-outline-primary" style="margin-top:10px">
+
+                    <input type="checkbox" name="tiempo_adicional" id="tiempo_adicional" value="1"><span>Disponibilidad de Tiempo Adicional</span><span class="checkmark"></span>
+                </label>
+            </div>
+
+            <div class="col-md-12 form-group mb-3" id="div-tiempo-adicional" style="display: none" >
+              <label><strong> Horas de Espera Adicional</strong></label>
+                   <input type="number" name="valor" value="0" class="form-control" min="0" max="24" placeholder="0" maxlength="11" required>
             </div>
 
             <div class="opciones_viaje col-md-6 form-group mb-3 ">
@@ -280,7 +320,7 @@
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.js"></script>
 <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDgnsQUqdsRu0bweRhx7Ji5r2Jknm7ncMo&callback=initMap&libraries=places&v=weekly"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTB40SU4FspBupqEDIRYg3PlrVNcrNsBQ&callback=initMap&libraries=places&v=weekly"
       async>
 </script>
 
@@ -379,11 +419,31 @@ class AutocompleteDirectionsHandler {
       (response, status) => {
         if (status === "OK") {
           me.directionsRenderer.setDirections(response);
+          var totalDistance = 0;
+          var totalDuration = 0;
+
+          var legs = response.routes[0].legs;
+          console.log(response.routes[0])
+          for(var i=0; i<legs.length; ++i) {
+              totalDistance += legs[i].distance.value;
+              totalDuration += legs[i].duration.value;
+          }
+          me.totalDistance=totalDistance;
+          me.totalDuration=totalDuration;
+          this.setDataInputs(me,legs);
+          
         } else {
           window.alert("Directions request failed due to " + status);
         }
       }
     );
+
+   
+  }
+  setDataInputs(data,legs){
+    $('#kilometros').val(legs[0].distance.text);
+    $('#tiempo').val(legs[0].duration.text)
+    
   }
 }
 
@@ -427,12 +487,14 @@ $.validator.messages.required = 'Este campo es requerido';
 $.validator.messages.email = 'Email invalido';
 
 $(form).validate({
+  
   rules: {
-        cliente_documento:{required:true},
+        /*cliente_documento:{required:true},
         cliente_nombres:{required:true},
         cliente_apellidos:{required:true},
         cliente_email:{required:true},
         cliente_celular:{required:true},
+        */
         pasajero_documento:{required:true},
         pasajero_nombres:{required:true},
         pasajero_apellidos:{required:true},
@@ -442,7 +504,9 @@ $(form).validate({
         origen: { required:true },
         destino: { required:true },
         tipo_viaje:{ required:true },
-        
+        tipo_servicio:{required:true},
+        educador_coordinador: {required:true},
+        uri: {required:true}
         
     },messages: {
                 
@@ -458,8 +522,10 @@ $("#submit").validate({
  submitHandler: function(form) {  
    if ($(form).valid())
    {
-       form.submit(); 
+      $('#submit').attr('disabled',true); 
+      form.submit(); 
    }
+   $('#submit').attr('disabled',false); 
    return false; // prevent normal form posting
  }
 });

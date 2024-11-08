@@ -38,18 +38,77 @@
 
         <div class="row">
 
-           <div class="col-md-6 form-group mb-3">
-              <label><strong>Conductor:</strong></label>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Tipo Anticipo:</strong></label>
+                    <select name="tipo" id="tipo" class="form-control">
+                      <option value="1">Anticipo Servicios</option>
+                      <option value="2">Anticipo Rodamiento</option>
+                    </select>
+            </div> 
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Cliente:</strong></label>
                     
-                    <select name="conductor_id" class="form-control">
+                    <select name="cliente_id" id="cliente_id" class="form-control">
+                      <?php echo Helper::selectClientes() ?>
+                    </select>
+            </div> 
+
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Coordinador(a):</strong></label>
+                    
+                    <select name="coordinador_id" class="form-control">
+                      <?php echo Helper::selectEmpleadosDirectores() ?>
+                    </select>
+            </div> 
+
+           
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Conductor Pago:</strong></label>
+                    
+                    <select name="conductor_id" id="conductor_id" class="form-control">
                       <?php echo Helper::selectConductores() ?>
                     </select>
             </div> 
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Conductor Servicio:</strong></label>
+                    
+                    <select name="conductor_servicio_id" id="conductor_servicio_id" class="form-control">
+                      <?php echo Helper::selectConductores() ?>
+                    </select>
+            </div> 
+
+            <div class="col-md-6 form-group mb-3">
+                   <label> <strong>Valor Cliente:</strong></label>
+                    <input type="number" name="valor_cliente" class="form-control" placeholder=""
+                        value="0" maxlength="20" required>
+            </div>
+
 
              <div class="col-md-6 form-group mb-3">
                    <label> <strong>Valor Anticipo:</strong></label>
                     <input type="number" name="valor" class="form-control" placeholder=""
                         value="0" maxlength="20" required>
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+                   <label> <strong>Servicio Id:</strong></label>
+                    <input type="number" name="servicio_id" class="form-control" placeholder=""
+                        value="0" maxlength="20">
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+                   <label> <strong>PreServicio Id:</strong></label>
+                    <input type="number" name="preservicio_id" class="form-control" placeholder=""
+                        value="0" maxlength="20">
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+            <label> <strong>Observaciones:</strong></label>
+                  <textarea class="form-control" name="observaciones" rows="3"></textarea>
             </div>
          
         
@@ -117,18 +176,18 @@ $("#submit").validate({
  }
 });
 
+$('#cliente_id').select2({
+   theme: 'bootstrap-5'
+ });
 
-
-/*
-$( "#submit" ).click(function(e) {
-  e.preventDefault();
-  if($( "#user-new-form" ).valid()){
-    alert('valido');
-    $( "#user-new-form" ).submit();
-  }else{
-    alert('ERRORES')
-  }
-});
-*/
+ $('#coordinador_id').select2({
+   theme: 'bootstrap-5'
+ });
+ $('#conductor_id').select2({
+   theme: 'bootstrap-5'
+ });
+ $('#conductor_servicio_id').select2({
+   theme: 'bootstrap-5'
+ });
 </script>
 @endsection

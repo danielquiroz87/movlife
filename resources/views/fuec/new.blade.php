@@ -76,9 +76,16 @@
                   </select>
             </div>
 
-             <div class="col-md-6 form-group mb-3">
+            <div class="col-md-6 form-group mb-3">
               <label><strong>Conductor 3:</strong></label>
                   <select name="id_conductor_3" id="conductor_servicio" class="form-control conductor_servicio">
+                        <?php echo Helper::selectConductores() ?>
+                  </select>
+            </div>
+
+            <div class="col-md-6 form-group mb-3">
+              <label><strong>Conductor 4:</strong></label>
+                  <select name="id_conductor_4" id="conductor_servicio" class="form-control conductor_servicio">
                         <?php echo Helper::selectConductores() ?>
                   </select>
             </div>
@@ -98,7 +105,14 @@
                     <select class="form-control clientes" name="id_cliente" id="id_cliente"  data-url="/fuec/contrato/"  >
                       <?php echo Helper::selectClientes() ?>
                     </select>
-                   
+            </div>
+
+
+           <div class="col-md-6 form-group mb-3">
+              <label><strong>Responsable Contrato Cliente:</strong></label>
+                    <select class="form-control clientes" name="id_contrato_cliente" id="id_contrato_cliente"  data-url="/fuec/contrato/"  >
+
+                    </select>
             </div>
 
           
@@ -168,13 +182,19 @@
    var id=$(this).val();
    var strurl='/fuec/contrato/'+id;
    $.get(strurl,{},function(response){
-     $('#objeto_contrato_id').val('');
-     if(response.data.objeto_contrato_id){
-       $('#objeto_contrato_id').val(response.data.objeto_contrato_id);
-     }else{
-      
-     }
-     console.log(response.data.objeto_contrato_id);
+    contratos=JSON.parse(JSON.stringify(response.data));
+    var option = ``;
+    $('#id_contrato_cliente').empty();
+
+    for (var i=0;i<contratos.length;i++){
+      option += `<option value=${contratos[i].id}>${contratos[i].responsable_nombres}</option>`;
+    }
+    $('#id_contrato_cliente').append(option);
+    if(contratos.length>0){
+      objeto_id=contratos[0].objeto_contrato_id;
+      $('#objeto_contrato_id').val(objeto_id);
+    }
+     //console.log(response.data.objeto_contrato_id);
    })
 
  })
@@ -194,14 +214,15 @@ $.validator.messages.email = 'Email invalido';
 
 $('#user-new-form').validate({
   rules: {
-        nombre: { required:true },
-        departamento_id:{ required:true },
-        ciudad_id: { required:true },
+
+        id_cliente: { required:true },
+        id_conductor:{ required:true },
+        placa: { required:true }
         
         
     },messages: {
                 
-            },
+    },
     
 })
 

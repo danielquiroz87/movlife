@@ -1,8 +1,16 @@
-
 @extends('layouts.master')
-
 @section('main-content')
-  <div class="breadcrumb">
+<?php 
+$clasificacion_vehiculo=array(
+  '1'=>'Intermunicipal',
+  '2'=>'Especial',
+  '3'=>'Particular',
+  '4'=>'Taxi',
+  '5'=>'Otro',
+  ''=>'NA'
+);
+?>
+<div class="breadcrumb">
       <ul>
           <li><a href="/">Inicio</a></li>
           <li>Vehiculos</li>
@@ -28,8 +36,12 @@
             <div class="d-sm-flex mb-3" data-view="print">
                 @if(auth()->user()->superadmin==1 )
                   <span class="m-auto"></span>
-                   <a class="btn btn-success" href="{{route('vehiculos.importar')}}" target="_blank" >Importar</a>&nbsp;&nbsp;
-                    <a class="btn btn-primary" href="{{route('vehiculos.new')}}">Nuevo</a>
+                   <a class="btn btn-primary" href="{{route('vehiculos.new')}}">Nuevo</a>
+                   &nbsp;&nbsp;
+                   <a class="btn btn-success" href="{{route('vehiculos.descargar.excel')}}" target="_blank" >Descargar</a>
+                   &nbsp;&nbsp;
+                   <a class="btn btn-success" href="{{route('vehiculos.importar')}}" target="_blank" >Importar</a>
+                   
                 @endif
             </div>
           </div>
@@ -49,11 +61,13 @@
                   <thead>
                     <tr>
                       <th>Placa</th>
-                      <th>Codigo Interno</th>
+                      <th>Modelo</th>
                       <th>Clase</th>
                       <th>Marca</th>
-                      <th>Activo</th>
-                      <th>Estado Documentos</th>
+                      <th>Tipo</th>
+                      <th># Pasajeros</th>
+                      <th>Alistamiento</th>
+
                       <th>Acciones</th>
                     </tr>
                   </thead>
@@ -61,21 +75,22 @@
                   	@foreach ($vehiculos as $vehiculo)
                     <tr>
                       <td>{{$vehiculo->placa}}</td>
-                      <td>{{$vehiculo->codigo_interno}}</td>
+                      <td>{{$vehiculo->modelo}}</td>
                       <td>{{$vehiculo->clase->nombre}}</td>
                       <td>{{$vehiculo->marca->nombre}} {{$vehiculo->linea}}</td>
-                      <td>{{$vehiculo->activo}}</td>
-                      <td>ok</td>
                       <td>
-
+                        {{$clasificacion_vehiculo[$vehiculo->id_vehiculo_uso]}}
+                      </td>
+                      <td>{{$vehiculo->capacidad_pasajeros}}</td>
+                      <td>
+                        <a href="{{route('alistamiento.new', $vehiculo->id)}}" title="Alistamiento"> <i class="nav-icon i-Car-Wheel font-weight-bold"></i>Alistamiento Diario</a>
+                      </td>
+                      <td>
                       @if(session::get('is_employe')==true || auth()->user()->superadmin==1  )
                       	<a href="{{route('vehiculos.edit', $vehiculo->id)}}" title="Editar"> <i class="nav-icon i-Pen-2 font-weight-bold"></i></a>
-
-                          <a href="{{route('alistamiento', ['q'=>$vehiculo->placa])}}" title="Alistamiento"> <i class="nav-icon i-Car-Wheel font-weight-bold"></i></a>
-
                       @endif
                       @if(session::get('is_driver')==true)
-                        <a href="{{route('alistamiento.new', $vehiculo->id)}}" title="Alistamiento"> <i class="nav-icon i-Car-Wheel font-weight-bold"></i></a>
+                        <a href="{{route('conductores.jornada.placa', ['placa'=>$vehiculo->placa])}}" title="Control Jornada"> <i class="nav-icon i-Car-Wheel font-weight-bold"></i></a>
                       @endif
                       	<a href="{{route('vehiculos.delete.get', $vehiculo->id)}}" title="Eliminar" class="eliminar"><i class="nav-icon i-Close-Window font-weight-bold"></i></a>
                       </td>

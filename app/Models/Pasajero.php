@@ -19,12 +19,21 @@ class Pasajero extends  Model implements Auditable
 
     protected $table = 'pasajeros';
 
-    protected $fillable = ['user_id','documento','nombres','apellidos','email_contacto','telefono','celular','direccion_id','whatsapp','activo'];
+    protected $fillable = ['user_id','documento','nombres','apellidos','email_contacto','telefono','celular','direccion_id','whatsapp','activo','cliente_id','uri_sede'];
 
 
      public function direccion()
 	{
 	    return $this->hasOne('App\Models\Direccion','id','direccion_id');
+	}
+
+	public function cliente()
+	{
+	    return $this->hasOne('App\Models\Cliente','id','cliente_id');
+	}
+	public function sede()
+	{
+	    return $this->hasOne('App\Models\Sedes','id','uri_sede');
 	}
 
     function scopeWithName($query, $fullname)
