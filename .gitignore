@@ -18,3 +18,7 @@ Homestead.json
 /.vagrant
 *.csv
 bootstrap/.DS_Store
+.DS_Store
+database/movlifec_app.sql
+database/movlifec_app2.sql
+database/movlifec_app_050424.sql
