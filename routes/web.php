@@ -49,13 +49,9 @@ Route::get('/clientes/delete/{id}', 'ClientesController@delete')->name('customer
 Route::get('/clientes/importar', 'ClientesController@importar')->name('customers.importar');
 Route::get('/clientes/contrato/fuec/{id}', 'ClientesController@contrato_fuec')->name('customers.fuec.contract');
 Route::get('/clientes/contrato/fuec/{id}/edit/{contratoid}', 'ClientesController@contrato_fuec')->name('customers.fuec.contract.edit');
-
 Route::post('/clientes/contrato/fuec/save', 'ClientesController@contrato_fuec_save')->name('customers.contract.fuec.save');
 Route::post('/clientes/documentos/save', 'ClientesController@documentossave')->name('customers.documentos.save');
-
-
 Route::get('/clientes/exportar', 'ClientesController@exportar')->name('customer.export');
-
 Route::get('/clientes/register', 'ClientesController@new')->name('signIn');
 
 Route::get('/empleados', 'EmpleadosController@index')->name('employes');
@@ -108,19 +104,28 @@ Route::get('/planilla/servicios/edit/{id}', 'PlanillaServiciosController@edit')-
 Route::post('/planilla/servicios/save', 'PlanillaServiciosController@save')->name('planillaservicios.save');
 Route::get('/planilla/servicios/delete/{id}', 'PlanillaServiciosController@delete')->name('planillaservicios.delete');
 
+
+
+Route::get('/vehiculos/mantenimientos', 'VehiculosMantenimientosController@index')->name('vehiculos.mantenimientos');
+Route::get('/vehiculos/mantenimientos/new', 'VehiculosMantenimientosController@new')->name('vehiculos.mantenimientos.new');
+Route::get('/vehiculos/mantenimientos/edit/{id}', 'VehiculosMantenimientosController@edit')->name('vehiculos.mantenimientos.edit');
+Route::post('/vehiculos/mantenimientos/save', 'VehiculosMantenimientosController@save')->name('vehiculos.mantenimientos.save');
+Route::get('/vehiculos/mantenimientos/delete', 'VehiculosMantenimientosController@delete')->name('vehiculos.mantenimientos.delete');
+
+
+
 Route::get('/vehiculos', 'VehiculosController@index')->name('vehiculos');
 Route::get('/vehiculos/new', 'VehiculosController@new')->name('vehiculos.new');
 Route::get('/vehiculos/edit/{id}', 'VehiculosController@edit')->name('vehiculos.edit');
 Route::post('/vehiculos/save', 'VehiculosController@save')->name('vehiculos.save');
 Route::post('/vehiculos/delete/{id}', 'VehiculosController@delete')->name('vehiculos.delete');
 Route::get('/vehiculos/delete/{id}', 'VehiculosController@delete')->name('vehiculos.delete.get');
-
 Route::post('/vehiculos/conductores/save', 'VehiculosController@saveConductores')->name('vehiculos.save.conductores');
 Route::post('/vehiculos/documentos/save', 'VehiculosController@documentossave')->name('vehiculos.documentos.save');
-
 Route::get('/vehiculos/delete/conductor/{id}', 'VehiculosController@deleteConductor')->name('vehiculos.delete.conductor');
 Route::get('/vehiculos/importar', 'VehiculosController@importar')->name('vehiculos.importar');
 Route::get('/vehiculos/descargar/excel', 'VehiculosController@descargarExcel')->name('vehiculos.descargar.excel');
+
 
 
 Route::get('/preservicios', 'ServiciosController@listar_preservicios')->name('preservicios');
@@ -245,8 +250,6 @@ Route::get('/alistamiento/new/{id}', 'AlistamientoVehiculosController@new')->nam
 Route::get('/alistamiento/edit/{id}', 'AlistamientoVehiculosController@edit')->name('alistamiento.edit');
 Route::get('/alistamiento/descargar/excel', 'AlistamientoVehiculosController@descargarExcel')->name('alistamiento.descargar.excel');
 Route::get('/alistamiento/descargar/{id}', 'AlistamientoVehiculosController@descargar')->name('alistamiento.descargar');
-
-
 Route::post('/alistamiento/save', 'AlistamientoVehiculosController@save')->name('alistamiento.save');
 Route::post('/alistamiento/save/revision', 'AlistamientoVehiculosController@save_revision')->name('alistamiento.save.revision');
 
@@ -269,7 +272,6 @@ Route::get('/sigdocumentos', 'SigDocumentosController@index')->name('sigdocument
 Route::get('/sigdocumentos/categorias/{id}', 'SigDocumentosController@index')->name('sigdocumentos.categorias');
 Route::post('/sigdocumentos/subcategorias/files/delete', 'SigDocumentosController@deleteFile')->name('sigdocumentos.subcategorias.files.delete');
 Route::get('/sigdocumentos/subcategorias/files/delete', 'SigDocumentosController@deleteFile')->name('sigdocumentos.subcategorias.files.delete.get');
-
 Route::get('/sigdocumentos/subcategorias/{id}', 'SigDocumentosController@index')->name('sigdocumentos.subcategorias');
 Route::get('/sigdocumentos/subcategorias/files/{id}', 'SigDocumentosController@subcategoriasFiles')->name('sigdocumentos.subcategorias.files');
 Route::post('/sigdocumentos/subcategorias/files/upload', 'SigDocumentosController@subcategoriasFilesUpload')->name('sigdocumentos.subcategorias.files.upload');
