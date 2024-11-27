@@ -1098,7 +1098,6 @@ class ServiciosController extends Controller
         $message="";
         
         try {
-        
 
             $fecha_solicitud=$importData[1];
             $fecha_solicitud=explode("/",$fecha_solicitud);
@@ -1533,6 +1532,7 @@ class ServiciosController extends Controller
                 $error=true;
                 $message='Error en la fila '.($j+1).',';
                 $message.=($e->getMessage());
+                $message.='. En la línea:'.$e->getLine();
                 break;
         }
         

@@ -109,8 +109,10 @@ Route::get('/planilla/servicios/delete/{id}', 'PlanillaServiciosController@delet
 Route::get('/vehiculos/mantenimientos', 'VehiculosMantenimientosController@index')->name('vehiculos.mantenimientos');
 Route::get('/vehiculos/mantenimientos/new', 'VehiculosMantenimientosController@new')->name('vehiculos.mantenimientos.new');
 Route::get('/vehiculos/mantenimientos/edit/{id}', 'VehiculosMantenimientosController@edit')->name('vehiculos.mantenimientos.edit');
-Route::post('/vehiculos/mantenimientos/save', 'VehiculosMantenimientosController@save')->name('vehiculos.mantenimientos.save');
 Route::get('/vehiculos/mantenimientos/delete', 'VehiculosMantenimientosController@delete')->name('vehiculos.mantenimientos.delete');
+Route::post('/vehiculos/mantenimientos/save', 'VehiculosMantenimientosController@save')->name('vehiculos.mantenimientos.save');
+Route::post('/vehiculos/mantenimientos/save/items', 'VehiculosMantenimientosController@saveItems')->name('vehiculos.mantenimientos.save.items');
+
 
 
 

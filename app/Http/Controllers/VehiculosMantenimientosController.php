@@ -4,8 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Vehiculo;
+use App\Models\VehiculoAlistamientoDiarioDetalle;
 use App\Models\VehiculoMantenimiento;
 use App\Models\VehiculoMantenimientoDetalle;
+use App\Models\VehiculoMantenimientoItems;
+
 
 use Config;
 
@@ -49,8 +53,17 @@ class VehiculosMantenimientosController extends Controller
     public function edit($id)
     {   
         $mantenimiento=VehiculoMantenimiento::find($id);
-        return view('vehiculos_mantenimientos.edit')->with(['mt'=>$mantenimiento]);
-
+        $items=VehiculoMantenimientoItems::all();
+        $arrItems=array();
+        foreach($items as $item){
+            $rowDetItem=$this->getItemDetalle($mantenimiento->id,$item->id);
+            if($rowDetItem){
+                $arrItems[$item->id]=$rowDetItem;
+            }else{
+                $arrItems[$item->id]=false;
+            }
+        }
+        return view('vehiculos_mantenimientos.edit')->with(['mt'=>$mantenimiento,'items'=>$items,'detItems'=>$arrItems]);
     }
     public function save(Request $request)
     { 
@@ -83,32 +96,79 @@ class VehiculosMantenimientosController extends Controller
         $mantenimiento->save();
 
         if($is_new){
-            \Session::flash('flash_message','Sede creada exitosamente!.');
+            \Session::flash('flash_message','Mantenimiento creada exitosamente!.');
 
         }else{
-            \Session::flash('flash_message','Sede actualizada exitosamente!.');
+            \Session::flash('flash_message','Mantenimiento actualizada exitosamente!.');
         }
 
          return redirect()->route('vehiculos.mantenimientos');
     }
 
+    public function saveItems(Request $request){
+
+        $mantenimiento=VehiculoMantenimiento::find($request->mantenimiento_id);
+        $items=$request->get('items');    
+        foreach($items as $id=>$valor){
+           
+            $existeD=$this->getItemDetalle($mantenimiento->id,$id);
+            $item=VehiculoMantenimientoItems::find($id);
+           
+            if($existeD){
+
+            }else{
+                $dt=new VehiculoMantenimientoDetalle();
+                $dt->mantenimiento_id=$mantenimiento->id;
+                $dt->item_id=$id;
+                if($item->tipo==1){
+                    $dt->intervalo_km=$item->intervalo_km;
+                    $dt->km_ultima_revision=0;
+                    $dt->km_restantes=($item->intervalo_km+0)-$mantenimiento->kilometros;
+
+                }else{
+                    $dt->intervalo_km=$item->intervalo_years;
+                    $dt->km_ultima_revision=0;
+                    $dt->dias_restantes=$valor;
+
+                
+                }
+                $dt->save();
+                \Session::flash('flash_message','Mantenimiento actualizado exitosamente!.');
+
+            }
+        }
+
+        return redirect()->back();
+
+    }
 
     public function update()
     { 
        
     }
     public function delete($id){
-        $sede=Sedes::find($id);
+        $sede=VehiculoMantenimiento::find($id);
         $sede->delete();
 
-        \Session::flash('flash_message','Registro eliminado exitosamente!.');
+        \Session::flash('flash_message','Mantenimiento eliminado exitosamente!.');
 
-         return redirect()->route('sedes');
+         return redirect()->route('vehiculos.mantenimientos');
 
 
     }
    
-
+    private function getItemDetalle($mantenimientoId,$itemId){
+       $dt=VehiculoMantenimientoDetalle::where('mantenimiento_id',$mantenimientoId)
+                                                   ->where('item_id',$itemId)
+                                                    ->orderBy('id','Desc')
+                                                    ->get()->first();
+        if($dt){
+            return $dt;
+        }else{
+         
+           return false;
+        }
+    }
     private function getRepository(){
         return VehiculoMantenimiento::paginate(Config::get('global_settings.paginate'));
     }
