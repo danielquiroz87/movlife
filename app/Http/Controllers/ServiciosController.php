@@ -237,7 +237,33 @@ class ServiciosController extends Controller
                             ->withHeaders(['Content-Type'=>'application/json'])
                             ->post('https://api2.iatechsas.com/sms/1/text/single');
         
-       
+
+
+
+            /*
+            $sid = "AC17ab8f2480b36b82150a69d9834f18c7";
+            $token = "70b4dd4458db511ab27ed706bae8e1f4";
+            $twilio = new TwClient($sid, $token);
+            $body = view('servicios.messagewhatsapp',compact('servicio'))->render();
+
+            
+            $message = $twilio->messages->create("whatsapp:+57".$celularPasajero, // to
+                array(
+                  "from" => $from,
+                  "body" => $body
+                )
+              );
+
+            
+            if($celularConductor){
+                /*
+                $messageConductor = $twilio->messages->create("whatsapp:+57".$celularConductor, // to
+                array(
+                  "from" => $from,
+                  "body" => $body
+                )
+              );
+                */
 
                $datasms=[
                     'from' => 'MOVLIFE',
@@ -293,19 +319,22 @@ class ServiciosController extends Controller
 
     public function sendMessagePreservicioWhatsapp($preservicio){
         
-      
-
+        
+        $from="whatsapp:+573123129835";
+        $sid = "AC17ab8f2480b36b82150a69d9834f18c7";
+        $token = "70b4dd4458db511ab27ed706bae8e1f4";
+        $twilio = new TwClient($sid, $token);
+        $body = view('servicios.message_preservicio_whatsapp',compact('preservicio'))->render();
+       
         if($preservicio->educador_coordinador>0){
             $empleado=Empleado::find($preservicio->educador_coordinador);
             if($empleado->whatsapp!=""){
-                /*
                  $messageConductor = $twilio->messages->create("whatsapp:+57".$empleado->whatsapp, // to
                  array(
                  "from" => $from,
                  "body" => $body
-                    )
-                );
-                */
+                 )
+             );
             }
 
             $existeNumeroListaSms=DB::table('conductor_numeros_sms')->where('numero',$empleado->whatsapp)->get()->first();
@@ -1503,7 +1532,7 @@ class ServiciosController extends Controller
                 $error=true;
                 $message='Error en la fila '.($j+1).',';
                 $message.=($e->getMessage());
-                $message.='. En la línea:'.$e->getLine();
+                $message.=' En la línea:'.$e->getLine();
                 break;
         }
         
