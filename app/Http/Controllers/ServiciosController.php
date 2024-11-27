@@ -241,7 +241,7 @@ class ServiciosController extends Controller
 
 
             /*
-            $sid = "AC17ab8f2480b36b82150a69d9834f18c7";
+            $sid = "TW_AC17ab8f2480b36b82150a69d9834f18c7";
             $token = "70b4dd4458db511ab27ed706bae8e1f4";
             $twilio = new TwClient($sid, $token);
             $body = view('servicios.messagewhatsapp',compact('servicio'))->render();
@@ -321,7 +321,7 @@ class ServiciosController extends Controller
         
         
         $from="whatsapp:+573123129835";
-        $sid = "AC17ab8f2480b36b82150a69d9834f18c7";
+        $sid = "TW_AC17ab8f2480b36b82150a69d9834f18c7";
         $token = "70b4dd4458db511ab27ed706bae8e1f4";
         $twilio = new TwClient($sid, $token);
         $body = view('servicios.message_preservicio_whatsapp',compact('preservicio'))->render();
