@@ -47,11 +47,17 @@
                   <thead>
                     <tr>
                       <th>Id</th>
-                      <th>Fecha Creación</th>
-                      <th>Fecha Actualización</th>
-                      <th>Fecha Mantenimiento</th>
                       <th>Placa</th>
-                      <th>Kilometros</th>
+                      <th>Item</th>
+                      <th>Intervalo Km</th>
+                      <th>Kilometro Actual</th>
+                      <th>Fecha Último Cambio</th>
+                      <th>Última Revisión Kilometraje</th>
+                      <th>Proveedor</th>
+                      <th>Observaciones</th>
+                      <th>Valor</th>
+                      <th>Km Restantes</th>
+                      <th>Siguiente Revisión</th>
                       <th>Acciones</th>
 
                     </tr>
@@ -59,14 +65,21 @@
                   <tbody>
                   	@foreach ($mantenimientos as $ma)
                     <tr>
-                      <td>{{$ma->id}}</td>
-                      <td>{{$ma->created_at}}</td>
-                      <td>{{$ma->updated_at}}</td>
-                      <td>{{$ma->fecha}}</td>
+                      <td>{{$ma->detalle_id}}</td>
                       <td>{{$ma->placa}}</td>
-                      <td>{{$ma->kilometros}}</td>
+                      <td> {{$ma->nombre}}</td>
+                      <td> {{number_format($ma->intervalo_km)}}</td>
+                      <td>{{number_format($ma->kilometros)}}</td>
+                      <td>{{$ma->created_at}}</td>
+                      <td>{{number_format($ma->km_ultima_revision)}}</td>
+                      <td>{{$ma->proveedor}}</td>
+                      <td>{{$ma->observaciones}}</td>
+                      <td>{{number_format($ma->valor)}}</td>
+                      <td>{{number_format($ma->km_restantes)}}</td>
+                      <td>{{number_format($ma->kilometros+$ma->intervalo_km)}}</td>
+
                       <td>
-                        <a class="text-success mr-2 coordinador" href="{{route('vehiculos.mantenimientos.edit',['id'=>$ma->id])}}" title="Editar">
+                        <a class="text-success mr-2 coordinador" href="{{route('vehiculos.mantenimientos.edit',['id'=>$ma->detalle_id])}}" title="Editar">
                         <i class="nav-icon i-Pen-2 font-weight-bold"></i>
                         </a>
                       </td>

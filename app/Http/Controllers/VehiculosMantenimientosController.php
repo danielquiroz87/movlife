@@ -12,6 +12,7 @@ use App\Models\VehiculoMantenimientoItems;
 
 
 use Config;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
@@ -32,38 +33,46 @@ class VehiculosMantenimientosController extends Controller
     }
     public function index(Request $request)
     {   
-        $mantenimientos=$this->getRepository();
+        //$mantenimientos=$this->getRepository();
+        $mantenimientos = DB::table('vehiculos_mantenimientos_detalle')
+        ->select('vehiculos_mantenimientos.*')
+        ->addSelect('vehiculos_mantenimientos_detalle.id as detalle_id')
+        ->addSelect('vehiculos_mantenimientos_detalle.km_ultima_revision')
+        ->addSelect('vehiculos_mantenimientos_detalle.proveedor')
+        ->addSelect('vehiculos_mantenimientos_detalle.observaciones')
+        ->addSelect('vehiculos_mantenimientos_detalle.valor')
+        ->addSelect('vehiculos_mantenimientos_detalle.km_restantes')
+        ->addSelect('vehiculos_mantenimientos_detalle.intervalo_km')
+        ->addSelect('vehiculos_mantenimientos_items.nombre')
+        ->join('vehiculos_mantenimientos','vehiculos_mantenimientos_detalle.mantenimiento_id', '=', 'vehiculos_mantenimientos.id')
+        ->join('vehiculos_mantenimientos_items','vehiculos_mantenimientos_detalle.item_id', '=', 'vehiculos_mantenimientos_items.id');
 
         $q="";
         if($request->has('q')){
             if($request->get('q')!=""){
                 $search=$request->get('q');
                 $q=$search;
-                $mantenimientos=VehiculoMantenimiento::where('placa','LIKE', '%'.$search.'%');
-                $mantenimientos=$mantenimientos->paginate(Config::get('global_settings.paginate'));                           
+                
+                $mantenimientos=$mantenimientos->where('vehiculos_mantenimientos.placa','LIKE', '%'.$search.'%');
             }
         }
+        $mantenimientos=$mantenimientos->paginate(Config::get('global_settings.paginate'));                           
 
         return view('vehiculos_mantenimientos.index')->with(['mantenimientos'=>$mantenimientos,'q'=>$q]);
     }
     public function new()
     { 
-        return view('vehiculos_mantenimientos.new');
+        $items=VehiculoMantenimientoItems::all();
+
+        return view('vehiculos_mantenimientos.new')->with(['items'=>$items]);
     }
     public function edit($id)
     {   
-        $mantenimiento=VehiculoMantenimiento::find($id);
+        $detalleMantenimiento=VehiculoMantenimientoDetalle::find($id);
+        $mantenimiento=VehiculoMantenimiento::find($detalleMantenimiento->mantenimiento_id);
         $items=VehiculoMantenimientoItems::all();
-        $arrItems=array();
-        foreach($items as $item){
-            $rowDetItem=$this->getItemDetalle($mantenimiento->id,$item->id);
-            if($rowDetItem){
-                $arrItems[$item->id]=$rowDetItem;
-            }else{
-                $arrItems[$item->id]=false;
-            }
-        }
-        return view('vehiculos_mantenimientos.edit')->with(['mt'=>$mantenimiento,'items'=>$items,'detItems'=>$arrItems]);
+        
+        return view('vehiculos_mantenimientos.edit')->with(['mt'=>$mantenimiento,'items'=>$items,'detItems'=>$detalleMantenimiento]);
     }
     public function save(Request $request)
     { 
@@ -95,6 +104,15 @@ class VehiculosMantenimientosController extends Controller
         $mantenimiento->kilometros=$request->get('kilometros');
         $mantenimiento->save();
 
+        $dt=new VehiculoMantenimientoDetalle();
+        $dt->mantenimiento_id=$mantenimiento->id;
+        $dt->item_id=$request->get('item');
+        $dt->tipo_mantenimiento=$request->get('tipo_mantenimiento');
+        $dt->proveedor=$request->get('proveedor');
+        $dt->valor=$request->get('valor');
+        $dt->observaciones=$request->get('observaciones');
+        $dt->save();
+
         if($is_new){
             \Session::flash('flash_message','Mantenimiento creada exitosamente!.');
 
@@ -108,37 +126,36 @@ class VehiculosMantenimientosController extends Controller
     public function saveItems(Request $request){
 
         $mantenimiento=VehiculoMantenimiento::find($request->mantenimiento_id);
-        $items=$request->get('items');    
-        foreach($items as $id=>$valor){
-           
-            $existeD=$this->getItemDetalle($mantenimiento->id,$id);
-            $item=VehiculoMantenimientoItems::find($id);
-           
-            if($existeD){
+        $id=$request->get('item');    
+        $existeD=VehiculoMantenimientoDetalle::find($request->get('detalle_id'));
+        $item=VehiculoMantenimientoItems::find($id);
+       
+        if($existeD){
+            $dt=$existeD;
+        }else{
+            $dt=new VehiculoMantenimientoDetalle();
+        }   
 
-            }else{
-                $dt=new VehiculoMantenimientoDetalle();
-                $dt->mantenimiento_id=$mantenimiento->id;
-                $dt->item_id=$id;
-                if($item->tipo==1){
-                    $dt->intervalo_km=$item->intervalo_km;
-                    $dt->km_ultima_revision=0;
-                    $dt->km_restantes=($item->intervalo_km+0)-$mantenimiento->kilometros;
-
-                }else{
-                    $dt->intervalo_km=$item->intervalo_years;
-                    $dt->km_ultima_revision=0;
-                    $dt->dias_restantes=$valor;
-
-                
-                }
-                $dt->save();
-                \Session::flash('flash_message','Mantenimiento actualizado exitosamente!.');
-
-            }
+        $dt->item_id=$item->id;
+        $dt->tipo_mantenimiento=$request->get('tipo_mantenimiento');
+        $dt->proveedor=$request->get('proveedor');
+        $dt->valor=$request->get('valor');
+        $dt->observaciones=$request->get('observaciones');
+        
+        if($item->tipo==1){
+            $dt->intervalo_km=$item->intervalo_km;
+            $dt->km_ultima_revision=0;
+            $dt->km_restantes=($item->intervalo_km+0)-$mantenimiento->kilometros;
+        }else{
+            $dt->intervalo_km=$item->intervalo_years;
+            $dt->km_ultima_revision=0;
+            $dt->km_restantes=($item->intervalo_km+0)-$mantenimiento->kilometros;
+          
         }
+        \Session::flash('flash_message','Mantenimiento actualizado exitosamente!.');
 
-        return redirect()->back();
+        $dt->save();
+        return redirect()->route('vehiculos.mantenimientos');
 
     }
 

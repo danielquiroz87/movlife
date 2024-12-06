@@ -98,13 +98,15 @@ function getAñosRestantes($mantenimiento,$detItems,$item){
                     {{ csrf_field() }}
                     <input type="hidden" name="mantenimiento_id" id="mantenimiento_id" value="{{$mt->id}}">
                     <input type="hidden" name="is_new" id="is_new" value="false">
+                    <input type="hidden" name="detalle_id" id="detalle_id" value="{{$detItems->id}}">
+
 
                     <div class="col-md-12 form-group mb-3">
                     <label><strong>Tipo Mantenimiento:</strong></label>
 
                      <select name="tipo_mantenimiento" class="form-control">
-                         <option value="1">Preventivo</option>
-                         <option value="2">Correctivo</option>
+                         <option value="1" @if($detItems->tipo_mantenimiento==1) selected="true" @endif>Preventivo</option>
+                         <option value="2"  @if($detItems->tipo_mantenimiento==2) selected="true" @endif>Correctivo</option>
                     </select>
                     </div>
                     <div class="col-md-12 form-group mb-3">
@@ -113,32 +115,32 @@ function getAñosRestantes($mantenimiento,$detItems,$item){
                      <select name="item" class="form-control">
                         @foreach($items as $key=>$item)
                             @if($item->tipo==1)
-                            <option value="{{$item->id}}">{{$item->nombre}} ({{number_format($item->intervalo_km)}}) km</option>
+                            <option value="{{$item->id}}" @if($detItems->item_id==$item->id) selected="true" @endif >{{$item->nombre}} ({{number_format($item->intervalo_km)}}) km</option>
                             @else
-                            <option value="{{$item->id}}">{{$item->nombre}} ({{number_format($item->intervalo_year)}}) años</option>
+                            <option value="{{$item->id}}" @if($detItems->item_id==$item->id) selected="true" @endif >{{$item->nombre}} ({{number_format($item->intervalo_year)}}) años</option>
                             @endif
-                            @endforeach;
+                        @endforeach;
                     </select>
                     </div>
 
                     <div class="col-md-12 form-group mb-3">
                     <label><strong>Proveedor:</strong></label>
-                    <input type="text" name="proveedor" id="proveedor" value="" class="form-control" >
+                    <input type="text" name="proveedor" id="proveedor" value="{{$detItems->proveedor}}" class="form-control" >
                     </div>
 
                     <div class="col-md-12 form-group mb-3">
                     <label><strong>Valor:</strong></label>
-                    <input type="text"  name="valor" id="valor" value="" class="form-control" >
+                    <input type="text"  name="valor" id="valor" value="{{$detItems->valor}}" class="form-control" >
                     </div>
 
                     <div class="col-md-12 form-group mb-3">
                     <label><strong>Archivo Factura:</strong></label>
-                    <input type="file" name="file_factura[]" />
+                    <input type="file" name="archivo" id="archivo" />
                     </div>
 
                     <div class="col-md-12 form-group mb-3">
                     <label><strong>Observaciones:</strong></label>
-                    <textarea name="observaciones" class="form-control"></textarea>
+                    <textarea name="observaciones" class="form-control">{{$detItems->observaciones}}</textarea>
                     </div>
                     
                 </div>

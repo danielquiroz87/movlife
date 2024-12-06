@@ -200,7 +200,7 @@
             </li>
             @endif
 
-             <li class="nav-item ">
+            <li class="nav-item ">
                 <a class="{{ Route::currentRouteName()=='servicios' ? 'open' : '' }}"
                     href="{{route('servicios')}}">
                     <i class="nav-icon i-Car-Wheel"></i>
@@ -267,6 +267,14 @@
                     href="{{route('convenios')}}">
                     <i class="nav-icon i-Car-Wheel"></i>
                     <span class="item-name">Convenios Empresariales</span>
+                </a>
+            </li>
+
+            <li class="nav-item ">
+                <a class="{{ Route::currentRouteName()=='vehiculos.mantenimientos' ? 'open' : '' }}"
+                    href="{{route('vehiculos.mantenimientos')}}">
+                    <i class="nav-icon i-Car-Wheel"></i>
+                    <span class="item-name">Mantenimiento Vehículos</span>
                 </a>
             </li>
             @endif

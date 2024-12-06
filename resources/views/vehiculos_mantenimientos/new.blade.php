@@ -25,48 +25,86 @@
 </div>
 <div class="row">
 
+
 <div class="col-md-8 mb-4">
-      <div class="card text-left">
-          <div class="card-body">
+        <div class="card text-left">
+            <div class="card-body">
                 <h3 class="card-title mb3">Nuevo Mantenimiento</h3>
-  
- <div class="box box-info">
- <form action="{{route('vehiculos.mantenimientos.save')}}" method="POST" id="form-planilla" enctype="multipart/form-data"  >
-        {{ csrf_field() }}
-        <input type="hidden" name="id" id="id" value="0">
+                <form action="{{route('vehiculos.mantenimientos.save')}}" method="POST" id="form-planilla" enctype="multipart/form-data"  >
+                    {{ csrf_field() }}
+
+                <input type="hidden" name="id" id="id" value="0">
         <input type="hidden" name="is_new" id="is_new" value="true">
         
-        <div class="col-md-8 form-group mb-3">
+        <div class="col-md-12 form-group mb-3">
         <label><strong>Fecha Mantenimiento:</strong></label>
         <input type="date" name="fecha" value="{{date('Y-m-d')}}"  class="form-control" placeholder="" maxlength="20" required>
         </div>
-        <div class="col-md-8 form-group mb-3">
+        <div class="col-md-12 form-group mb-3">
         <label><strong>Placa Vehiculo:</strong></label>
         <input type="text"  name="placa" id="placa" value="" class="form-control" >
         </div>
-        <div class="col-md-8 form-group mb-3">
+        <div class="col-md-12 form-group mb-3">
         <label><strong>Kilometros Actuales:</strong></label>
         <input type="number"  name="kilometros" id="kilometros" value="" class="form-control" >
         </div>
-                                     
-            <div class="col-xs-8 col-sm-12 col-md-12 ">
-                <button id="submit" type="submit" class="btn btn-primary">Enviar</button>
-                <a href="{{ route('planillaservicios') }}" class="btn btn-danger">Cancelar</a>
+                <div class="box box-info">
+                
+                    <div class="col-md-12 form-group mb-3">
+                    <label><strong>Tipo Mantenimiento:</strong></label>
+
+                     <select name="tipo_mantenimiento" class="form-control">
+                         <option value="1">Preventivo</option>
+                         <option value="2">Correctivo</option>
+                    </select>
+                    </div>
+                    <div class="col-md-12 form-group mb-3">
+                    <label><strong>Item Mantenimiento:</strong></label>
+
+                     <select name="item" class="form-control">
+                        @foreach($items as $key=>$item)
+                            @if($item->tipo==1)
+                            <option value="{{$item->id}}">{{$item->nombre}} ({{number_format($item->intervalo_km)}}) km</option>
+                            @else
+                            <option value="{{$item->id}}">{{$item->nombre}} ({{number_format($item->intervalo_year)}}) años</option>
+                            @endif
+                        @endforeach;
+                    </select>
+                    </div>
+
+                    <div class="col-md-12 form-group mb-3">
+                    <label><strong>Proveedor:</strong></label>
+                    <input type="text" name="proveedor" id="proveedor" value="" class="form-control" >
+                    </div>
+
+                    <div class="col-md-12 form-group mb-3">
+                    <label><strong>Valor:</strong></label>
+                    <input type="text"  name="valor" id="valor" value="" class="form-control" >
+                    </div>
+
+                    <div class="col-md-12 form-group mb-3">
+                    <label><strong>Archivo Factura:</strong></label>
+                    <input type="file" name="archivo" id="archivo" />
+                    </div>
+
+                    <div class="col-md-12 form-group mb-3">
+                    <label><strong>Observaciones:</strong></label>
+                    <textarea name="observaciones" class="form-control"></textarea>
+                    </div>
+                    
+                </div>
+                 
+                                                
+                        <div class="col-xs-12 col-sm-12 col-md-12 ">
+                            <button id="submit" type="submit" class="btn btn-primary">Enviar</button>
+                            <a href="{{ route('planillaservicios') }}" class="btn btn-danger">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-</form>
-
-
-</div>
-             
-   </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-
-
-            <!-- /.card -->
-          </div>
-
+            <!-- /.card-body -->
+        </div>
+   
 
 </div>
 @endsection
